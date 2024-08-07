@@ -1,0 +1,51 @@
+# Compiled Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic Libraries
+*.so
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Dependency files
+*.d
+
+# Debug files
+*.pdb
+*.ilk
+
+# Visual Studio
+.vs/
+*.vcxproj.user
+*.suo
+*.user
+*.tlog
+*.ipch
+*.opensdf
+*.sdf
+*.VC.db
+
+# Visual Studio Code
+.vscode/
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+CMakeLists.txt.user
+
+# Other
+*.log
+*.tmp
+*.bak
+*.swp

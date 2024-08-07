@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{4053a5e8-3cce-4ef2-89c4-5908a156213c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main">
+      <UniqueIdentifier>{3eee0713-2ea6-4b89-9d09-90e4ac60741e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Protocol">
+      <UniqueIdentifier>{f2ba1d16-a97e-459c-84a1-58a3aaf971c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameContents">
+      <UniqueIdentifier>{615cb3ef-b239-47bd-b02f-ccde57f9f51c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Protocol.pb.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="Struct.pb.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="Enum.pb.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="TestPacketHandler.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>GameContents</Filter>
+    </ClInclude>
+    <ClInclude Include="DummySession.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkModule.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="DummyManager.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawModule.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkModule.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Protocol.pb.cc">
+      <Filter>Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="Struct.pb.cc">
+      <Filter>Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="Enum.pb.cc">
+      <Filter>Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="TestPacketHandler.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="DummySession.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Client.cpp">
+      <Filter>GameContents</Filter>
+    </ClCompile>
+    <ClCompile Include="DummyManager.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Protocol.proto">
+      <Filter>Protocol</Filter>
+    </None>
+    <None Include="Struct.proto">
+      <Filter>Protocol</Filter>
+    </None>
+    <None Include="Enum.proto">
+      <Filter>Protocol</Filter>
+    </None>
+    <None Include="..\Common\proto\bin\GenPackets.bat">
+      <Filter>Protocol</Filter>
+    </None>
+  </ItemGroup>
+</Project>

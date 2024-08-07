@@ -1,0 +1,81 @@
+syntax = "proto3";
+package Protocol;
+
+import "Enum.proto";
+import "Struct.proto";
+
+message C_LOGIN
+{
+	string name = 1;
+}
+
+message C_MOVE
+{
+	uint64 direction = 1;
+	int64 move_time = 2;
+}
+
+message C_CHAT
+{
+	string msg = 1;
+}
+
+message C_TELEPORT
+{
+	uint64 id = 1;
+}
+
+message C_ATTACK
+{
+	uint64 id = 1;
+	uint64 skill = 2;
+}
+
+message C_LOGOUT
+{
+	uint64 id = 1;
+}
+
+message S_LOGIN
+{
+	bool success = 1;
+	repeated Player players = 2;
+}
+
+message S_ADD_OBJECT
+{
+	repeated AddPlayer players = 1;
+}
+
+message S_REMOVE_OBJECT
+{
+	uint64 id = 1;
+}
+
+message S_MOVE_OBJECT
+{
+	repeated Move moves = 1;
+}
+
+message S_CHAT
+{
+	repeated Mess messages = 1;
+}
+
+message S_STAT_CHANGE
+{
+	repeated Stat stats = 1;
+}
+
+message S_DAMAGE
+{
+	uint64 damage = 1;
+}
+
+message S_RESPAWN
+{
+	uint64 hp = 1;
+	uint64 x = 2;
+	uint64 y = 3;
+	uint64 exp = 4;
+}

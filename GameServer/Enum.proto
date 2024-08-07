@@ -1,0 +1,13 @@
+syntax = "proto3";
+package Protocol;
+
+enum PlayerType
+{
+	PLAYER_TYPE_NONE = 0;
+	PLAYER_TYPE_CLIENT = 1;
+	PLAYER_TYPE_LV1 = 2;
+	PLAYER_TYPE_LV2 = 3;
+	PLAYER_TYPE_LV3 = 4;
+	PLAYER_TYPE_LV4 = 5;
+	PLAYER_TYPE_DUMMY = 6;
+}

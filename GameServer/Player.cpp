@@ -1,0 +1,36 @@
+#include "pch.h"
+#include "Player.h"
+#include "utils.h"
+
+Player::Player() 
+{
+	myId = -1;
+	myName = "NONAME";
+	myState = ST_FREE;
+	myPos = { -1, -1 };
+	myStat = { -1, -1, -1, -1, -1, -1, -1};
+	active = false;
+}
+
+Player::~Player()
+{
+	cout << "~Player()" << endl;
+}
+
+Player::Player(string _name, STAT _stat, POS _pos, S_STATE _state, uint32 _room, Protocol::PlayerType _pt)
+	:myName(_name), myStat(_stat), myPos(_pos), myState(_state), currentRoom(_room), PT(_pt)
+{
+	active = false;
+}
+
+void Player::LevelUp()
+{
+	myStat.level++;
+	myStat.exp = 0;
+	myStat.maxExp *= 2;
+	myStat.maxHp *= 2;
+	myStat.maxMp *= 2;
+	myStat.hp = myStat.maxHp;
+	myStat.mp = myStat.maxMp;
+}
+

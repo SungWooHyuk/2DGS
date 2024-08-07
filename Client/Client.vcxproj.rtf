@@ -1,0 +1,435 @@
+{\rtf1\ansi\deff0\nouicompat{\fonttbl{\f0\fnil\fcharset129 \'b1\'bc\'b8\'b2;}}
+{\*\generator Riched20 10.0.22621}\viewkind4\uc1 
+\pard\f0\fs22 <?xml version="1.0" encoding="utf-8"?>\par
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">\par
+  <ItemGroup Label="ProjectConfigurations">\par
+    <ProjectConfiguration Include="Debug|Win32">\par
+      <Configuration>Debug</Configuration>\par
+      <Platform>Win32</Platform>\par
+    </ProjectConfiguration>\par
+    <ProjectConfiguration Include="Release|Win32">\par
+      <Configuration>Release</Configuration>\par
+      <Platform>Win32</Platform>\par
+    </ProjectConfiguration>\par
+    <ProjectConfiguration Include="Debug|x64">\par
+      <Configuration>Debug</Configuration>\par
+      <Platform>x64</Platform>\par
+    </ProjectConfiguration>\par
+    <ProjectConfiguration Include="Release|x64">\par
+      <Configuration>Release</Configuration>\par
+      <Platform>x64</Platform>\par
+    </ProjectConfiguration>\par
+  </ItemGroup>\par
+  <PropertyGroup Label="Globals">\par
+    <VCProjectVersion>16.0</VCProjectVersion>\par
+    <Keyword>Win32Proj</Keyword>\par
+    <ProjectGuid>\{032438b8-778b-48ef-8456-814315339f91\}</ProjectGuid>\par
+    <RootNamespace>Client</RootNamespace>\par
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>\par
+  </PropertyGroup>\par
+  <Import Project="$(VCTargetsPath)\\Microsoft.Cpp.Default.props" />\par
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">\par
+    <ConfigurationType>Application</ConfigurationType>\par
+    <UseDebugLibraries>true</UseDebugLibraries>\par
+    <PlatformToolset>v143</PlatformToolset>\par
+    <CharacterSet>MultiByte</CharacterSet>\par
+  </PropertyGroup>\par
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">\par
+    <ConfigurationType>Application</ConfigurationType>\par
+    <UseDebugLibraries>false</UseDebugLibraries>\par
+    <PlatformToolset>v143</PlatformToolset>\par
+    <WholeProgramOptimization>true</WholeProgramOptimization>\par
+    <CharacterSet>MultiByte</CharacterSet>\par
+  </PropertyGroup>\par
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">\par
+    <ConfigurationType>Application</ConfigurationType>\par
+    <UseDebugLibraries>true</UseDebugLibraries>\par
+    <PlatformToolset>v143</PlatformToolset>\par
+    <CharacterSet>MultiByte</CharacterSet>\par
+  </PropertyGroup>\par
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">\par
+    <ConfigurationType>Application</ConfigurationType>\par
+    <UseDebugLibraries>false</UseDebugLibraries>\par
+    <PlatformToolset>v143</PlatformToolset>\par
+    <WholeProgramOptimization>true</WholeProgramOptimization>\par
+    <CharacterSet>MultiByte</CharacterSet>\par
+  </PropertyGroup>\par
+  <Import Project="$(VCTargetsPath)\\Microsoft.Cpp.props" />\par
+  <ImportGroup Label="ExtensionSettings">\par
+  </ImportGroup>\par
+  <ImportGroup Label="Shared">\par
+  </ImportGroup>\par
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">\par
+    <Import Project="$(UserRootDir)\\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />\par
+  </ImportGroup>\par
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">\par
+    <Import Project="$(UserRootDir)\\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />\par
+  </ImportGroup>\par
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">\par
+    <Import Project="$(UserRootDir)\\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />\par
+  </ImportGroup>\par
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">\par
+    <Import Project="$(UserRootDir)\\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />\par
+  </ImportGroup>\par
+  <PropertyGroup Label="UserMacros" />\par
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">\par
+    <OutDir>$(SolutionDir)Binary\\$(Configuration)\\</OutDir>\par
+    <IncludePath>$(SolutionDir)Libraries\\Include\\;$(SolutionDir)Client\\include\\SFML\\;$(SolutionDir)ServerCore\\;$(WindowsSDK_IncludePath);$(VC_IncludePath);$(IncludePath)</IncludePath>\par
+    <LibraryPath>$(SolutionDir)Client\\lib\\;$(SolutionDir)Libraries\\SFML\\;$(SolutionDir)Libraries\\Libs\\;$(LibraryPath)</LibraryPath>\par
+  </PropertyGroup>\par
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">\par
+    <OutDir>$(SolutionDir)Binary\\$(Configuration)\\</OutDir>\par
+    <IncludePath>$(SolutionDir)Libraries\\Include\\;$(SolutionDir)Client\\include\\SFML\\;$(SolutionDir)ServerCore\\;$(WindowsSDK_IncludePath);$(VC_IncludePath);$(IncludePath)</IncludePath>\par
+    <LibraryPath>$(SolutionDir)Client\\lib\\;$(SolutionDir)Libraries\\SFML\\;$(SolutionDir)Libraries\\Libs\\;$(LibraryPath)</LibraryPath>\par
+  </PropertyGroup>\par
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">\par
+    <OutDir>$(SolutionDir)Binary\\$(Configuration)\\</OutDir>\par
+    <IncludePath>$(SolutionDir)Libraries\\Include\\;$(SolutionDir)Client\\include\\SFML\\;$(SolutionDir)ServerCore\\;$(WindowsSDK_IncludePath);$(VC_IncludePath);$(IncludePath)</IncludePath>\par
+    <LibraryPath>$(SolutionDir)Client\\lib\\;$(SolutionDir)Libraries\\SFML\\;$(SolutionDir)Libraries\\Libs\\;$(LibraryPath)</LibraryPath>\par
+  </PropertyGroup>\par
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">\par
+    <OutDir>$(SolutionDir)Binary\\$(Configuration)\\</OutDir>\par
+    <IncludePath>$(SolutionDir)Libraries\\Include\\;$(SolutionDir)Client\\include\\SFML\\;$(SolutionDir)ServerCore\\;$(WindowsSDK_IncludePath);$(VC_IncludePath);$(IncludePath)</IncludePath>\par
+    <LibraryPath>$(SolutionDir)Client\\lib\\;$(SolutionDir)Libraries\\SFML\\;$(SolutionDir)Libraries\\Libs\\;$(LibraryPath)</LibraryPath>\par
+  </PropertyGroup>\par
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">\par
+    <VcpkgTriplet>\par
+    </VcpkgTriplet>\par
+    <VcpkgUseStatic>false</VcpkgUseStatic>\par
+  </PropertyGroup>\par
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">\par
+    <VcpkgTriplet>\par
+    </VcpkgTriplet>\par
+    <VcpkgUseStatic>false</VcpkgUseStatic>\par
+  </PropertyGroup>\par
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">\par
+    <VcpkgTriplet>\par
+    </VcpkgTriplet>\par
+    <VcpkgUseStatic>false</VcpkgUseStatic>\par
+  </PropertyGroup>\par
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">\par
+    <VcpkgTriplet>\par
+    </VcpkgTriplet>\par
+    <VcpkgUseStatic>false</VcpkgUseStatic>\par
+  </PropertyGroup>\par
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">\par
+    <ClCompile>\par
+      <WarningLevel>Level3</WarningLevel>\par
+      <SDLCheck>false</SDLCheck>\par
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>\par
+      <ConformanceMode>true</ConformanceMode>\par
+      <PrecompiledHeader>Use</PrecompiledHeader>\par
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>\par
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>\par
+      <AdditionalIncludeDirectories>$(SolutionDir)Client\\include\\SFML\\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>\par
+    </ClCompile>\par
+    <Link>\par
+      <SubSystem>Console</SubSystem>\par
+      <GenerateDebugInformation>true</GenerateDebugInformation>\par
+    </Link>\par
+    <PreBuildEvent>\par
+      <Command>CALL $(SolutionDir)Common\\proto\\bin\\GenPackets.bat</Command>\par
+    </PreBuildEvent>\par
+  </ItemDefinitionGroup>\par
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">\par
+    <ClCompile>\par
+      <WarningLevel>Level3</WarningLevel>\par
+      <FunctionLevelLinking>true</FunctionLevelLinking>\par
+      <IntrinsicFunctions>true</IntrinsicFunctions>\par
+      <SDLCheck>false</SDLCheck>\par
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>\par
+      <ConformanceMode>true</ConformanceMode>\par
+      <PrecompiledHeader>Use</PrecompiledHeader>\par
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>\par
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>\par
+      <AdditionalIncludeDirectories>$(SolutionDir)Client\\include\\SFML\\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>\par
+    </ClCompile>\par
+    <Link>\par
+      <SubSystem>Console</SubSystem>\par
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>\par
+      <OptimizeReferences>true</OptimizeReferences>\par
+      <GenerateDebugInformation>true</GenerateDebugInformation>\par
+    </Link>\par
+    <PreBuildEvent>\par
+      <Command>CALL $(SolutionDir)Common\\proto\\bin\\GenPackets.bat</Command>\par
+    </PreBuildEvent>\par
+  </ItemDefinitionGroup>\par
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">\par
+    <ClCompile>\par
+      <WarningLevel>Level3</WarningLevel>\par
+      <SDLCheck>false</SDLCheck>\par
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>\par
+      <ConformanceMode>true</ConformanceMode>\par
+      <PrecompiledHeader>Use</PrecompiledHeader>\par
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>\par
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>\par
+      <AdditionalIncludeDirectories>$(SolutionDir)Client\\include\\SFML\\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>\par
+    </ClCompile>\par
+    <Link>\par
+      <SubSystem>Console</SubSystem>\par
+      <GenerateDebugInformation>true</GenerateDebugInformation>\par
+    </Link>\par
+    <PreBuildEvent>\par
+      <Command>CALL $(SolutionDir)Common\\proto\\bin\\GenPackets.bat</Command>\par
+    </PreBuildEvent>\par
+  </ItemDefinitionGroup>\par
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">\par
+    <ClCompile>\par
+      <WarningLevel>Level3</WarningLevel>\par
+      <FunctionLevelLinking>true</FunctionLevelLinking>\par
+      <IntrinsicFunctions>true</IntrinsicFunctions>\par
+      <SDLCheck>false</SDLCheck>\par
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>\par
+      <ConformanceMode>true</ConformanceMode>\par
+      <PrecompiledHeader>Use</PrecompiledHeader>\par
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>\par
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>\par
+      <AdditionalIncludeDirectories>$(SolutionDir)Client\\include\\SFML\\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>\par
+    </ClCompile>\par
+    <Link>\par
+      <SubSystem>Console</SubSystem>\par
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>\par
+      <OptimizeReferences>true</OptimizeReferences>\par
+      <GenerateDebugInformation>true</GenerateDebugInformation>\par
+    </Link>\par
+    <PreBuildEvent>\par
+      <Command>CALL $(SolutionDir)Common\\proto\\bin\\GenPackets.bat</Command>\par
+    </PreBuildEvent>\par
+  </ItemDefinitionGroup>\par
+  <ItemGroup>\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Config.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\BlendMode.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\CircleShape.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\Color.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\ConvexShape.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\Drawable.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\Export.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\Font.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\Glsl.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\Glyph.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\Image.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\PrimitiveType.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\Rect.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\RectangleShape.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\RenderStates.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\RenderTarget.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\RenderTexture.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\RenderWindow.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\Shader.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\Shape.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\Sprite.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\Text.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\Texture.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\Transform.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\Transformable.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\Vertex.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\VertexArray.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\VertexBuffer.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\View.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Network.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Network\\Export.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Network\\Ftp.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Network\\Http.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Network\\IpAddress.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Network\\Packet.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Network\\Socket.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Network\\SocketHandle.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Network\\SocketSelector.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Network\\TcpListener.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Network\\TcpSocket.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Network\\UdpSocket.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\System.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\System\\Clock.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\System\\Err.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\System\\Export.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\System\\FileInputStream.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\System\\InputStream.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\System\\Lock.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\System\\MemoryInputStream.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\System\\Mutex.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\System\\NativeActivity.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\System\\NonCopyable.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\System\\Sleep.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\System\\String.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\System\\Thread.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\System\\ThreadLocal.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\System\\ThreadLocalPtr.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\System\\Time.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\System\\Utf.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\System\\Vector2.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\System\\Vector3.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Window.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Window\\Clipboard.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Window\\Context.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Window\\ContextSettings.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Window\\Cursor.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Window\\Event.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Window\\Export.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Window\\GlResource.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Window\\Joystick.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Window\\Keyboard.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Window\\Mouse.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Window\\Sensor.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Window\\Touch.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Window\\VideoMode.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Window\\Window.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Window\\WindowHandle.hpp" />\par
+    <ClInclude Include="..\\ClientS\\client_sample\\include\\SFML\\Window\\WindowStyle.hpp" />\par
+    <ClInclude Include="Enum.pb.h" />\par
+    <ClInclude Include="MapData.h" />\par
+    <ClInclude Include="Object.h" />\par
+    <ClInclude Include="pch.h" />\par
+    <ClInclude Include="Client.h" />\par
+    <ClInclude Include="Player.h" />\par
+    <ClInclude Include="protocol.h" />\par
+    <ClInclude Include="Protocol.pb.h" />\par
+    <ClInclude Include="ServerPacketHandler.h" />\par
+    <ClInclude Include="SFSystem.h" />\par
+    <ClInclude Include="Struct.pb.h" />\par
+    <ClInclude Include="utils.h" />\par
+  </ItemGroup>\par
+  <ItemGroup>\par
+    <ClCompile Include="ClientMain.cpp" />\par
+    <ClCompile Include="Enum.pb.cc">\par
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>\par
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>\par
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>\par
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>\par
+    </ClCompile>\par
+    <ClCompile Include="MapData.cpp" />\par
+    <ClCompile Include="Object.cpp" />\par
+    <ClCompile Include="pch.cpp">\par
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>\par
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>\par
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>\par
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">pch.h</PrecompiledHeaderFile>\par
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>\par
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>\par
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>\par
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>\par
+    </ClCompile>\par
+    <ClCompile Include="Client.cpp" />\par
+    <ClCompile Include="Player.cpp" />\par
+    <ClCompile Include="Protocol.pb.cc">\par
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>\par
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>\par
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>\par
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>\par
+    </ClCompile>\par
+    <ClCompile Include="ServerPacketHandler.cpp" />\par
+    <ClCompile Include="SFSystem.cpp" />\par
+    <ClCompile Include="Struct.pb.cc">\par
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>\par
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>\par
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>\par
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>\par
+    </ClCompile>\par
+  </ItemGroup>\par
+  <ItemGroup>\par
+    <None Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\Glsl.inl" />\par
+    <None Include="..\\ClientS\\client_sample\\include\\SFML\\Graphics\\Rect.inl" />\par
+    <None Include="..\\ClientS\\client_sample\\include\\SFML\\System\\String.inl" />\par
+    <None Include="..\\ClientS\\client_sample\\include\\SFML\\System\\Thread.inl" />\par
+    <None Include="..\\ClientS\\client_sample\\include\\SFML\\System\\ThreadLocalPtr.inl" />\par
+    <None Include="..\\ClientS\\client_sample\\include\\SFML\\System\\Utf.inl" />\par
+    <None Include="..\\ClientS\\client_sample\\include\\SFML\\System\\Vector2.inl" />\par
+    <None Include="..\\ClientS\\client_sample\\include\\SFML\\System\\Vector3.inl" />\par
+    <None Include="..\\ClientS\\client_sample\\lib\\sfml-graphics-s-d.pdb">\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>\par
+    </None>\par
+    <None Include="..\\ClientS\\client_sample\\lib\\sfml-network-s-d.pdb">\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>\par
+    </None>\par
+    <None Include="..\\ClientS\\client_sample\\lib\\sfml-system-s-d.pdb">\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>\par
+    </None>\par
+    <None Include="..\\ClientS\\client_sample\\lib\\sfml-window-s-d.pdb">\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>\par
+    </None>\par
+    <None Include="..\\Common\\proto\\bin\\Enum.proto" />\par
+    <None Include="..\\Common\\proto\\bin\\GenPackets.bat" />\par
+    <None Include="..\\Common\\proto\\bin\\Protocol.proto" />\par
+    <None Include="..\\Common\\proto\\bin\\Struct.proto" />\par
+  </ItemGroup>\par
+  <ItemGroup>\par
+
+\pard     <UpToDateCheckInput Include="..\\Common\\proto\\bin\\Enum.proto" />\par
+    <UpToDateCheckInput Include="..\\Common\\proto\\bin\\Protocol.proto" />\par
+    <UpToDateCheckInput Include="..\\Common\\proto\\bin\\Struct.proto" />\par
+
+\pard   </ItemGroup>\par
+  <ItemGroup>\par
+     <Library Include="..\\ClientS\\client_sample\\lib\\freetype.lib">\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>\par
+    </Library>\par
+    <Library Include="..\\ClientS\\client_sample\\lib\\sfml-graphics-s-d.lib">\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>\par
+    </Library>\par
+    <Library Include="..\\ClientS\\client_sample\\lib\\sfml-graphics-s.lib">\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>\par
+    </Library>\par
+    <Library Include="..\\ClientS\\client_sample\\lib\\sfml-network-s-d.lib">\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>\par
+    </Library>\par
+    <Library Include="..\\ClientS\\client_sample\\lib\\sfml-network-s.lib">\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>\par
+    </Library>\par
+    <Library Include="..\\ClientS\\client_sample\\lib\\sfml-system-s-d.lib">\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>\par
+    </Library>\par
+    <Library Include="..\\ClientS\\client_sample\\lib\\sfml-system-s.lib">\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>\par
+    </Library>\par
+    <Library Include="..\\ClientS\\client_sample\\lib\\sfml-window-s-d.lib">\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>\par
+    </Library>\par
+    <Library Include="..\\ClientS\\client_sample\\lib\\sfml-window-s.lib">\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>\par
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>\par
+    </Library>\par
+  </ItemGroup>\par
+  <Import Project="$(VCTargetsPath)\\Microsoft.Cpp.targets" />\par
+  <ImportGroup Label="ExtensionTargets">\par
+  </ImportGroup>\par
+</Project>\par
+}
+ 

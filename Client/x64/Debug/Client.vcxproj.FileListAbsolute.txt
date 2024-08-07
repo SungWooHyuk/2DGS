@@ -1,0 +1,2 @@
+D:\GS_Term\G_S\Client\x64\Debug\Client.vcxproj.CopyComplete
+D:\GS_Term\GameServer\Client\x64\Debug\Client.vcxproj.CopyComplete

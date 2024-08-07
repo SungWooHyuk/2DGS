@@ -1,0 +1,54 @@
+syntax = "proto3";
+package Protocol;
+
+import "Enum.proto";
+
+message Player
+{
+	repeated PlayerType playertype = 1;
+	uint64 id = 2;
+	string name = 3;
+	uint64 x = 4;
+	uint64 y = 5;
+	uint64 level = 6;
+	uint64 hp = 7;
+	uint64 maxhp = 8;
+	uint64 mp = 9;
+	uint64 maxmp = 10;
+	uint64 exp = 11;
+	uint64 maxexp = 12;
+}
+
+message Stat
+{
+	uint64 level = 1;
+	uint64 exp = 2;
+	uint64 maxexp = 3;
+	uint64 hp = 4;
+	uint64 maxhp = 5;
+	uint64 mp = 6;
+	uint64 maxmp = 7;
+}
+
+message AddPlayer
+{
+	repeated PlayerType playertype = 1;
+	uint64 id = 2;
+	string name = 3;
+	uint64 x = 4;
+	uint64 y = 5;
+}
+
+message Move
+{
+	uint64 id = 1;
+	uint64 x = 2;
+	uint64 y = 3;
+	int64 move_time = 4;
+}
+
+message Mess
+{
+	uint64 id = 1;
+	string mess = 2;
+}
