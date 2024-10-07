@@ -22,6 +22,7 @@
 
 #include "NetworkModule.h"
 #include "DummyManager.h"
+extern int global_delay;
 
 HDC			hDC = NULL;		// Private GDI Device Context
 HGLRC		hRC = NULL;		// Permanent Rendering Context

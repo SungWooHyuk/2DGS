@@ -140,7 +140,6 @@ void GameSessionManager::WakeNpc(PlayerRef _player, PlayerRef _toPlayer)
 	bool old_state = false;
 	if (false == atomic_compare_exchange_strong(&player->active, &old_state, true))
 		return; // 한쓰레드만 접근하게 
-	//NpcAstar(player->GetId(), target->GetId()); // 위에서 깨워준거니까 다시 해도된다. false로 바뀌었을땐 이미 path clear 진행했기때문에
 	DoTimer(1000, &GameSessionManager::NpcAstarMove, player->GetId());
 }
 
@@ -173,23 +172,27 @@ void GameSessionManager::NpcAstarMove(uint64 _id)
 		npc = sessions[_id]->GetCurrentPlayer();
 	}
 
-	unordered_set<uint64_t> viewPlayer = sessions[_id]->GetViewPlayer();
-	int32_t closestDistance = INT32_MAX;
-	uint64_t closestPlayerId = 0;
+	unordered_set<uint64> vl = ROOMMANAGER->ViewList(sessions[_id]);
+	sessions[_id]->SetViewPlayer(vl);
+
+	unordered_set<uint64> viewPlayer = sessions[_id]->GetViewPlayer();
+	uint32 closestDistance = INT32_MAX;
+	uint32 closestPlayerId = 0;
 
 	if (viewPlayer.size() > 0) {
-		if (sessions[_id]->GetCurrentPlayer()->GetState() == ST_INGAME)
+		if (sessions[_id]->GetCurrentPlayer()->GetState() == ST_INGAME) // 굳이?
 		{
-			cout << sessions[_id]->GetPathCount() << endl;
-			if (sessions[_id]->GetPathCount() > 3)
+	
+			if (sessions[_id]->EmptyPath() || sessions[_id]->GetPathCount() > 4)
 			{
+				sessions[_id]->ResetPath();
 				for (auto id : viewPlayer)
 				{
-					if (sessions[id]->GetCurrentPlayer()->GetPT() == Protocol::PLAYER_TYPE_CLIENT)
+					if (sessions[id]->GetCurrentPlayer()->GetPT() == Protocol::PLAYER_TYPE_CLIENT && sessions[id]->GetCurrentPlayer()->GetState() == ST_INGAME)
 					{
 						POS playerPos = sessions[id]->GetCurrentPlayer()->GetPos();
 
-						int32_t distance = abs(sessions[_id]->GetCurrentPlayer()->GetPos().posx - playerPos.posx) + abs(sessions[_id]->GetCurrentPlayer()->GetPos().posy - playerPos.posy);
+						uint32 distance = abs(sessions[_id]->GetCurrentPlayer()->GetPos().posx - playerPos.posx) + abs(sessions[_id]->GetCurrentPlayer()->GetPos().posy - playerPos.posy);
 
 
 						if (distance < closestDistance) {
@@ -259,23 +262,28 @@ void GameSessionManager::AstarMove(GameSessionRef& _session)
 	int index = gamesession->GetPathIndex();
 	vector<POS> v = gamesession->GetPath();
 	int size = v.size();
-	if (index >= size)
+	
+	gamesession->SetPathCount(gamesession->GetPathCount() + 1);
+
+	if (!v.empty())
 	{
+		if (index >= size)
 		{
-			WRITE_LOCK;
-			gamesession->GetCurrentPlayer()->SetPos(v[index - 1]);
+			{
+				WRITE_LOCK;
+				gamesession->GetCurrentPlayer()->SetPos(v[index - 1]);
+			}
+		}
+		else
+		{
+			{
+				WRITE_LOCK;
+				gamesession->GetCurrentPlayer()->SetPos(v[index]);
+			}
+
+			gamesession->SetPathIndex(index + 1);
 		}
 	}
-	else
-	{
-		{
-			WRITE_LOCK;
-			gamesession->GetCurrentPlayer()->SetPos(v[index]);
-		}
-
-		gamesession->SetPathIndex(index + 1);
-	}
-
 }
 
 void GameSessionManager::NpcAstar(uint64 _id, uint64 _destId)
@@ -283,17 +291,21 @@ void GameSessionManager::NpcAstar(uint64 _id, uint64 _destId)
 	GameSessionRef gamesession = sessions[_id];
 	PlayerRef player = gamesession->GetCurrentPlayer();
 
-	if (gamesession->GetPathCount() < 3) // 비어있을때만 진행해준다. 즉, 현재 경로가없으면.
+	if (gamesession->EmptyPath()) // 비어있을때만 진행해준다. 즉, 현재 경로가없으면.
 	{
-		gamesession->SetPathCount(0);
 		// 점수 매기기
 	// F = G+H
 	// F = 최종점수 ( 작을 수록 좋고, 경로에 따라 달라짐 )
 	// G = 시작점에서 해당 좌표까지 이동하는데 드는 비용 (작을수록 좋고, 경로에 따라 달라짐)
 	// H = 목적지에서 얼마나 가까운지 ( 작을 수록 좋음, 고정 )
+		
 
 		POS start = player->GetPos(); // NPC의 현재위치 start
-		POS dest = sessions[_destId]->GetCurrentPlayer()->GetPos();// 나를 깨운 player
+		POS dest;
+		if (sessions[_destId])
+			dest = sessions[_destId]->GetCurrentPlayer()->GetPos();// 나를 깨운 player
+		else
+			return;
 
 
 		//방문 여부
@@ -397,7 +409,7 @@ void GameSessionManager::Move(GameSessionRef& _session, uint64 _direction, int64
 	}
 	UpdatePlayerPosition(player, _direction);
 
-	unordered_set<uint64> new_vl = ROOMMANAGER->ViewList(gamesession, false); // 움직인 후 주변애들 + WakeNPC까지 진행완료
+	unordered_set<uint64> new_vl = ROOMMANAGER->ViewList(gamesession); // 움직인 후 주변애들 + WakeNPC까지 진행완료
 
 	if (player->GetPT() == Protocol::PLAYER_TYPE_CLIENT)
 		HandleCollisions(gamesession, player, new_vl);
@@ -517,13 +529,14 @@ void GameSessionManager::HandlePlayerDeath(GameSessionRef& _gamesession, PlayerR
 		_player->SetState(ST_FREE);
 	}
 
+	_gamesession->ResetViewPlayer();
 	ROOMMANAGER->LeaveRoom(_gamesession);
 
 	stringstream ss;
 	ss << "Player " << PLAYER(_killerId)->GetName() << " Die ";
 	string chat = ss.str();
 	_gamesession->ChatPkt(_player->GetId(), chat);
-
+	
 	DoTimer(10, &GameSessionManager::PlayerRespawn, _player->GetId());
 }
 
@@ -572,7 +585,17 @@ void GameSessionManager::HandleNpcCollision(PlayerRef& _player, uint64 _pl)
 	{
 		int32 damage = PLSTAT(_player->GetId()).level * 5;
 		PLAYER(_pl)->UpdateStatHp(damage * -1);
-		sessions[_pl]->DamagePkt(damage);
+		
+		sessions[_pl]->StatChangePkt(
+			PLAYER(_pl)->GetStat().level,
+			PLAYER(_pl)->GetStat().hp,
+			PLAYER(_pl)->GetStat().maxHp,
+			PLAYER(_pl)->GetStat().mp,
+			PLAYER(_pl)->GetStat().maxMp,
+			PLAYER(_pl)->GetStat().exp,
+			PLAYER(_pl)->GetStat().maxExp
+		);
+
 
 		stringstream ss;
 		ss << PLAYER(_pl)->GetName() << " <- Damage " << damage << " Attack ";

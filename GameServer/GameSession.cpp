@@ -59,7 +59,7 @@ vector<int> GameSession::GetRandomDirectionIndices()
 
 bool GameSession::CanGo(POS _pos)
 {
-	if (MAPDATA->GetTile(_pos.posy, _pos.posx) == MAPDATA->e_PLAT)
+	if (MAPDATA->GetTile(_pos.posy, _pos.posx) != MAPDATA->e_OBSTACLE)
 		return true;
 	return false;
 }
@@ -67,6 +67,7 @@ bool GameSession::CanGo(POS _pos)
 void GameSession::ResetPath()
 {
 	if (!path.empty()) {
+		WRITE_LOCK;
 		path.clear();
 		pathIndex = 1;
 		pathCount = 0;
@@ -76,7 +77,7 @@ void GameSession::ResetPath()
 void GameSession::SetPath(POS _dest, map<POS, POS>& _parent)
 {
 	POS pos = _dest;
-
+	WRITE_LOCK;
 	path.clear();
 	pathIndex = 1;
 	pathCount = 0;
