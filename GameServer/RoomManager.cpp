@@ -77,6 +77,7 @@ vector<RoomRef> RoomManager::GetAdjacentRooms(uint32 _roomNumber)
 	return adjacentRooms;
 }
 
+
 unordered_set<uint64> RoomManager::ViewList(GameSessionRef& _session, bool _npc)
 {
 

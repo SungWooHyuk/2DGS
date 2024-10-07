@@ -172,7 +172,7 @@ void GameSessionManager::NpcAstarMove(uint64 _id)
 		npc = sessions[_id]->GetCurrentPlayer();
 	}
 
-	unordered_set<uint64> vl = ROOMMANAGER->ViewList(sessions[_id]);
+	unordered_set<uint64> vl = ROOMMANAGER->ViewList(sessions[_id], false);
 	sessions[_id]->SetViewPlayer(vl);
 
 	unordered_set<uint64> viewPlayer = sessions[_id]->GetViewPlayer();
@@ -409,7 +409,7 @@ void GameSessionManager::Move(GameSessionRef& _session, uint64 _direction, int64
 	}
 	UpdatePlayerPosition(player, _direction);
 
-	unordered_set<uint64> new_vl = ROOMMANAGER->ViewList(gamesession); // 움직인 후 주변애들 + WakeNPC까지 진행완료
+	unordered_set<uint64> new_vl = ROOMMANAGER->ViewList(gamesession, false); // 움직인 후 주변애들 + WakeNPC까지 진행완료
 
 	if (player->GetPT() == Protocol::PLAYER_TYPE_CLIENT)
 		HandleCollisions(gamesession, player, new_vl);

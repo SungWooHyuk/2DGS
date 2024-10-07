@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>D:\GS_Term\GameServer\Binary\Release\StressTest.exe</FullPath>
+      <FullPath>D:\2DGS\Binary\Release\StressTest.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />
