@@ -8,40 +8,33 @@ message C_LOGIN
 {
 	string name = 1;
 }
-
 message C_MOVE
 {
 	uint64 direction = 1;
 	int64 move_time = 2;
 }
-
 message C_CHAT
 {
 	string msg = 1;
 }
-
 message C_TELEPORT
 {
 	uint64 id = 1;
 }
-
 message C_ATTACK
 {
 	uint64 id = 1;
 	uint64 skill = 2;
 }
-
 message C_LOGOUT
 {
 	uint64 id = 1;
 }
-
 message S_LOGIN
 {
 	bool success = 1;
 	repeated Player players = 2;
 }
-
 message S_ADD_OBJECT
 {
 	repeated AddPlayer players = 1;

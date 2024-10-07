@@ -18,7 +18,7 @@ public:
 public:
 	bool							IsNpc(uint64 _myId);
 	bool							DoNpcRandomMove(GameSessionRef& _session);
-	
+
 public:
 	vector<int>						GetRandomDirectionIndices();
 
@@ -26,18 +26,26 @@ public:
 
 public:
 	void							SetCurrentPlayer(const PlayerRef& _player) { currentPlayer = _player; }
-	const PlayerRef&				GetCurrentPlayer() const { return currentPlayer; }
+	const PlayerRef& GetCurrentPlayer() const { return currentPlayer; }
 
 	void							SetViewPlayer(const unordered_set<uint64_t>& _players) { viewPlayer = _players; }
-	const unordered_set<uint64_t>&	GetViewPlayer() const { return viewPlayer; }
+	const unordered_set<uint64_t>& GetViewPlayer() const { return viewPlayer; }
 	void							AddViewPlayer(const uint64 _id) { WRITE_LOCK; viewPlayer.insert(_id); }
 	void							SetRoom(const weak_ptr<Room>& _roomPtr) { room = _roomPtr; }
 	weak_ptr<Room>					GetRoom() const { return room; }
 	uint64							GetId() const { return myId; }
 	void							SetId(uint64 _id) { myId = _id; }
-
-
 	void							RoomReset() { room.reset(); };
+public:
+	bool							CanGo(POS _pos);
+	void							ResetPath();
+	void							SetPath(POS _dest, map<POS, POS>& _parent);
+	bool							EmptyPath();
+	uint32							GetPathIndex() { return pathIndex; };
+	void							SetPathIndex(uint32 _path) { pathIndex = _path; };
+	vector<POS>						GetPath() { return path; };
+	uint32							GetPathCount() { return pathCount; };
+	void							SetPathCount(uint32 _count) { pathCount = _count; };
 
 public:
 	void							RemovePkt(uint64 _id);
@@ -49,6 +57,7 @@ public:
 	void							StatChangePkt(int32 _level, int32 _hp, int32 _maxhp, int32 _mp, int32 _maxmp, int32 _exp, int32 _maxexp);
 	void							LoginPkt(bool _success, uint64 _id, Protocol::PlayerType _pt, string _name, POS _pos, STAT _stat);
 	void							LoginPkt(bool _success);
+
 private:
 	USE_LOCK;
 	PlayerRef currentPlayer;
@@ -56,6 +65,10 @@ private:
 	weak_ptr<Room> room;
 
 	uint64			myId;
+
+	vector<POS>		path;
+	uint32			pathIndex = 1;
+	uint32			pathCount = 0;
 private:
 	const array<pair<int, int>, 4> directions = { { {0,1}, {0,-1}, {1, 0}, {-1, 0} } };
 

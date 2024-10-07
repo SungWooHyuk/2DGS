@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "utils.h"
 #include "MapData.h"
 #include "GameSession.h"
 #include "GameSessionManager.h"
@@ -54,6 +55,50 @@ vector<int> GameSession::GetRandomDirectionIndices()
 	std::mt19937 g(rd());
 	std::shuffle(indices.begin(), indices.end(), g);
 	return indices;
+}
+
+bool GameSession::CanGo(POS _pos)
+{
+	if (MAPDATA->GetTile(_pos.posy, _pos.posx) == MAPDATA->e_PLAT)
+		return true;
+	return false;
+}
+
+void GameSession::ResetPath()
+{
+	if (!path.empty()) {
+		path.clear();
+		pathIndex = 1;
+		pathCount = 0;
+	}
+}
+
+void GameSession::SetPath(POS _dest, map<POS, POS>& _parent)
+{
+	POS pos = _dest;
+
+	path.clear();
+	pathIndex = 1;
+	pathCount = 0;
+	while (true)
+	{
+		path.push_back(pos);
+
+		if (pos == _parent[pos])
+			break;
+
+		pos = _parent[pos];
+	}
+
+	reverse(path.begin(), path.end());
+}
+
+bool GameSession::EmptyPath()
+{
+	if (path.empty())
+		return true;
+	else
+		return false;
 }
 
 void GameSession::RemovePkt(uint64 _id)

@@ -55,6 +55,42 @@ enum S_STATE
 	ST_SLEEP
 };
 
+struct POS
+{
+	int32	posx;
+	int32	posy;
+
+	bool operator==(const POS& other) const {
+		return posx == other.posx && posy == other.posy;
+	}
+
+	POS operator+(const POS& other) const {
+		return { posx + other.posx, posy + other.posy };  // 더 간결하게 초기화
+	}
+
+	// 비교 연산자 추가
+	bool operator<(const POS& other) const {
+		return std::tie(posy, posx) < std::tie(other.posy, other.posx); // posy가 같으면 posx 비교
+	}
+
+	bool operator>(const POS& other) const {
+		return std::tie(posy, posx) > std::tie(other.posy, other.posx); // posy가 같으면 posx 비교
+	}
+
+};
+
+struct PQNode
+{
+	int32 f; // f = g + h
+	int32 g;
+	POS pos;
+
+	bool operator<(const PQNode& other) const { return f < other.f; }
+	bool operator>(const PQNode& other) const { return f > other.f; }
+
+};
+
+enum { DIR_COUNT = 8 };
 
 struct STAT
 {
@@ -80,15 +116,7 @@ struct SAVEDB
 	int32	maxMp;
 	int32	maxExp;
 };
-struct POS
-{
-	int32	posx;
-	int32	posy;
 
-	bool operator==(const POS& other) const {
-		return posx == other.posx && posy == other.posy;
-	}
-};
 
 struct TP
 {

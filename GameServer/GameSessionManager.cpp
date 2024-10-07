@@ -1,5 +1,5 @@
 #include "pch.h"
-
+#include "utils.h"
 #include <sstream>
 #include "GameSessionManager.h"
 #include "ClientPacketHandler.h"
@@ -35,7 +35,7 @@ void GameSessionManager::Remove(GameSessionRef _session)
 	for (const auto& _vl : vl)
 	{
 		if (false == IsPlayer(_vl)) continue;
-		if (_vl == id) continue; 
+		if (_vl == id) continue;
 		if (PLAYER(_vl)->GetState() != ST_INGAME) continue;
 		if (sessions[_vl]->GetCurrentPlayer()->GetPT() == Protocol::PLAYER_TYPE_DUMMY) continue;
 
@@ -125,9 +125,10 @@ int GameSessionManager::GetNewClientId()
 	return -1;
 }
 
-void GameSessionManager::WakeNpc(PlayerRef _player)
+void GameSessionManager::WakeNpc(PlayerRef _player, PlayerRef _toPlayer)
 {
 	PlayerRef player = _player;
+	PlayerRef target = _toPlayer;
 	unordered_set<uint64> vl = ROOMMANAGER->ViewList(player->GetOwnerSession(), true);
 	{
 		WRITE_LOCK;
@@ -139,7 +140,8 @@ void GameSessionManager::WakeNpc(PlayerRef _player)
 	bool old_state = false;
 	if (false == atomic_compare_exchange_strong(&player->active, &old_state, true))
 		return; // 한쓰레드만 접근하게 
-	DoTimer(1000, &GameSessionManager::NpcRandomMove, player->GetId());
+	//NpcAstar(player->GetId(), target->GetId()); // 위에서 깨워준거니까 다시 해도된다. false로 바뀌었을땐 이미 path clear 진행했기때문에
+	DoTimer(1000, &GameSessionManager::NpcAstarMove, player->GetId());
 }
 
 void GameSessionManager::NpcRandomMove(uint64 _id)
@@ -163,6 +165,56 @@ void GameSessionManager::NpcRandomMove(uint64 _id)
 		npc->active = false;
 }
 
+void GameSessionManager::NpcAstarMove(uint64 _id)
+{
+	PlayerRef npc;
+	{
+		READ_LOCK;
+		npc = sessions[_id]->GetCurrentPlayer();
+	}
+
+	unordered_set<uint64_t> viewPlayer = sessions[_id]->GetViewPlayer();
+	int32_t closestDistance = INT32_MAX;
+	uint64_t closestPlayerId = 0;
+
+	if (viewPlayer.size() > 0) {
+		if (sessions[_id]->GetCurrentPlayer()->GetState() == ST_INGAME)
+		{
+			cout << sessions[_id]->GetPathCount() << endl;
+			if (sessions[_id]->GetPathCount() > 3)
+			{
+				for (auto id : viewPlayer)
+				{
+					if (sessions[id]->GetCurrentPlayer()->GetPT() == Protocol::PLAYER_TYPE_CLIENT)
+					{
+						POS playerPos = sessions[id]->GetCurrentPlayer()->GetPos();
+
+						int32_t distance = abs(sessions[_id]->GetCurrentPlayer()->GetPos().posx - playerPos.posx) + abs(sessions[_id]->GetCurrentPlayer()->GetPos().posy - playerPos.posy);
+
+
+						if (distance < closestDistance) {
+							closestDistance = distance;
+							closestPlayerId = id;
+						}
+					}
+				}
+			}
+
+			NpcAstar(sessions[_id]->GetCurrentPlayer()->GetId(), closestPlayerId);
+			DoNpcAstarMove(_id);
+			DoTimer(1000, &GameSessionManager::NpcAstarMove, _id);
+		}
+		else {
+			npc->active = false;
+			npc->GetOwnerSession()->ResetPath();
+		}
+	}
+	else {
+		npc->active = false;
+		npc->GetOwnerSession()->ResetPath();
+	}
+}
+
 bool GameSessionManager::DoNpcRandomMove(uint64 _id)
 {
 	GameSessionRef gamesession = sessions[_id];
@@ -180,6 +232,140 @@ bool GameSessionManager::DoNpcRandomMove(uint64 _id)
 	HandleNPCViewListChanges(gamesession, player, old_vl, new_vl);
 
 	return true;
+}
+
+bool GameSessionManager::DoNpcAstarMove(uint64 _id)
+{
+	GameSessionRef gamesession = sessions[_id];
+	PlayerRef player = gamesession->GetCurrentPlayer();
+	unordered_set<uint64> old_vl;
+	{
+		READ_LOCK;
+		old_vl = gamesession->GetViewPlayer();
+	}
+
+	AstarMove(gamesession);
+
+	unordered_set<uint64> new_vl = ROOMMANAGER->ViewList(gamesession, true);
+
+	HandleNPCViewListChanges(gamesession, player, old_vl, new_vl);
+
+	return true;
+}
+
+void GameSessionManager::AstarMove(GameSessionRef& _session)
+{
+	GameSessionRef gamesession = _session;
+	int index = gamesession->GetPathIndex();
+	vector<POS> v = gamesession->GetPath();
+	int size = v.size();
+	if (index >= size)
+	{
+		{
+			WRITE_LOCK;
+			gamesession->GetCurrentPlayer()->SetPos(v[index - 1]);
+		}
+	}
+	else
+	{
+		{
+			WRITE_LOCK;
+			gamesession->GetCurrentPlayer()->SetPos(v[index]);
+		}
+
+		gamesession->SetPathIndex(index + 1);
+	}
+
+}
+
+void GameSessionManager::NpcAstar(uint64 _id, uint64 _destId)
+{
+	GameSessionRef gamesession = sessions[_id];
+	PlayerRef player = gamesession->GetCurrentPlayer();
+
+	if (gamesession->GetPathCount() < 3) // 비어있을때만 진행해준다. 즉, 현재 경로가없으면.
+	{
+		gamesession->SetPathCount(0);
+		// 점수 매기기
+	// F = G+H
+	// F = 최종점수 ( 작을 수록 좋고, 경로에 따라 달라짐 )
+	// G = 시작점에서 해당 좌표까지 이동하는데 드는 비용 (작을수록 좋고, 경로에 따라 달라짐)
+	// H = 목적지에서 얼마나 가까운지 ( 작을 수록 좋음, 고정 )
+
+		POS start = player->GetPos(); // NPC의 현재위치 start
+		POS dest = sessions[_destId]->GetCurrentPlayer()->GetPos();// 나를 깨운 player
+
+
+		//방문 여부
+		vector<vector<bool>> closed(W_HEIGHT, vector<bool>(W_WIDTH, false));
+		//최고값
+		vector<vector<int>> best(W_HEIGHT, vector<int>(W_WIDTH, INT32_MAX));
+		//부모 추적
+		map<POS, POS> parent;
+		//open list -> 이거 concurrent 쓸지말지 고민 - 쓰레드세이프한거
+		priority_queue<PQNode, vector<PQNode>, greater<PQNode>> pq;
+		// 1. 예약(발견) 시스템 구현
+		// - 여기서 이미 더 좋은 경로를 찾았다면 스킵
+		// 2. 뒤늦게 더 좋은 경로가 발견될시에는 예외처리 필수적으로
+		// - openlist에서 찾아서 제거하거나
+		// - pq에서 pop한 다음에 무시한다거나
+
+		// 초기값
+		{
+			int32 g = 0;
+			int32 h = 10 * (abs(dest.posy - start.posy) + abs(dest.posx - start.posx));
+			pq.push(PQNode{ g + h, g, start }); // 초기값 넣기
+			best[start.posy][start.posx] = g + h; // 당연한것
+			parent[start] = start; // 초기값의 부모는 나
+		}
+
+		while (pq.empty() == false)
+		{
+			// 제일 좋은 후보를 찾아준다.
+			PQNode node = pq.top();
+			pq.pop();
+
+			// 동일한 좌표를 여러 경로로 찾을 예정이다.
+			// 거기서 더 빠른 경로로 인해서 이미 방문 즉, 닫힌 경우엔 스킵
+			// 선택
+			if (closed[node.pos.posy][node.pos.posx])
+				continue;
+			if (best[node.pos.posy][node.pos.posx] < node.f)
+				continue;
+
+			closed[node.pos.posy][node.pos.posx] = true;
+
+			if (node.pos == dest) // 도착
+				break;
+
+			for (int32 dir = 0; dir < DIR_COUNT; dir++)
+			{
+				POS nextPos = node.pos + dirs[dir];
+
+				if (gamesession->CanGo(nextPos) == false)
+					continue;
+				if (closed[nextPos.posy][nextPos.posx])
+					continue;
+
+				// 자 이제 계산
+				int32 g = node.g + cost[dir];
+				int32 h = 10 * (abs(dest.posy - nextPos.posy) + abs(dest.posx - nextPos.posx));
+
+				// 다른 경로에서 더 빠른 길을 찾았으면 스킵
+				if (best[nextPos.posy][nextPos.posx] <= g + h)
+					continue; // 베스트가 더 적다. 즉 이 길이 아니다.
+
+				// 오 여기가 제일 빠르네
+				best[nextPos.posy][nextPos.posx] = g + h;
+				pq.push(PQNode{ g + h, g, nextPos });
+				parent[nextPos] = node.pos;
+			}
+		}
+
+		gamesession->SetPath(dest, parent); // 이제 gamesession의 path에 내가 가야하는 길들이 저장된다.
+	}
+	else
+		gamesession->SetPathCount(gamesession->GetPathCount() + 1);
 }
 
 void GameSessionManager::Attack(GameSessionRef& _session, uint64 _id, uint64 _skill)
@@ -204,8 +390,8 @@ void GameSessionManager::Move(GameSessionRef& _session, uint64 _direction, int64
 	GameSessionRef gamesession = _session;
 	PlayerRef player = gamesession->GetCurrentPlayer();
 	unordered_set<uint64> old_vl;
-	
-	{ 
+
+	{
 		READ_LOCK;
 		old_vl = gamesession->GetViewPlayer();
 	}
@@ -349,7 +535,7 @@ void GameSessionManager::UpdateViewList(GameSessionRef& _gamesession, PlayerRef&
 		{
 			if (sessions[pl]->GetViewPlayer().count(_player->GetId()))
 				sessions[pl]->MovePkt(_player->GetId(), _player->GetPos(), _movetime);
-			else{
+			else {
 				sessions[pl]->AddViewPlayer(_player->GetId());
 				sessions[pl]->AddObjectPkt(_player->GetPT(), _player->GetId(), _player->GetName(), _player->GetPos());
 			}
@@ -480,9 +666,9 @@ void GameSessionManager::HandleAttack(uint64 _attackerId, uint64 _targetId)
 
 	if (PLSTAT(_targetId).hp <= 0) // Target died
 		HandleNPCDeath(_attackerId, _targetId);
-	else		
+	else
 		BroadcastAttackMessage(_attackerId, _targetId);
-	
+
 }
 
 void GameSessionManager::HandleNPCDeath(uint64 _attackerId, uint64 _targetId)

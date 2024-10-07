@@ -1,1 +1,2 @@
 D:\GS_Term\GameServer\Client\x64\Release\Client.vcxproj.CopyComplete
+D:\2DGS\Client\x64\Release\Client.vcxproj.CopyComplete

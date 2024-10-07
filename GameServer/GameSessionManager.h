@@ -20,15 +20,19 @@ public:
 	void			PlayerRespawn(uint64 _id);
 
 	int				GetNewClientId();
-	
+
 	void			NpcRandomMove(uint64 _id);
+	void			NpcAstarMove(uint64 _id);
 	bool			DoNpcRandomMove(uint64 _id);
+	bool			DoNpcAstarMove(uint64 _id);
+	void			AstarMove(GameSessionRef& _session);
+	void			NpcAstar(uint64 _id, uint64 _destId);
 	void			Attack(GameSessionRef& _session, uint64 _id, uint64 _skill);
 	void			Move(GameSessionRef& _session, uint64 _direction, int64 _movetime);
 	void			Chat(GameSessionRef& _session, string _mess);
 	bool			IsPlayer(uint64 _id);
 	void			InitializeNPC();
-	void			WakeNpc(PlayerRef _player);
+	void			WakeNpc(PlayerRef _player, PlayerRef _toPlayer);
 	GameSessionRef	GetSession(uint64 _id);
 	bool			SaveDBPlayer(uint64 _id);
 
@@ -62,6 +66,28 @@ private:
 private:
 	const array<pair<int, int>, 4> directions = { { {0,1}, {0,-1}, {1, 0}, {-1, 0} } };
 
+	POS dirs[8] =
+	{ POS { -1, 0},	// UP
+		POS { 0, -1},	// LEFT
+		POS { 1, 0},	// DOWN
+		POS { 0, 1},	// RIGHT
+		POS {-1, -1},	// UP_LEFT
+		POS {1, -1},	// DOWN_LEFT
+		POS {1, 1},		// DOWN_RIGHT
+		POS {-1, 1}	// UP_RIGHT 
+	};
+
+	int32 cost[8] =
+	{
+		10,
+		10,
+		10,
+		10,
+		14,
+		14,
+		14,
+		14
+	};
 };
 
 extern shared_ptr<GameSessionManager> GGameSessionManager;
