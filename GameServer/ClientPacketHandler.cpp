@@ -29,7 +29,7 @@ bool Handle_C_LOGIN(PacketSessionRef& session, Protocol::C_LOGIN& pkt)
 
 		ROOMMANAGER->EnterRoom(gamesession);
 		POS pos = { player->POSX, player->POSY };
-		STAT stat = { PLAYERSTAT.level, PLAYERSTAT.hp, PLAYERSTAT.mp, PLAYERSTAT.exp, PLAYERSTAT.maxHp, PLAYERSTAT.maxMp, PLAYERSTAT.maxExp };
+		STAT stat = { player->GetStat().level, player->GetStat().hp, player->GetStat().mp, player->GetStat().exp, player->GetStat().maxHp, player->GetStat().maxMp, player->GetStat().maxExp };
 		gamesession->LoginPkt(true, player->GetId(), player->GetPT(), player->GetName(), pos, stat);
 
 		unordered_set<uint64> vl = ROOMMANAGER->ViewList(gamesession, false);

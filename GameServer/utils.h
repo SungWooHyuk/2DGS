@@ -156,10 +156,6 @@ enum SystemBox
 #define ROOMMANAGER			GRoomManager
 #define GAMESESSIONMANAGER	GGameSessionManager
 
-#define PLAYER(id)			(sessions[(id)]->GetCurrentPlayer())
-#define PLSTAT(id)   		(sessions[(id)]->GetCurrentPlayer())->GetStat()
-#define PLAYERSTAT			player->GetStat()
-
 #define PLAYERMOVETIME		session->GetPlayer()->GetTP().moveTime
 #define NOW					chrono::system_clock::now()
 

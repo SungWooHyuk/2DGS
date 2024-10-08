@@ -25,7 +25,7 @@ public:
 	void			NpcAstarMove(uint64 _id);
 	bool			DoNpcRandomMove(uint64 _id);
 	bool			DoNpcAstarMove(uint64 _id);
-	void			AstarMove(GameSessionRef& _session);
+	void			AstarMove(GameSessionRef& _session,PlayerRef& _player);
 	void			NpcAstar(uint64 _id, uint64 _destId);
 	void			Attack(GameSessionRef& _session, uint64 _id, uint64 _skill);
 	void			Move(GameSessionRef& _session, uint64 _direction, int64 _movetime);
@@ -67,14 +67,14 @@ private:
 	const array<pair<int, int>, 4> directions = { { {0,1}, {0,-1}, {1, 0}, {-1, 0} } };
 
 	POS dirs[8] =
-	{ POS { -1, 0},	// UP
-		POS { 0, -1},	// LEFT
-		POS { 1, 0},	// DOWN
-		POS { 0, 1},	// RIGHT
-		POS {-1, -1},	// UP_LEFT
-		POS {1, -1},	// DOWN_LEFT
-		POS {1, 1},		// DOWN_RIGHT
-		POS {-1, 1}	// UP_RIGHT 
+	{	POS { -1,  0},		// UP
+		POS {  0, -1},		// LEFT
+		POS {  1,  0},		// DOWN
+		POS {  0,  1},		// RIGHT
+		POS { -1, -1},		// UP_LEFT
+		POS {  1, -1},		// DOWN_LEFT
+		POS {  1,  1},		// DOWN_RIGHT
+		POS { -1,  1}		// UP_RIGHT 
 	};
 
 	int32 cost[8] =

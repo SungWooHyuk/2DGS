@@ -38,15 +38,6 @@ void GameSession::OnSend(int32 len)
 {
 }
 
-bool GameSession::IsNpc(uint64 _myId)
-{
-	return _myId > MAX_USER;
-}
-
-bool GameSession::DoNpcRandomMove(GameSessionRef& _session)
-{
-	return false;
-}
 
 vector<int> GameSession::GetRandomDirectionIndices()
 {
@@ -66,8 +57,8 @@ bool GameSession::CanGo(POS _pos)
 
 void GameSession::ResetPath()
 {
+	WRITE_LOCK;
 	if (!path.empty()) {
-		WRITE_LOCK;
 		path.clear();
 		pathIndex = 1;
 		pathCount = 0;
@@ -81,6 +72,7 @@ void GameSession::SetPath(POS _dest, map<POS, POS>& _parent)
 	path.clear();
 	pathIndex = 1;
 	pathCount = 0;
+
 	while (true)
 	{
 		path.push_back(pos);
@@ -96,6 +88,7 @@ void GameSession::SetPath(POS _dest, map<POS, POS>& _parent)
 
 bool GameSession::EmptyPath()
 {
+	READ_LOCK;
 	if (path.empty())
 		return true;
 	else
