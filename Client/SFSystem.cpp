@@ -13,10 +13,10 @@ SFSystem::SFSystem()
 	InitText();
 	InitBox();
 
-	board			=		new sf::Texture;
-	player			=		new sf::Texture;
-	monster			=		new sf::Texture;
-	player_attack	=		new sf::Texture;
+	board = new sf::Texture;
+	player = new sf::Texture;
+	monster = new sf::Texture;
+	player_attack = new sf::Texture;
 
 	ASSERT_CRASH(board->loadFromFile("./Image/maps.bmp"));
 	ASSERT_CRASH(player->loadFromFile("./Image/Player.png"));
@@ -70,13 +70,13 @@ void SFSystem::InitBox()
 	{
 		box[i].setSize(sf::Vector2f(BOX));
 		box[i].setFillColor(sf::Color(WHITE));
-		box[i].setPosition(sf::Vector2f(INFORMATION_X, INFORMATION_HP_Y + i*100));
+		box[i].setPosition(sf::Vector2f(INFORMATION_X, INFORMATION_HP_Y + i * 100));
 		box[i].setOutlineThickness(OUTLINETHICK);
 		box[i].setOutlineColor(sf::Color::Green);
 	}
 
 	for (int i = 3; i < 6; ++i)
-		box[i].setPosition(sf::Vector2f(INFORMATION_X, INFORMATION_HP_Y + (i-3) * 100));
+		box[i].setPosition(sf::Vector2f(INFORMATION_X, INFORMATION_HP_Y + (i - 3) * 100));
 
 	box[SystemBox::HPINNERBOX].setFillColor(sf::Color(RED));
 	box[SystemBox::MPINNERBOX].setFillColor(sf::Color(BLUE));
@@ -90,7 +90,7 @@ void SFSystem::SetText(SystemText _st, const char _str[])
 
 void SFSystem::SetChat(const string& _mess)
 {
-	if (systemChat.size() == 10)
+	if (systemChat.size() >= 10)
 		systemChat.erase(systemChat.begin());
 
 	sf::Text text;
@@ -155,8 +155,8 @@ void SFSystem::Update(ServerSessionRef& _session)
 
 	session->GetPlayer()->Draw();
 	for (auto& pl : session->GetClients())
-			pl.second->Draw();
-	
+		pl.second->Draw();
+
 	Draw();
 }
 
@@ -164,7 +164,7 @@ void SFSystem::Draw()
 {
 	for (int i = 0; i < text.size(); ++i)
 		window->draw(text[i]);
-	
+
 	for (int i = 0; i < box.size(); ++i)
 		window->draw(box[i]);
 
@@ -173,6 +173,7 @@ void SFSystem::Draw()
 		systemChat[i].setPosition(1040, 35 * i);
 		window->draw(systemChat[i]);
 	}
+
 }
 
 

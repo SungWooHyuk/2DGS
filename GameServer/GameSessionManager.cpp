@@ -27,14 +27,13 @@ void GameSessionManager::Remove(GameSessionRef _session)
 {
 	GameSessionRef gamesession;
 	{
-		READ_LOCK;
 		gamesession = _session;
 		int id = gamesession->GetCurrentPlayer()->GetId();
 
 		if (gamesession->GetCurrentPlayer()->GetPT() == Protocol::PLAYER_TYPE_CLIENT)
 			ASSERT_CRASH(SaveDBPlayer(id));
 
-		unordered_set<uint64> vl = sessions[id]->GetViewPlayer(); // Lock 체크
+		unordered_set<uint64> vl = sessions[id]->GetViewPlayer();
 		for (const auto& _vl : vl)
 		{
 			if (false == IsPlayer(_vl)) continue;
@@ -47,10 +46,13 @@ void GameSessionManager::Remove(GameSessionRef _session)
 		}
 	}
 	{
-		WRITE_LOCK;
+
 		freeId.push(gamesession->GetCurrentPlayer()->GetId());
+
+		sessions[gamesession->GetCurrentPlayer()->GetId()]->s_lock.lock();
 		sessions[gamesession->GetCurrentPlayer()->GetId()]->GetCurrentPlayer()->SetState(ST_FREE);
 		sessions[gamesession->GetCurrentPlayer()->GetId()].reset();
+		sessions[gamesession->GetCurrentPlayer()->GetId()]->s_lock.unlock();
 	}
 }
 
@@ -69,18 +71,19 @@ void GameSessionManager::Respawn(GameSessionRef _session)
 	GameSessionRef gamesession;
 	PlayerRef player;
 	{
-		READ_LOCK;
 		gamesession = _session;
 		player = gamesession->GetCurrentPlayer();
 	}
 
 	ROOMMANAGER->EnterRoom(_session); // 룸 다시 입장.
 
+	gamesession->s_lock.lock();
 	player->SetStatHp(player->GetStat().maxHp);
+	gamesession->s_lock.unlock();
 
 	unordered_set<uint64> vl = ROOMMANAGER->ViewList(gamesession, true);
 	gamesession->SetViewPlayer(vl);
-	
+
 	for (auto _vl : vl)
 	{
 		POS plPos = { gamesession->GetCurrentPlayer()->POSX, gamesession->GetCurrentPlayer()->POSY };
@@ -94,8 +97,9 @@ void GameSessionManager::Respawn(GameSessionRef _session)
 	}
 
 	{
-		WRITE_LOCK;
+		gamesession->s_lock.lock();
 		gamesession->GetCurrentPlayer()->SetState(ST_INGAME);
+		gamesession->s_lock.unlock();
 	}
 }
 
@@ -103,11 +107,12 @@ void GameSessionManager::PlayerRespawn(uint64 _id)
 {
 	POS pos{ TOWN };
 	{
-		WRITE_LOCK;
+		sessions[_id]->s_lock.lock();
 		sessions[_id]->GetCurrentPlayer()->SetStatHp(sessions[_id]->GetCurrentPlayer()->GetStat().maxHp);
 		sessions[_id]->GetCurrentPlayer()->SetPos(pos);
 		sessions[_id]->GetCurrentPlayer()->SetStatExp(sessions[_id]->GetCurrentPlayer()->GetStat().exp / 2);
 		sessions[_id]->GetCurrentPlayer()->SetState(ST_INGAME);
+		sessions[_id]->s_lock.unlock();
 	}
 	ROOMMANAGER->EnterRoom(sessions[_id]);
 	sessions[_id]->RespawnPkt(sessions[_id]->GetCurrentPlayer()->GetStat().hp, pos, sessions[_id]->GetCurrentPlayer()->GetStat().exp);
@@ -140,7 +145,6 @@ void GameSessionManager::WakeNpc(PlayerRef _player, PlayerRef _toPlayer)
 	PlayerRef player;
 	PlayerRef target;
 	{
-		READ_LOCK;
 		player = _player;
 		target = _toPlayer;
 	}
@@ -161,7 +165,6 @@ void GameSessionManager::NpcRandomMove(uint64 _id)
 	GameSessionRef gamesession;
 	PlayerRef npc;
 	{
-		READ_LOCK;
 		gamesession = sessions[_id];
 		npc = gamesession->GetCurrentPlayer();
 	}
@@ -184,7 +187,6 @@ void GameSessionManager::NpcAstarMove(uint64 _id)
 	PlayerRef npc;
 	GameSessionRef gamesession;
 	{
-		READ_LOCK;
 		gamesession = sessions[_id];
 		npc = gamesession->GetCurrentPlayer();
 	}
@@ -242,7 +244,6 @@ bool GameSessionManager::DoNpcRandomMove(uint64 _id)
 	GameSessionRef gamesession;
 	PlayerRef player;
 	{
-		READ_LOCK;
 		gamesession = sessions[_id];
 		player = gamesession->GetCurrentPlayer();
 	}
@@ -264,7 +265,6 @@ bool GameSessionManager::DoNpcAstarMove(uint64 _id)
 	GameSessionRef gamesession;
 	PlayerRef player;
 	{
-		READ_LOCK;
 		gamesession = sessions[_id];
 		player = gamesession->GetCurrentPlayer();
 	}
@@ -283,9 +283,10 @@ bool GameSessionManager::DoNpcAstarMove(uint64 _id)
 void GameSessionManager::AstarMove(GameSessionRef& _session, PlayerRef& _player)
 {
 	GameSessionRef gamesession;
+	PlayerRef player;
 	{
-		READ_LOCK;
 		gamesession = _session;
+		player = _player;
 	}
 
 	int index = gamesession->GetPathIndex();
@@ -293,21 +294,23 @@ void GameSessionManager::AstarMove(GameSessionRef& _session, PlayerRef& _player)
 	int size = v.size();
 
 	gamesession->SetPathCount(gamesession->GetPathCount() + 1);
-	
+
 	if (!v.empty())
 	{
 		if (index >= size)
 		{
 			{
-				WRITE_LOCK;
-				_player->SetPos(v[index - 1]);
+				player->GetOwnerSession()->s_lock.lock();
+				player->SetPos(v[index - 1]);
+				player->GetOwnerSession()->s_lock.unlock();
 			}
 		}
 		else
 		{
 			{
-				WRITE_LOCK;
-				_player->SetPos(v[index]);
+				player->GetOwnerSession()->s_lock.lock();
+				player->SetPos(v[index]);
+				player->GetOwnerSession()->s_lock.unlock();
 			}
 
 			gamesession->SetPathIndex(index + 1);
@@ -321,7 +324,6 @@ void GameSessionManager::NpcAstar(uint64 _id, uint64 _destId)
 	GameSessionRef dest_gamesession;
 	PlayerRef player;
 	{
-		READ_LOCK;
 		gamesession = sessions[_id];
 		dest_gamesession = sessions[_destId];
 		player = gamesession->GetCurrentPlayer();
@@ -419,7 +421,6 @@ void GameSessionManager::Move(GameSessionRef& _session, uint64 _direction, int64
 	GameSessionRef gamesession;
 	PlayerRef player;
 	{
-		READ_LOCK;
 		gamesession = _session;
 		player = gamesession->GetCurrentPlayer();
 	}
@@ -452,11 +453,9 @@ bool GameSessionManager::SaveDBPlayer(uint64 _id)
 	GameSessionRef gamesession;
 	SAVEDB db;
 	{
-		READ_LOCK;
 		gamesession = sessions[_id];
 	}
 	{
-		READ_LOCK;
 		db.level = gamesession->GetCurrentPlayer()->GetStat().level;
 		db.hp = gamesession->GetCurrentPlayer()->GetStat().hp;
 		db.maxHp = gamesession->GetCurrentPlayer()->GetStat().maxHp;
@@ -475,7 +474,6 @@ void GameSessionManager::UpdatePlayerPosition(PlayerRef& _player, uint64 _direct
 {
 	PlayerRef player;
 	{
-		READ_LOCK;
 		player = _player;
 	}
 	POS pos{ player->POSX, player->POSY };
@@ -501,8 +499,9 @@ void GameSessionManager::UpdatePlayerPosition(PlayerRef& _player, uint64 _direct
 	}
 
 	{
-		WRITE_LOCK;
+		player->GetOwnerSession()->s_lock.lock();
 		player->SetPos(pos);
+		player->GetOwnerSession()->s_lock.unlock();
 	}
 }
 
@@ -511,7 +510,6 @@ void GameSessionManager::HandleCollisions(GameSessionRef& _gamesession, PlayerRe
 	GameSessionRef gamesession;
 	PlayerRef player;
 	{
-		READ_LOCK;
 		gamesession = _gamesession;
 		player = _player;
 	}
@@ -523,7 +521,9 @@ void GameSessionManager::HandleCollisions(GameSessionRef& _gamesession, PlayerRe
 			if (sessions[vl]->GetCurrentPlayer()->GetPos() == player->GetPos())
 			{
 				{
+					player->GetOwnerSession()->s_lock.lock();
 					player->UpdateStatHp(sessions[vl]->GetCurrentPlayer()->GetStat().level * -5);
+					player->GetOwnerSession()->s_lock.unlock();
 				}
 
 				if (player->GetStat().hp <= 0)
@@ -558,20 +558,21 @@ void GameSessionManager::HandlePlayerDeath(GameSessionRef& _gamesession, PlayerR
 	GameSessionRef gamesession;
 	PlayerRef player;
 	{
-		READ_LOCK;
 		gamesession = _gamesession;
 		player = _player;
 	}
 
 	for (int i = 0; i < MAX_USER; ++i)
 	{
+		READ_LOCK;
 		if (sessions[i] != nullptr)
 			sessions[i]->RemovePkt(player->GetId());
 	}
 
 	{
-		WRITE_LOCK;
+		player->GetOwnerSession()->s_lock.lock();
 		player->SetState(ST_FREE);
+		player->GetOwnerSession()->s_lock.unlock();
 	}
 
 	gamesession->ResetViewPlayer();
@@ -590,7 +591,6 @@ void GameSessionManager::UpdateViewList(GameSessionRef& _gamesession, PlayerRef&
 	GameSessionRef gamesession;
 	PlayerRef player;
 	{
-		READ_LOCK;
 		gamesession = _gamesession;
 		player = _player;
 	}
@@ -636,7 +636,6 @@ void GameSessionManager::HandleNpcCollision(PlayerRef& _player, uint64 _pl)
 {
 	PlayerRef player;
 	{
-		READ_LOCK;
 		player = _player;
 	}
 
@@ -645,8 +644,11 @@ void GameSessionManager::HandleNpcCollision(PlayerRef& _player, uint64 _pl)
 		{
 
 			int32 damage = sessions[_player->GetId()]->GetCurrentPlayer()->GetStat().level * 5;
+
+			sessions[_pl]->s_lock.lock();
 			sessions[_pl]->GetCurrentPlayer()->UpdateStatHp(damage * -1);
-			
+			sessions[_pl]->s_lock.unlock();
+
 			sessions[_pl]->StatChangePkt(
 				sessions[_pl]->GetCurrentPlayer()->GetStat().level,
 				sessions[_pl]->GetCurrentPlayer()->GetStat().hp,
@@ -666,8 +668,9 @@ void GameSessionManager::HandleNpcCollision(PlayerRef& _player, uint64 _pl)
 			if (sessions[_pl]->GetCurrentPlayer()->GetStat().hp <= 0)
 			{
 				{
-					WRITE_LOCK;
+					sessions[_pl]->s_lock.lock();
 					sessions[_pl]->GetCurrentPlayer()->SetState(ST_FREE);
+					sessions[_pl]->s_lock.unlock();
 				}
 				DoTimer(10, &GameSessionManager::PlayerRespawn, _pl);
 			}
@@ -680,7 +683,6 @@ void GameSessionManager::HandleNPCViewListChanges(GameSessionRef& _gamesession, 
 	GameSessionRef gamesession;
 	PlayerRef player;
 	{
-		READ_LOCK;
 		gamesession = _gamesession;
 		player = _player;
 	}
@@ -732,7 +734,6 @@ void GameSessionManager::MoveNpcToRandomPosition(GameSessionRef& _gamesession, P
 	GameSessionRef gamesession;
 	PlayerRef player;
 	{
-		READ_LOCK;
 		gamesession = _gamesession;
 		player = _player;
 	}
@@ -747,8 +748,9 @@ void GameSessionManager::MoveNpcToRandomPosition(GameSessionRef& _gamesession, P
 		if (newX >= 0 && newX < W_WIDTH && newY >= 0 && newY < W_HEIGHT && MAPDATA->GetTile(newY, newX) == MAPDATA->e_PLAT) {
 			POS pos = { newX, newY };
 			{
-				WRITE_LOCK;
+				player->GetOwnerSession()->s_lock.lock();
 				player->SetPos(pos);
+				player->GetOwnerSession()->s_lock.unlock();
 			}
 			break;
 		}
@@ -760,7 +762,6 @@ bool GameSessionManager::IsAdjacent(uint64 _attackerId, uint64 _targetId)
 	GameSessionRef attack_gamesession;
 	GameSessionRef target_gamesession;
 	{
-		READ_LOCK;
 		attack_gamesession = sessions[_attackerId];
 		target_gamesession = sessions[_targetId];
 
@@ -776,7 +777,6 @@ void GameSessionManager::HandleAttack(uint64 _attackerId, uint64 _targetId)
 	GameSessionRef attack_gamesession;
 	GameSessionRef target_gamesession;
 	{
-		READ_LOCK;
 		attack_gamesession = sessions[_attackerId];
 		target_gamesession = sessions[_targetId];
 
@@ -785,9 +785,9 @@ void GameSessionManager::HandleAttack(uint64 _attackerId, uint64 _targetId)
 	{
 		if (target_gamesession->GetCurrentPlayer()->GetState() == ST_INGAME)
 		{
-			
+			target_gamesession->s_lock.lock();
 			target_gamesession->GetCurrentPlayer()->UpdateStatHp(attack_gamesession->GetCurrentPlayer()->GetStat().level * -3);
-			
+			target_gamesession->s_lock.unlock();
 
 			if (target_gamesession->GetCurrentPlayer()->GetStat().hp <= 0) // Target died
 				HandleNPCDeath(_attackerId, _targetId);
@@ -802,22 +802,28 @@ void GameSessionManager::HandleNPCDeath(uint64 _attackerId, uint64 _targetId)
 	GameSessionRef attack_gamesession;
 	GameSessionRef target_gamesession;
 	{
-		READ_LOCK;
 		attack_gamesession = sessions[_attackerId];
 		target_gamesession = sessions[_targetId];
 
 	}
-
-	
-	target_gamesession->GetCurrentPlayer()->active = false;
-	target_gamesession->GetCurrentPlayer()->SetState(ST_FREE);
-	attack_gamesession->GetCurrentPlayer()->UpdateStatExp(target_gamesession->GetCurrentPlayer()->GetStat().exp);
-	
+	{
+		target_gamesession->s_lock.lock();
+		target_gamesession->GetCurrentPlayer()->active = false;
+		target_gamesession->GetCurrentPlayer()->SetState(ST_FREE);
+		target_gamesession->s_lock.unlock();
+	}
+	{
+		attack_gamesession->s_lock.lock();
+		attack_gamesession->GetCurrentPlayer()->UpdateStatExp(target_gamesession->GetCurrentPlayer()->GetStat().exp);
+		attack_gamesession->s_lock.unlock();
+	}
 	{
 		if (attack_gamesession->GetCurrentPlayer()->GetStat().exp >= attack_gamesession->GetCurrentPlayer()->GetStat().maxExp) // Level up
 		{
 			{
+				attack_gamesession->s_lock.lock();
 				attack_gamesession->GetCurrentPlayer()->LevelUp();
+				attack_gamesession->s_lock.unlock();
 			}
 			attack_gamesession->StatChangePkt(
 				attack_gamesession->GetCurrentPlayer()->GetStat().level,
@@ -854,13 +860,15 @@ void GameSessionManager::HandleNPCDeath(uint64 _attackerId, uint64 _targetId)
 	}
 	for (int i = 0; i < MAX_USER; ++i)
 	{
+		READ_LOCK;
 		if (sessions[i] != nullptr)
 			sessions[i]->RemovePkt(_targetId);
 	}
 
 	{
-		//WRITE_LOCK;
+		target_gamesession->s_lock.lock();
 		target_gamesession->GetCurrentPlayer()->SetState(ST_SLEEP);
+		target_gamesession->s_lock.unlock();
 	}
 	ROOMMANAGER->LeaveRoom(sessions[_targetId]);
 	DoTimer(10000, &GameSessionManager::Respawn, target_gamesession);
@@ -871,7 +879,6 @@ void GameSessionManager::BroadcastAttackMessage(uint64 _attackerId, uint64 _targ
 	GameSessionRef attack_gamesession;
 	GameSessionRef target_gamesession;
 	{
-		READ_LOCK;
 		attack_gamesession = sessions[_attackerId];
 		target_gamesession = sessions[_targetId];
 	}
@@ -890,7 +897,6 @@ void GameSessionManager::BroadcastAttackMessage(uint64 _attackerId, uint64 _targ
 		{
 			for (auto viewerId : viewList)
 			{
-				READ_LOCK;
 				sessions[viewerId]->ChatPkt(_attackerId, chat);
 			}
 		}
@@ -903,7 +909,6 @@ void GameSessionManager::SetupPlayerAndSession(int _id, const string& _name, con
 	PlayerRef player = MakeShared<Player>(_name, _st, _pos, ST_INGAME, 9999, _pt);
 
 	{
-		WRITE_LOCK;
 		player->SetId(_id);
 		session->SetId(_id);
 		session->SetCurrentPlayer(player);
@@ -911,7 +916,6 @@ void GameSessionManager::SetupPlayerAndSession(int _id, const string& _name, con
 	}
 
 	{
-		WRITE_LOCK;
 		sessions[_id] = session;
 	}
 	ROOMMANAGER->EnterRoom(session);

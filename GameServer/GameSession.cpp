@@ -21,7 +21,7 @@ void GameSession::OnDisconnected()
 		if (auto rooms = room.lock())
 			rooms->DoAsync(&Room::Leave, currentPlayer);
 	}
-	WRITE_LOCK;
+	
 	currentPlayer = nullptr;
 }
 
@@ -57,7 +57,7 @@ bool GameSession::CanGo(POS _pos)
 
 void GameSession::ResetPath()
 {
-	WRITE_LOCK;
+	WRITE_LOCK_IDX(1);
 	if (!path.empty()) {
 		path.clear();
 		pathIndex = 1;
@@ -68,7 +68,7 @@ void GameSession::ResetPath()
 void GameSession::SetPath(POS _dest, map<POS, POS>& _parent)
 {
 	POS pos = _dest;
-	WRITE_LOCK;
+	WRITE_LOCK_IDX(1);
 	path.clear();
 	pathIndex = 1;
 	pathCount = 0;
@@ -88,7 +88,6 @@ void GameSession::SetPath(POS _dest, map<POS, POS>& _parent)
 
 bool GameSession::EmptyPath()
 {
-	READ_LOCK;
 	if (path.empty())
 		return true;
 	else

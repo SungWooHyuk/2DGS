@@ -19,15 +19,15 @@ public:
 public:
 	vector<int>						GetRandomDirectionIndices();
 
-	void							RemoveViewPlayer(uint64 _id) { WRITE_LOCK; viewPlayer.erase(_id); };
-	void							SetViewPlayer(const unordered_set<uint64_t>& _players) { WRITE_LOCK; viewPlayer = _players; }
-	const unordered_set<uint64_t>& GetViewPlayer() { READ_LOCK; return viewPlayer; }
-	void							AddViewPlayer(const uint64 _id) { WRITE_LOCK; viewPlayer.insert(_id); }
-	void							ResetViewPlayer() { WRITE_LOCK; viewPlayer.clear(); }
+	void							RemoveViewPlayer(uint64 _id) { WRITE_LOCK_IDX(0); viewPlayer.erase(_id); };
+	void							SetViewPlayer(const unordered_set<uint64_t>& _players) { WRITE_LOCK_IDX(0); viewPlayer = _players; }
+	const unordered_set<uint64_t>& GetViewPlayer() { READ_LOCK_IDX(0); return viewPlayer; }
+	void							AddViewPlayer(const uint64 _id) { WRITE_LOCK_IDX(0); viewPlayer.insert(_id); }
+	void							ResetViewPlayer() { WRITE_LOCK_IDX(0); viewPlayer.clear(); }
 
 
 public:
-	void							SetCurrentPlayer(const PlayerRef& _player) { WRITE_LOCK; currentPlayer = _player; }
+	void							SetCurrentPlayer(const PlayerRef& _player) { currentPlayer = _player; }
 	const PlayerRef& GetCurrentPlayer() const { return currentPlayer; }
 
 	void							SetRoom(const weak_ptr<Room>& _roomPtr) { room = _roomPtr; }
@@ -40,11 +40,11 @@ public:
 	void							ResetPath();
 	void							SetPath(POS _dest, map<POS, POS>& _parent);
 	bool							EmptyPath();
-	uint32							GetPathIndex() { READ_LOCK; return pathIndex; };
-	void							SetPathIndex(uint32 _path) { WRITE_LOCK; pathIndex = _path; };
-	vector<POS>						GetPath() { READ_LOCK; return path; };
-	uint32							GetPathCount() { READ_LOCK; return pathCount; };
-	void							SetPathCount(uint32 _count) { WRITE_LOCK; pathCount = _count; };
+	uint32							GetPathIndex() { READ_LOCK_IDX(1); return pathIndex; };
+	void							SetPathIndex(uint32 _path) { WRITE_LOCK_IDX(1); pathIndex = _path; };
+	vector<POS>						GetPath() { READ_LOCK_IDX(1); return path; };
+	uint32							GetPathCount() { READ_LOCK_IDX(1); return pathCount; };
+	void							SetPathCount(uint32 _count) { WRITE_LOCK_IDX(1); pathCount = _count; };
 
 public:
 	void							RemovePkt(uint64 _id);
@@ -57,8 +57,9 @@ public:
 	void							LoginPkt(bool _success, uint64 _id, Protocol::PlayerType _pt, string _name, POS _pos, STAT _stat);
 	void							LoginPkt(bool _success);
 
+	mutex			s_lock;
 private:
-	USE_LOCK;
+	USE_MANY_LOCKS(2);
 	PlayerRef currentPlayer;
 	unordered_set<uint64> viewPlayer;
 	weak_ptr<Room> room;

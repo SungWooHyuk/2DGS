@@ -47,6 +47,7 @@ public:
 	sf::TcpSocket				socket;
 
 private:
+	USE_LOCK;
 	vector<sf::Text>			text;
 	vector<sf::RectangleShape>	box;
 	vector<sf::Text>			systemChat;
