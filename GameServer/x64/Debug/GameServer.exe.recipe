@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>D:\GS_Term\GameServer\Binary\Debug\GameServer.exe</FullPath>
+      <FullPath>D:\2DGS\Binary\Debug\GameServer.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

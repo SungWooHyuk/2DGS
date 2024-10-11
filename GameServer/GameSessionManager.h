@@ -23,6 +23,7 @@ public:
 
 	void			NpcRandomMove(uint64 _id);
 	void			NpcAstarMove(uint64 _id);
+	void			NpcAstarMoveTo(uint64 _id, uint64 _targetid);
 	bool			DoNpcRandomMove(uint64 _id);
 	bool			DoNpcAstarMove(uint64 _id);
 	void			AstarMove(GameSessionRef& _session,PlayerRef& _player);

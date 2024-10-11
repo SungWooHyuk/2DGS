@@ -90,7 +90,7 @@ struct PQNode
 
 };
 
-enum { DIR_COUNT = 8 };
+enum { DIR_COUNT = 4 };
 
 struct STAT
 {

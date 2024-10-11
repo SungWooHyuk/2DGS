@@ -14,7 +14,6 @@ DataBase* DataBase::GetInstance()
 	return d_instance;
 }
 
-static int k = 0;
 bool DataBase::CheckDB(string _name, GameSessionRef& _gamesession)
 {
 	string temp = _name;
@@ -22,27 +21,26 @@ bool DataBase::CheckDB(string _name, GameSessionRef& _gamesession)
 
 	const string DUMMY_PREFIX = "dummy";
 
-	if (_name.compare(0, DUMMY_PREFIX.size(), DUMMY_PREFIX) == 0) 
+	if (_name.compare(0, DUMMY_PREFIX.size(), DUMMY_PREFIX) == 0)
 	{
-
 		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-		std::mt19937 generator(seed); 
-		std::uniform_int_distribution<int> distribution(0, 1999);
+		std::mt19937 generator(seed);
+		std::uniform_int_distribution<int> distribution(10, 1900);
 
 		POS pos;
 		STAT st;
 
 		while (true) {
-			int	x = distribution(generator);;
-			int	y = distribution(generator);;
-			
-			if (MAPDATA->GetTile(x, y) != MAPDATA->e_OBSTACLE) {
+			int	x = distribution(generator);
+			int	y = distribution(generator);
+
+			if (MAPDATA->GetTile(y, x) != MAPDATA->e_OBSTACLE) {
 				pos.posx = x;
 				pos.posy = y;
 				break;
 			};
 		}
-				
+		
 		st.hp = 5000;
 		st.maxHp = 5000;
 		st.exp = 0;
@@ -51,8 +49,9 @@ bool DataBase::CheckDB(string _name, GameSessionRef& _gamesession)
 		st.maxMp = 5000;
 		st.level = 5000;
 
-		PlayerRef player = MakeShared<Player>(_name, st, pos, ST_INGAME, 9999, Protocol::PLAYER_TYPE_DUMMY);
+		PlayerRef player = MakeShared<Player>(_name, st, pos, ST_INGAME, 9999, Protocol::PLAYER_TYPE_CLIENT);
 		_gamesession->SetCurrentPlayer(player);
+
 		return true;
 	}
 

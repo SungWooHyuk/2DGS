@@ -85,7 +85,10 @@ void MapData::InitTownMapSetting(const char* _townMapFilename)
 
 char MapData::GetTile(int _x, int _y)
 {
-    return worldMap[_x][_y];
+    if (_x >= 0 && _x < W_WIDTH && _y >= 0 && _y < W_HEIGHT)
+        return worldMap[_x][_y];
+    else
+        return e_OBSTACLE;
 }
 
 void MapData::InitMAP()

@@ -38,7 +38,6 @@ int main()
 		MakeShared<ServerSession>,
 		1);
 
-
 	int num_threads = std::thread::hardware_concurrency();
 	for (int32 i = 0; i < num_threads; i++)
 	{

@@ -35,7 +35,7 @@ bool Handle_C_LOGIN(PacketSessionRef& session, Protocol::C_LOGIN& pkt)
 		unordered_set<uint64> vl = ROOMMANAGER->ViewList(gamesession, false);
 
 		gamesession->SetViewPlayer(vl); // first viewlist enroll
-
+		
 		for (const auto vp : vl)
 		{
 			if (GAMESESSIONMANAGER->GetSession(vp))

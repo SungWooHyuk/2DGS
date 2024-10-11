@@ -69,7 +69,6 @@ private:
 	vector<POS>		path;
 	uint32			pathIndex = 1;
 	uint32			pathCount = 0;
-
 private:
 	const array<pair<int, int>, 4> directions = { { {0,1}, {0,-1}, {1, 0}, {-1, 0} } };
 

@@ -63,7 +63,7 @@ vector<RoomRef> RoomManager::GetAdjacentRooms(uint32 _roomNumber)
 	for (int i = -1; i <= 1; ++i) {
 		for (int j = -1; j <= 1; ++j) {
 			if (i == 0 && j == 0)
-				continue; 
+				continue;
 
 			int newRow = row + i;
 			int newCol = col + j;
@@ -80,50 +80,50 @@ vector<RoomRef> RoomManager::GetAdjacentRooms(uint32 _roomNumber)
 
 unordered_set<uint64> RoomManager::ViewList(GameSessionRef& _session, bool _npc)
 {
+	{
+		//READ_LOCK;
 
+		//unordered_set<uint64> viewPlayer;
+		//PlayerRef player = _session->GetCurrentPlayer();
+
+		//// 전체 방을 검사
+		//for (int row = 0; row < ROOM; ++row)
+		//{
+		//	for (int col = 0; col < ROOM; ++col)
+		//	{
+		//		RoomRef room = rooms[row][col];
+		//		if (!room) continue; // 방이 없으면 건너뛰기
+
+		//		for (const auto& other : room->GetPlayers())
+		//		{
+		//			if (other.second->GetState() == ST_INGAME)
+		//			{
+		//				if (other.second->GetPT() == Protocol::PLAYER_TYPE_CLIENT) // CLIENT
+		//				{
+		//					if (CanSee(player, other.second))
+		//						viewPlayer.insert(other.second->GetId());
+		//				}
+		//				else if (other.second->GetPT() == Protocol::PLAYER_TYPE_DUMMY && player->GetPT() == Protocol::PLAYER_TYPE_CLIENT)
+		//				{
+		//					if (CanSee(player, other.second))
+		//						viewPlayer.insert(other.second->GetId());
+		//				}
+		//				else // NPC
+		//				{
+		//					if (CanSee(player, other.second) && !_npc && player->GetPT() == Protocol::PLAYER_TYPE_CLIENT)
+		//					{
+		//						viewPlayer.insert(other.second->GetId());
+		//						GAMESESSIONMANAGER->WakeNpc(other.second);
+		//					}
+		//				}
+		//			}
+		//		}
+		//	}
+		//}
+
+		//return viewPlayer;
+	}
 	//READ_LOCK;
-
-	//unordered_set<uint64> viewPlayer;
-	//PlayerRef player = _session->GetCurrentPlayer();
-
-	//// 전체 방을 검사
-	//for (int row = 0; row < ROOM; ++row)
-	//{
-	//	for (int col = 0; col < ROOM; ++col)
-	//	{
-	//		RoomRef room = rooms[row][col];
-	//		if (!room) continue; // 방이 없으면 건너뛰기
-
-	//		for (const auto& other : room->GetPlayers())
-	//		{
-	//			if (other.second->GetState() == ST_INGAME)
-	//			{
-	//				if (other.second->GetPT() == Protocol::PLAYER_TYPE_CLIENT) // CLIENT
-	//				{
-	//					if (CanSee(player, other.second))
-	//						viewPlayer.insert(other.second->GetId());
-	//				}
-	//				else if (other.second->GetPT() == Protocol::PLAYER_TYPE_DUMMY && player->GetPT() == Protocol::PLAYER_TYPE_CLIENT)
-	//				{
-	//					if (CanSee(player, other.second))
-	//						viewPlayer.insert(other.second->GetId());
-	//				}
-	//				else // NPC
-	//				{
-	//					if (CanSee(player, other.second) && !_npc && player->GetPT() == Protocol::PLAYER_TYPE_CLIENT)
-	//					{
-	//						viewPlayer.insert(other.second->GetId());
-	//						GAMESESSIONMANAGER->WakeNpc(other.second);
-	//					}
-	//				}
-	//			}
-	//		}
-	//	}
-	//}
-
-	//return viewPlayer;
-
-	READ_LOCK;
 
 	unordered_set<uint64> viewPlayer;
 	PlayerRef player = _session->GetCurrentPlayer();
@@ -134,23 +134,31 @@ unordered_set<uint64> RoomManager::ViewList(GameSessionRef& _session, bool _npc)
 	{
 		for (const auto& other : room->GetPlayers())
 		{
-			if (other.second->GetState() == ST_INGAME)
+			if (other.second)
 			{
-				if (other.second->GetPT() == Protocol::PLAYER_TYPE_CLIENT) // CLIENT
+				other.second->GetOwnerSession()->s_lock.lock();
+				PlayerRef vl = other.second;
+				other.second->GetOwnerSession()->s_lock.unlock();
+				if (vl->GetState() == ST_INGAME)
 				{
-					if (CanSee(player, other.second))
-						viewPlayer.insert(other.second->GetId());
-				}
-				else if (other.second->GetPT() == Protocol::PLAYER_TYPE_DUMMY && player->GetPT() == Protocol::PLAYER_TYPE_CLIENT)
-				{
-					if (CanSee(player, other.second))
-						viewPlayer.insert(other.second->GetId());
-				}
-				else { // NPC
-					if (CanSee(player, other.second) && !_npc && player->GetPT() == Protocol::PLAYER_TYPE_CLIENT)
+					if (vl->GetPT() == Protocol::PLAYER_TYPE_CLIENT) // p-p
 					{
-						viewPlayer.insert(other.second->GetId());
-						GAMESESSIONMANAGER->WakeNpc(other.second, player);
+						if (CanSee(player, vl))
+							viewPlayer.insert(vl->GetId());
+					}
+					else if (vl->GetPT() == Protocol::PLAYER_TYPE_DUMMY && player->GetPT() == Protocol::PLAYER_TYPE_CLIENT) // p- d
+					{
+						if (CanSee(player, vl))
+							viewPlayer.insert(vl->GetId());
+					}
+					else {
+						if (!_npc && player->GetPT() == Protocol::PLAYER_TYPE_CLIENT) // p - n
+						{
+							if (CanSee(player, vl)) {
+								viewPlayer.insert(vl->GetId());
+								GAMESESSIONMANAGER->WakeNpc(vl, player);
+							}
+						}
 					}
 				}
 			}
