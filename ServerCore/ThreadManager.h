@@ -21,7 +21,7 @@ public:
 
 	static void DoGlobalQueueWork();
 	static void DistributeReservedJobs();
-
+	static void DoLogger();
 private:
 	Mutex			_lock;
 	vector<thread>	_threads;

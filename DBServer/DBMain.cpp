@@ -3,29 +3,12 @@
 #include "ThreadManager.h"
 #include "Service.h"
 #include "Session.h"
-#include "GameSession.h"
-#include "GameSessionManager.h"
 #include "BufferWriter.h"
-#include "ClientPacketHandler.h"
 #include "Job.h"
 #include "Logger.h"
-
-#include "DataBase.h"
-#include "MapData.h"
-
 #include <concurrent_priority_queue.h>
 #include <sqlext.h>
 #include <locale>
-
-#include "utils.h"
-
-
-extern "C"
-{
-#include "include\lua.h"
-#include "include\lauxlib.h"
-#include "include\lualib.h"
-}
 
 using namespace std;
 

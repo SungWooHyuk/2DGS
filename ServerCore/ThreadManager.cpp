@@ -4,7 +4,7 @@
 #include "CoreGlobal.h"
 #include "JobQueue.h"
 #include "GlobalQueue.h"
-
+#include "Logger.h"
 /*------------------
 	ThreadManager
 -------------------*/
@@ -65,6 +65,7 @@ void ThreadManager::DoGlobalQueueWork()
 		if (jobQueue == nullptr)
 			break;
 
+		
 		jobQueue->Execute();
 	}
 }
@@ -74,4 +75,19 @@ void ThreadManager::DistributeReservedJobs()
 	const uint64 now = ::GetTickCount64();
 
 	GJobTimer->Distribute(now);
+}
+
+void ThreadManager::DoLogger()
+{
+	while (true)
+	{
+		uint64 now = ::GetTickCount64();
+		if (now > LEndTickCount)
+			break;
+
+		if (Logger::GetInstance().IsEmpty())
+			break;
+
+		Logger::GetInstance().PopAndLog();
+	}
 }

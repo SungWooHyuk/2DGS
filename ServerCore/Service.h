@@ -8,7 +8,8 @@ enum class ServiceType : uint8
 {
 	Server,
 	Client,
-	Dummy
+	Dummy,
+	DB
 };
 
 /*-------------
@@ -61,7 +62,7 @@ class ClientService : public Service
 {
 public:
 	ClientService(NetAddress targetAddress, IocpCoreRef core, SessionFactory factory, int32 maxSessionCount = 1);
-	virtual ~ClientService() {}
+	~ClientService() {}
 
 	SessionRef		GetSession();
 	virtual bool	Start() override;
@@ -76,7 +77,7 @@ class ServerService : public Service
 {
 public:
 	ServerService(NetAddress targetAddress, IocpCoreRef core, SessionFactory factory, int32 maxSessionCount = 1);
-	virtual ~ServerService() {}
+	~ServerService() {}
 
 	virtual bool	Start() override;
 	virtual void	CloseService() override;
@@ -86,14 +87,29 @@ private:
 };
 
 /*-----------------
-	ServerService
+	DummyService
 ------------------*/
 
 class DummyService : public Service
 {
 public:
 	DummyService(NetAddress targetAddress, IocpCoreRef core, SessionFactory factory, int32 maxSessionCount = 1);
-	virtual ~DummyService() {}
+	~DummyService() {}
 
 	virtual bool	Start() override;
+	virtual void	CloseService() override;
+
+};
+
+class DBService : public Service
+{
+public:
+	DBService(NetAddress targetAddress, IocpCoreRef core, SessionFactory factory, int32 maxSessionCount = 1);
+	~DBService() {}
+
+	virtual bool	Start() override;
+	virtual void	CloseService() override;
+
+private:
+	ListenerRef		_listener = nullptr;
 };

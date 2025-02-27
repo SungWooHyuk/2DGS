@@ -136,9 +136,7 @@ unordered_set<uint64> RoomManager::ViewList(GameSessionRef& _session, bool _npc)
 		{
 			if (other.second)
 			{
-				other.second->GetOwnerSession()->s_lock.lock();
 				PlayerRef vl = other.second;
-				other.second->GetOwnerSession()->s_lock.unlock();
 				if (vl->GetState() == ST_INGAME)
 				{
 					if (vl->GetPT() == Protocol::PLAYER_TYPE_CLIENT) // p-p

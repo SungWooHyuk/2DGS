@@ -2,6 +2,7 @@
 #include "Session.h"
 #include "SocketUtils.h"
 #include "Service.h"
+#include "Logger.h"
 
 /*--------------
 	Session
@@ -61,6 +62,8 @@ HANDLE Session::GetHandle()
 
 void Session::Dispatch(IocpEvent* iocpEvent, int32 numOfBytes)
 {
+	//string str = std::to_string(static_cast<int>(iocpEvent->eventType));
+	//LOG_PUSH("Dispatch Execute Start: EventType = " + str);
 	switch (iocpEvent->eventType)
 	{
 	case EventType::Connect:

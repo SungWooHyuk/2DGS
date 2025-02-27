@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "JobQueue.h"
 #include "GlobalQueue.h"
-
+#include "Logger.h"
 /*-----------------
 	JobQueue
 ------------------*/
@@ -34,7 +34,7 @@ void JobQueue::Push(JobRef job, bool pushOnly)
 void JobQueue::Execute()
 {
 	LCurrentJobQueue = this;
-
+	//LOG_PUSH("JobQueue Execute Start");
 	while (true)
 	{
 		Vector<JobRef> jobs;
@@ -61,5 +61,6 @@ void JobQueue::Execute()
 			break;
 		}
 	}
+	//OG_PUSH("JobQueue Execute End");
 }
 

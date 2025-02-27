@@ -31,6 +31,7 @@ USING_SHARED_PTR(Listener);
 USING_SHARED_PTR(ServerService);
 USING_SHARED_PTR(DummyService);
 USING_SHARED_PTR(ClientService);
+USING_SHARED_PTR(DBService);
 USING_SHARED_PTR(SendBuffer);
 USING_SHARED_PTR(SendBufferChunk);
 USING_SHARED_PTR(Job);

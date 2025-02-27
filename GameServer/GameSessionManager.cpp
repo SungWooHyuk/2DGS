@@ -28,11 +28,26 @@ void GameSessionManager::Remove(GameSessionRef _session)
 {
 	GameSessionRef gamesession;
 	{
+		if (!_session)
+		{
+			ASSERT_CRASH(false);
+			return;
+		}
+
 		gamesession = _session;
-		int id = gamesession->GetCurrentPlayer()->GetId();
+		auto currentPlayer = gamesession->GetCurrentPlayer();
+		if (!currentPlayer)
+		{
+			ASSERT_CRASH(false);
+			return;
+		}
+
+		int id = currentPlayer->GetId();
 
 		if (gamesession->GetCurrentPlayer()->GetPT() == Protocol::PLAYER_TYPE_CLIENT)
-			ASSERT_CRASH(SaveDBPlayer(id));
+			if (gamesession->GetCurrentPlayer()->GetName().substr(0, 5) != "dummy")
+				ASSERT_CRASH(SaveDBPlayer(id));
+		
 
 		unordered_set<uint64> vl = sessions[id]->GetViewPlayer();
 		for (const auto& _vl : vl)
@@ -351,78 +366,70 @@ void GameSessionManager::AstarMove(GameSessionRef& _session, PlayerRef& _player)
 
 void GameSessionManager::NpcAstar(uint64 _id, uint64 _destId)
 {
-	GameSessionRef gamesession;
-	GameSessionRef dest_gamesession;
-	PlayerRef player;
-	{
-		gamesession = sessions[_id];
-		dest_gamesession = sessions[_destId];
-		player = gamesession->GetCurrentPlayer();
-	}
+	GameSessionRef gamesession = sessions[_id];
+	GameSessionRef dest_gamesession = sessions[_destId];
+	if (!gamesession || !dest_gamesession) return;
 
-	if (gamesession->EmptyPath())
-	{
-		POS start = player->GetPos();
-		POS dest;
-		if (dest_gamesession)
-			dest = dest_gamesession->GetCurrentPlayer()->GetPos();
-		else
-			return;
-		
-		vector<vector<bool>> closed(W_HEIGHT, vector<bool>(W_WIDTH, false));
-		vector<vector<int>> best(W_HEIGHT, vector<int>(W_WIDTH, INT32_MAX));
-		map<POS, POS> parent;
-		priority_queue<PQNode, vector<PQNode>, greater<PQNode>> pq;
+	PlayerRef player = gamesession->GetCurrentPlayer();
+	if (!player) return;
 
+	if (!gamesession->EmptyPath()) return;
+
+	POS start = player->GetPos();
+	POS dest = dest_gamesession->GetCurrentPlayer()->GetPos();
+
+	// 시작점과 목적지가 같으면 바로 리턴
+	if (start == dest) return;
+
+	const int MAX_ITERATIONS = 1000; // 최대 반복 횟수 설정
+
+	vector<vector<bool>> closed(W_HEIGHT, vector<bool>(W_WIDTH, false));
+	vector<vector<int>> best(W_HEIGHT, vector<int>(W_WIDTH, INT32_MAX));
+	map<POS, POS> parent;
+	priority_queue<PQNode, vector<PQNode>, greater<PQNode>> pq;
+
+	pq.push(PQNode{ 0, 0, start });
+	best[start.posy][start.posx] = 0;
+	parent[start] = start;
+
+	int cnt = 0;
+	while (!pq.empty() && cnt < MAX_ITERATIONS)
+	{
+		PQNode node = pq.top();
+		pq.pop();
+
+		if (closed[node.pos.posy][node.pos.posx]) continue;
+		closed[node.pos.posy][node.pos.posx] = true;
+
+		if (node.pos == dest)
 		{
-			int32 g = 0;
-			int32 h = 10 * (abs(dest.posy - start.posy) + abs(dest.posx - start.posx));
-			pq.push(PQNode{ g + h, g, start });
-			best[start.posy][start.posx] = g + h;
-			parent[start] = start;
+			gamesession->SetPath(dest, parent);
+			return;
 		}
 
-		// 가장 빠른길 찾기
-		while (pq.empty() == false)
+		for (int32 dir = 0; dir < DIR_COUNT; dir++)
 		{
+			POS nextPos = node.pos + dirs[dir];
+			if (!gamesession->CanGo(nextPos) || closed[nextPos.posy][nextPos.posx]) continue;
 
-			PQNode node = pq.top();
-			pq.pop();
+			int32 g = node.g + cost[dir];
+			int32 h = 10 * (abs(dest.posy - nextPos.posy) + abs(dest.posx - nextPos.posx));
+			int32 f = g + h;
 
-			if (closed[node.pos.posy][node.pos.posx])
-				continue;
-			if (best[node.pos.posy][node.pos.posx] < node.f)
-				continue;
+			if (best[nextPos.posy][nextPos.posx] <= f) continue;
 
-			closed[node.pos.posy][node.pos.posx] = true;
+			best[nextPos.posy][nextPos.posx] = f;
+			pq.push(PQNode{ f, g, nextPos });
+			parent[nextPos] = node.pos;
+		}
+		cnt++;
+	}
 
-			if (node.pos == dest) // 도착
-				break;
-			
-			for (int32 dir = 0; dir < DIR_COUNT; dir++)
-			{
-				POS nextPos = node.pos + dirs[dir];
-
-				if (gamesession->CanGo(nextPos) == false)
-					continue;
-				if (closed[nextPos.posy][nextPos.posx])
-					continue;
-
-				int32 g = node.g + cost[dir];
-				int32 h = 10 * (abs(dest.posy - nextPos.posy) + abs(dest.posx - nextPos.posx));
-
-				if (best[nextPos.posy][nextPos.posx] <= g + h)
-					continue;
-
-				best[nextPos.posy][nextPos.posx] = g + h;
-				pq.push(PQNode{ g + h, g, nextPos });
-				parent[nextPos] = node.pos;
-
-			}
-		} 
-
-		gamesession->SetPath(dest, parent);
-		
+	// 경로를 찾지 못한 경우
+	if (cnt >= MAX_ITERATIONS)
+	{
+		cout << "Path finding failed: too many iterations" << endl;
+		// 여기서 적절한 에러 처리나 로깅을 수행
 	}
 }
 
@@ -430,14 +437,12 @@ void GameSessionManager::Attack(GameSessionRef& _session, uint64 _id, uint64 _sk
 {
 	GameSessionRef gamesession;
 	{
-		READ_LOCK;
 		gamesession = _session;
 	}
 	unordered_set<uint64> vl = gamesession->GetViewPlayer();
 
 	for (const auto& _vl : vl)
 	{
-		READ_LOCK;
 		if (IsPlayer(_vl)) // Player ignore
 			continue;
 

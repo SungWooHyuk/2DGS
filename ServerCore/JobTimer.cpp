@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "JobTimer.h"
 #include "JobQueue.h"
-
+#include "Logger.h"
 
 /*---------------
 	JobTimer
@@ -24,7 +24,7 @@ void JobTimer::Distribute(uint64 now)
 		return;
 	
 	Vector<TimerItem> items;
-
+	//LOG_PUSH("JobTimer Distribute Start");
 	{
 		WRITE_LOCK;
 
@@ -48,6 +48,7 @@ void JobTimer::Distribute(uint64 now)
 
 	}
 	// 끝났으면 풀기
+	//LOG_PUSH("JobTimer Distribute End");
 	_distributing.store(false);
 }
 

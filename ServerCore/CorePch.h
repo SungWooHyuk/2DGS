@@ -26,7 +26,8 @@ using namespace std;
 #include <windows.h>
 #include <mswsock.h>
 #include <ws2tcpip.h>
-
+#include <sstream>
+#include <iomanip>
 //#pragma comment(lib, "ws2_32.lib")
 
 #include "Lock.h"
