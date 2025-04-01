@@ -36,13 +36,13 @@ void DoWorkerJob(ServerServiceRef& service)
 	{
 		LEndTickCount = ::GetTickCount64() + WORKER_TICK;
 
-		// ³×Æ®¿öÅ© ÀÔÃâ·Â Ã³¸® -> ÀÎ°ÔÀÓ ·ÎÁ÷±îÁö (ÆÐÅ¶ ÇÚµé·¯¿¡ ÀÇÇØ)
+		// ï¿½ï¿½Æ®ï¿½ï¿½Å© ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ -> ï¿½Î°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½Å¶ ï¿½Úµé·¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
 		service->GetIocpCore()->Dispatch(10);
 
-		// ¿¹¾àµÈ ÀÏ°¨ Ã³¸®
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï°ï¿½ Ã³ï¿½ï¿½
 		ThreadManager::DistributeReservedJobs();
 
-		// ±Û·Î¹ú Å¥
+		// ï¿½Û·Î¹ï¿½ Å¥
 		ThreadManager::DoGlobalQueueWork();
 
 		//ThreadManager::DoLogger();

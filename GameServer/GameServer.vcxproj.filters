@@ -39,9 +39,6 @@
     <ClInclude Include="include\lualib.h">
       <Filter>Lua</Filter>
     </ClInclude>
-    <ClInclude Include="protocol.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="DataBase.h">
       <Filter>DB</Filter>
     </ClInclude>
@@ -77,6 +74,9 @@
     </ClInclude>
     <ClInclude Include="RoomManager.h">
       <Filter>GameContents</Filter>
+    </ClInclude>
+    <ClInclude Include="RedisManager.h">
+      <Filter>DB</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -118,6 +118,9 @@
     </ClCompile>
     <ClCompile Include="RoomManager.cpp">
       <Filter>GameContents</Filter>
+    </ClCompile>
+    <ClCompile Include="RedisManager.cpp">
+      <Filter>DB</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

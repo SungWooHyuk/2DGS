@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Player.h"
 #include "utils.h"
+#include "RedisManager.h"
 
 Player::Player() 
 {
@@ -32,5 +33,8 @@ void Player::LevelUp()
 	myStat.maxMp *= 2;
 	myStat.hp = myStat.maxHp;
 	myStat.mp = myStat.maxMp;
+
+	// Redis에 레벨 업데이트
+	//RedisManager::GetInstance().UpdatePlayerLevel(myName, myStat.level);
 }
 

@@ -134,3 +134,8 @@ bool DummyService::Start()
 	
 	return true;
 }
+
+void DummyService::CloseService()
+{
+	Service::CloseService();
+}

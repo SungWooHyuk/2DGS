@@ -162,6 +162,9 @@
     <ClInclude Include="DBSynchronizer.h">
       <Filter>DB</Filter>
     </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Log</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CorePch.cpp">
@@ -268,6 +271,9 @@
     </ClCompile>
     <ClCompile Include="DBSynchronizer.cpp">
       <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>Log</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

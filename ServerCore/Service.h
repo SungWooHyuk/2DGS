@@ -100,16 +100,3 @@ public:
 	virtual void	CloseService() override;
 
 };
-
-class DBService : public Service
-{
-public:
-	DBService(NetAddress targetAddress, IocpCoreRef core, SessionFactory factory, int32 maxSessionCount = 1);
-	~DBService() {}
-
-	virtual bool	Start() override;
-	virtual void	CloseService() override;
-
-private:
-	ListenerRef		_listener = nullptr;
-};

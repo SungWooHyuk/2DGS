@@ -1,6 +1,5 @@
 #pragma once
 
-#include "protocol.h"
 #include "pch.h"
 #include "utils.h"
 #include "GameSession.h"

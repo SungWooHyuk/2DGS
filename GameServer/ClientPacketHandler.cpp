@@ -66,12 +66,12 @@ bool Handle_C_LOGIN(PacketSessionRef& session, Protocol::C_LOGIN& pkt)
 			}
 			else
 			{
-				// sessionÀ» ºÒ·¶´Âµ¥ nullptr ? ¹®Á¦°¡ÀÖ´Ù. ¿Ö³Ä¸é ViewList¿¡ ÀÖ´Âµ¥, ¸Å´ÏÀú¿¡´Â ¾ø´Ù´Â°Å´Ï±î »óÈ£ºÒÀÏÄ¡.
+				// sessionï¿½ï¿½ ï¿½Ò·ï¿½ï¿½Âµï¿½ nullptr ? ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½. ï¿½Ö³Ä¸ï¿½ ViewListï¿½ï¿½ ï¿½Ö´Âµï¿½, ï¿½Å´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ù´Â°Å´Ï±ï¿½ ï¿½ï¿½È£ï¿½ï¿½ï¿½ï¿½Ä¡.
 			}
 		}
 
 		return true;
-		// ´Ù¸¥ Å¬¶óÀÌ¾ðÆ® RoomManager Ã¼Å·ÇÏ±â.
+		// ï¿½Ù¸ï¿½ Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ® RoomManager Ã¼Å·ï¿½Ï±ï¿½.
 	}
 
 	gamesession->LoginPkt(false);
@@ -100,7 +100,7 @@ bool Handle_C_CHAT(PacketSessionRef& session, Protocol::C_CHAT& pkt)
 
 bool Handle_C_TELEPORT(PacketSessionRef& session, Protocol::C_TELEPORT& pkt)
 {
-	// Stress test ¿ë
+	// Stress test ï¿½ï¿½
 	return false;
 }
 

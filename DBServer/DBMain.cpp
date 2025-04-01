@@ -35,9 +35,7 @@ void DoWorkerJob(ServerServiceRef& service)
 int main()
 {
 	DB->InitDB();
-	MAPDATA->InitMAP();
-	ClientPacketHandler::Init();
-	GAMESESSIONMANAGER->InitializeNPC();
+	//ClientPacketHandler::Init();
 	//Logger::GetInstance().Init("GameServer");
 
 	ServerServiceRef service = MakeShared<ServerService>(
