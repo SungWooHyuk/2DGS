@@ -1,8 +1,6 @@
 #include "pch.h"
 #include "MapData.h"
 
-MapData* MapData::m_instance = nullptr;
-
 MapData::MapData()
 {
     
@@ -10,15 +8,7 @@ MapData::MapData()
 
 MapData::~MapData()
 {
-}
 
-MapData* MapData::GetInstance()
-{
-    if (m_instance == nullptr)
-    {
-        m_instance = new MapData();
-    }
-    return m_instance;
 }
 
 void MapData::InitMapSetting(const char* _worldMapFilename)

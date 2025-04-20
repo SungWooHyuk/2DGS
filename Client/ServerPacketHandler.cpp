@@ -37,8 +37,8 @@ bool Handle_S_LOGIN(PacketSessionRef& session, Protocol::S_LOGIN& pkt)
 			tp.attackTime = chrono::system_clock::now();
 			tp.moveTime = chrono::system_clock::now();
 
-			PlayerRef pl = MakeShared<Player>(*SFSYSTEM->GetPlayerAttack(),
-				*SFSYSTEM->GetPlayer(),
+			PlayerRef pl = MakeShared<Player>(*SFSYSTEM.GetPlayerAttack(),
+				*SFSYSTEM.GetPlayer(),
 				0, 0, 65, 65, st, ps, tp,
 				player.id(), player.name());
 
@@ -113,7 +113,7 @@ bool Handle_S_CHAT(PacketSessionRef& session, Protocol::S_CHAT& pkt)
 {
 	for (const auto& msg : pkt.messages())
 	{
-		SFSYSTEM->SetChat(msg.mess());
+		SFSYSTEM.SetChat(msg.mess());
 	}
 
 	return true;

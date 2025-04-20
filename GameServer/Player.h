@@ -55,6 +55,7 @@ private:
 	STAT					myStat;
 	POS						myPos;
 	S_STATE					myState;
+	uint64					myGold;
 	uint32					currentRoom;
 	Protocol::PlayerType	PT;
 

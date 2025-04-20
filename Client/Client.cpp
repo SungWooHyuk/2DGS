@@ -28,27 +28,27 @@ void Client::SetTexture(Protocol::PlayerType pt)
 	switch (pt)
 	{
 	case Protocol::PLAYER_TYPE_CLIENT:
-		Sprite.setTexture(*SFSYSTEM->GetPlayer());
+		Sprite.setTexture(*SFSYSTEM.GetPlayer());
 		Sprite.setTextureRect(sf::IntRect(CLIENT));
 		break;
 	case Protocol::PLAYER_TYPE_LV1:
-		Sprite.setTexture(*SFSYSTEM->GetMonster());
+		Sprite.setTexture(*SFSYSTEM.GetMonster());
 		Sprite.setTextureRect(sf::IntRect(LV1MONSTER));
 		break;
 	case Protocol::PLAYER_TYPE_LV2:
-		Sprite.setTexture(*SFSYSTEM->GetMonster());
+		Sprite.setTexture(*SFSYSTEM.GetMonster());
 		Sprite.setTextureRect(sf::IntRect(LV2MONSTER));
 		break;
 	case Protocol::PLAYER_TYPE_LV3:
-		Sprite.setTexture(*SFSYSTEM->GetMonster());
+		Sprite.setTexture(*SFSYSTEM.GetMonster());
 		Sprite.setTextureRect(sf::IntRect(LV3MONSTER));
 		break;
 	case Protocol::PLAYER_TYPE_LV4:
-		Sprite.setTexture(*SFSYSTEM->GetMonster());
+		Sprite.setTexture(*SFSYSTEM.GetMonster());
 		Sprite.setTextureRect(sf::IntRect(LV4MONSTER));
 		break;
 	default:
-		Sprite.setTexture(*SFSYSTEM->GetPlayer());
+		Sprite.setTexture(*SFSYSTEM.GetPlayer());
 		Sprite.setTextureRect(sf::IntRect(CLIENT));
 		break;
 	}
@@ -71,13 +71,13 @@ void Client::Draw()
 	Sprite.setPosition(fX, fY);
 	myTextName.setPosition(fX + 32 - size.width / 2, fY - 10);
 
-	SFSYSTEM->GetWindow()->draw(Sprite);
-	SFSYSTEM->GetWindow()->draw(myTextName);
+	SFSYSTEM.GetWindow()->draw(Sprite);
+	SFSYSTEM.GetWindow()->draw(myTextName);
 }
 
 void Client::SetNameColor(const string& _name)
 {
-	myTextName.setFont(SFSYSTEM->GetFont());
+	myTextName.setFont(SFSYSTEM.GetFont());
 	myTextName.setString(_name);
 
 	myTextName.setStyle(sf::Text::Bold);

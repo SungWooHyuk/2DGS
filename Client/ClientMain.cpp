@@ -19,21 +19,25 @@ uint32	g_top_y;
 void Update(ClientServiceRef& _service)
 {
 	ServerSessionRef session = static_pointer_cast<ServerSession>(_service->GetSession());
-	TILE->TileDraw();
+	TILE.TileDraw();
 	if (session->GetPlayer() != nullptr) 
-		SFSYSTEM->Update(session);
+		SFSYSTEM.Update(session);
+}
+
+void InitSingletons()
+{
+	MAPDATA; // Map data
+	SFSYSTEM; // Sfml data
+	TILE; // Tile data
 }
 
 int main()
 {
-
-	MapData* mapData = MapData::GetInstance(); // Map data
-	SFSystem* sfml = SFSystem::GetInstance(); // Sfml data
-	Tile* tile = Tile::GetInstance(); // Tile data
+	InitSingletons();
 	ServerPacketHandler::Init(); // packethandler init
 
 	ClientServiceRef service = MakeShared<ClientService>( // connect
-		NetAddress(L"127.0.0.1", PORT_NUM),
+		NetAddress(IP, PORT_NUM),
 		MakeShared<IocpCore>(),
 		MakeShared<ServerSession>,
 		1);
@@ -53,7 +57,7 @@ int main()
 	service->Start();
 
 	sf::RenderWindow window(sf::VideoMode(1365, WINDOW_HEIGHT), "2D CLIENT");
-	SFSYSTEM->SetWindow(&window);
+	SFSYSTEM.SetWindow(&window);
 
 	
 	while (window.isOpen())

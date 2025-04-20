@@ -3,7 +3,6 @@
 #include "SFSystem.h"
 #include "Client.h"
 #include "Player.h"
-SFSystem* SFSystem::s_instance = nullptr;
 
 SFSystem::SFSystem()
 {
@@ -31,15 +30,6 @@ SFSystem::~SFSystem()
 	delete			player;
 	delete			monster;
 	delete			player_attack;
-}
-
-SFSystem* SFSystem::GetInstance()
-{
-	if (s_instance == nullptr)
-	{
-		s_instance = new SFSystem();
-	}
-	return s_instance;
 }
 
 void SFSystem::InitText()

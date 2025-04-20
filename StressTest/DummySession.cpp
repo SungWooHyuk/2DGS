@@ -26,7 +26,7 @@ void DummySession::OnSend(int32 len)
 
 void DummySession::OnDisconnected()
 {
-	GDummyManager->Remove(static_pointer_cast<DummySession>(shared_from_this()));
+	DUMMYMANAGER.Remove(static_pointer_cast<DummySession>(shared_from_this()));
 	client = nullptr;
 	cout << "Disconnected" << endl;
 }

@@ -39,9 +39,6 @@
     <ClInclude Include="include\lualib.h">
       <Filter>Lua</Filter>
     </ClInclude>
-    <ClInclude Include="DataBase.h">
-      <Filter>DB</Filter>
-    </ClInclude>
     <ClInclude Include="MapData.h">
       <Filter>GameContents</Filter>
     </ClInclude>
@@ -78,6 +75,18 @@
     <ClInclude Include="RedisManager.h">
       <Filter>DB</Filter>
     </ClInclude>
+    <ClInclude Include="DBProtocol.pb.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="GameDBPacketHandler.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="DBGameSession.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>GameContents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -85,9 +94,6 @@
     </ClCompile>
     <ClCompile Include="ServerMain.cpp">
       <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="DataBase.cpp">
-      <Filter>DB</Filter>
     </ClCompile>
     <ClCompile Include="MapData.cpp">
       <Filter>GameContents</Filter>
@@ -122,6 +128,18 @@
     <ClCompile Include="RedisManager.cpp">
       <Filter>DB</Filter>
     </ClCompile>
+    <ClCompile Include="DBProtocol.pb.cc">
+      <Filter>Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="GameDBPacketHandler.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="DBGameSession.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>GameContents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Struct.proto">
@@ -134,6 +152,9 @@
       <Filter>Protocol</Filter>
     </None>
     <None Include="..\Common\proto\bin\GenPackets.bat">
+      <Filter>Protocol</Filter>
+    </None>
+    <None Include="DBProtocol.proto">
       <Filter>Protocol</Filter>
     </None>
   </ItemGroup>

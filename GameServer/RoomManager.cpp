@@ -8,8 +8,6 @@
 
 #include <atomic>
 
-shared_ptr<RoomManager> GRoomManager = make_shared<RoomManager>();
-
 RoomManager::RoomManager()
 {
 	for (int i = 0; i < ROOM; ++i)
@@ -154,7 +152,7 @@ unordered_set<uint64> RoomManager::ViewList(GameSessionRef& _session, bool _npc)
 						{
 							if (CanSee(player, vl)) {
 								viewPlayer.insert(vl->GetId());
-								GAMESESSIONMANAGER->WakeNpc(vl, player);
+								GAMESESSIONMANAGER.WakeNpc(vl, player);
 							}
 						}
 					}

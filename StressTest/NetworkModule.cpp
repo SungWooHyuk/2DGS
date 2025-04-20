@@ -21,8 +21,8 @@ thread test_thread;
 void Test_Thread()
 {
 	while (true) {
-		if (GDummyManager->Adjust_Number_Of_Client())
-			GDummyManager->AllMove();
+		if (DUMMYMANAGER.Adjust_Number_Of_Client())
+			DUMMYMANAGER.AllMove();
 	}
 }
 
@@ -45,7 +45,7 @@ void InitializeNetwork()
 		);
 
 	ASSERT_CRASH(service->Start());
-	GDummyManager->SetService(service);
+	DUMMYMANAGER.SetService(service);
 	int num_threads = std::thread::hardware_concurrency();
 
 	for (int32 i= 0; i < 6; ++i)

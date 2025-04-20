@@ -7,9 +7,18 @@ using namespace chrono;
 
 class DummyManager
 {
-public:
+private:
+	DummyManager(const DummyManager&) = delete;
+	DummyManager& operator=(const DummyManager&) = delete;
 	DummyManager();
 	~DummyManager() {};
+public:
+	
+	static DummyManager& GetInstance()
+	{
+		static DummyManager instance;
+		return instance;
+	}
 
 	void			Add(DummySessionRef _dummy);
 	void			Remove(DummySessionRef _dummy);
@@ -40,5 +49,3 @@ private:
 
 	high_resolution_clock::time_point last_connect_time;
 };
-
-extern shared_ptr<DummyManager> GDummyManager;

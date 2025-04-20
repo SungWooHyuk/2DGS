@@ -4,8 +4,11 @@
 class MapData
 {
 private:
-	static	MapData* m_instance;
 	MapData();
+	~MapData();
+	MapData(const MapData&) = delete;
+	MapData& operator=(const MapData&) = delete;
+
 
 public:
 	enum MAP_TYPE
@@ -17,8 +20,11 @@ public:
 	};
 
 public:
-	~MapData();
-	static MapData* GetInstance();
+	static MapData& GetInstance()
+	{
+		static MapData instance;
+		return instance;
+	}
 
 	void			InitMapSetting(const char* _worldMapFilename);
 	void			InitTownMapSetting(const char* _townMapFilename);

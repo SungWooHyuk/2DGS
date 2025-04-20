@@ -1,0 +1,40 @@
+syntax = "proto3";
+package DBProtocol;
+
+import "Enum.proto";
+import "Struct.proto";
+
+// GameServer -> DBServer 요청
+message SD_LOGIN { // 필수
+    string name = 1;
+}
+
+message SD_SAVE_PLAYER {
+    uint64 player_id = 1;
+}
+
+message SD_GET_INVENTORY {
+    uint64 player_id = 1;
+}
+
+message SD_UPDATE_INVENTORY {
+    uint64 player_id = 1;
+    //repeated Item items = 2;
+}
+
+// DBServer -> GameServer 응답
+message DS_LOGIN {
+    bool success = 1;
+}
+
+message DS_SAVE_PLAYER { // 실패시 
+    bool success = 1;
+}
+
+message DS_UPDATE_GOLD { // 실패하면 서버에 보내주고 성공하면 그대로 냅둘것.
+    bool success = 1;
+} 
+
+//TODO 
+// 패킷설계 -> DB클래스 작업 -> 
+//

@@ -2,25 +2,10 @@
 #include "pch.h"
 #include "MapData.h"
 
-MapData* MapData::m_instance = nullptr;
-
 MapData::MapData()
 {
-	InitMapSetting("mapdata.txt");
-	InitTownMapSetting("townmap.txt");
-}
-
-MapData::~MapData()
-{
-}
-
-MapData* MapData::GetInstance()
-{
-    if (m_instance == nullptr)
-    {
-        m_instance = new MapData();
-    }
-    return m_instance;
+    InitMapSetting("mapdata.txt");
+    InitTownMapSetting("townmap.txt");
 }
 
 void MapData::InitMapSetting(const char* _worldMapFilename)

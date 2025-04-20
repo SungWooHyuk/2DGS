@@ -41,18 +41,18 @@ void Player::Draw()
 	float fY = (myPos.posy - g_top_y) * 65.f + 1;
 
 	Sprite.setPosition(fX, fY);
-	SFSYSTEM->GetWindow()->draw(Sprite);
+	SFSYSTEM.GetWindow()->draw(Sprite);
 
 	if (myTp.attackEndTime > NOW)
 	{
 		attackSprite.setPosition(fX, fY - 65);
-		SFSYSTEM->GetWindow()->draw(attackSprite);
+		SFSYSTEM.GetWindow()->draw(attackSprite);
 		attackSprite.setPosition(fX, fY + 65);
-		SFSYSTEM->GetWindow()->draw(attackSprite);
+		SFSYSTEM.GetWindow()->draw(attackSprite);
 		attackSprite.setPosition(fX + 65, fY);
-		SFSYSTEM->GetWindow()->draw(attackSprite);
+		SFSYSTEM.GetWindow()->draw(attackSprite);
 		attackSprite.setPosition(fX - 65, fY);
-		SFSYSTEM->GetWindow()->draw(attackSprite);
+		SFSYSTEM.GetWindow()->draw(attackSprite);
 	}
 }
 

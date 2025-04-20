@@ -9,9 +9,17 @@ using GameSessionRef = shared_ptr<GameSession>;
 
 class GameSessionManager : public JobQueue
 {
-public:
+private:
 	GameSessionManager() {};
 	~GameSessionManager() {};
+	GameSessionManager(const GameSessionManager&) = delete;
+	GameSessionManager& operator=(const GameSessionManager&) = delete;
+public:
+	static GameSessionManager& GetInstance()
+	{
+		static GameSessionManager instance;
+		return instance;
+	}
 
 	void			Add(GameSessionRef _session);
 	void			Remove(GameSessionRef _session);
@@ -35,7 +43,7 @@ public:
 	void			InitializeNPC();
 	void			WakeNpc(PlayerRef _player, PlayerRef _toPlayer);
 	GameSessionRef	GetSession(uint64 _id);
-	bool			SaveDBPlayer(uint64 _id);
+	bool			UserInfoPlayer(uint64 _id);
 
 public:
 	void			SetupPlayerAndSession(int id, const string& name, const STAT& st, const POS& pos, Protocol::PlayerType pt);
@@ -90,5 +98,3 @@ private:
 		14
 	};
 };
-
-extern shared_ptr<GameSessionManager> GGameSessionManager;

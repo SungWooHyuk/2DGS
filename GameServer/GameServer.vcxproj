@@ -184,8 +184,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ClientPacketHandler.h" />
-    <ClInclude Include="DataBase.h" />
+    <ClInclude Include="DBGameSession.h" />
+    <ClInclude Include="DBProtocol.pb.h" />
     <ClInclude Include="Enum.pb.h" />
+    <ClInclude Include="GameDBPacketHandler.h" />
     <ClInclude Include="GameSession.h" />
     <ClInclude Include="GameSessionManager.h" />
     <ClInclude Include="include\lauxlib.h" />
@@ -193,6 +195,7 @@
     <ClInclude Include="include\lua.hpp" />
     <ClInclude Include="include\luaconf.h" />
     <ClInclude Include="include\lualib.h" />
+    <ClInclude Include="Item.h" />
     <ClInclude Include="MapData.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Player.h" />
@@ -205,15 +208,23 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ClientPacketHandler.cpp" />
-    <ClCompile Include="DataBase.cpp" />
+    <ClCompile Include="DBGameSession.cpp" />
+    <ClCompile Include="DBProtocol.pb.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Enum.pb.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="GameDBPacketHandler.cpp" />
     <ClCompile Include="GameSession.cpp" />
     <ClCompile Include="GameSessionManager.cpp" />
+    <ClCompile Include="Item.cpp" />
     <ClCompile Include="MapData.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -245,6 +256,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Common\proto\bin\GenPackets.bat" />
+    <None Include="DBProtocol.proto" />
     <None Include="Enum.proto" />
     <None Include="Protocol.proto" />
     <None Include="Struct.proto" />

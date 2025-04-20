@@ -139,3 +139,27 @@ void DummyService::CloseService()
 {
 	Service::CloseService();
 }
+
+// DBService
+DBService::DBService(NetAddress targetAddress, IocpCoreRef core, SessionFactory factory, int32 maxSessionCount)
+	:Service(ServiceType::DB, targetAddress, core, factory, maxSessionCount)
+{
+
+}
+
+bool DBService::Start()
+{
+	if (CanStart() == false)
+		return false;
+
+	SessionRef session = CreateSession();
+	if (session->Connect() == false)
+		return false;
+
+	return true;
+}
+
+void DBService::CloseService()
+{
+	Service::CloseService();
+}

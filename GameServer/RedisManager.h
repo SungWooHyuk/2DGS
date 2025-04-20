@@ -25,6 +25,8 @@ public:
 private:
     RedisManager() = default;
     ~RedisManager() { Close(); }
+    RedisManager(const RedisManager&) = delete;
+    RedisManager& operator=(const RedisManager&) = delete;
 
     redisContext* context = nullptr;
     const char* RANKING_KEY = "player_ranking";

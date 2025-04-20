@@ -11,13 +11,16 @@ def main():
     arg_parser.add_argument('--send', type=str, default='SC_', help='send convention')
     args = arg_parser.parse_args()
 
-    parser = ProtoParser.ProtoParser(1000, args.recv, args.send)
+    is_db = args.recv.startswith('D') or args.send.startswith('D')
+    protocol_ns = 'DBProtocol' if is_db else 'Protocol'
+    count_num = 2000 if is_db else 1000
+    parser = ProtoParser.ProtoParser(count_num, args.recv, args.send, is_db)
     parser.parse_proto(args.path)
     file_loader = jinja2.FileSystemLoader('Templates')
     env = jinja2.Environment(loader=file_loader)
    
     template = env.get_template('PacketHandler.h')
-    output = template.render(parser = parser, output=args.output)
+    output = template.render(parser = parser, output=args.output, protocol_ns=protocol_ns)
   
     f = open(args.output+'.h', 'w+')
     f.write(output)

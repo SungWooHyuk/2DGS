@@ -1,11 +1,7 @@
 #pragma once
 
-class MapData 
+class MapData
 {
-private:
-	static	MapData* m_instance;
-	MapData();
-
 public:
 	enum MAP_TYPE
 	{
@@ -16,14 +12,22 @@ public:
 	};
 
 public:
-	~MapData();
-	static MapData* GetInstance();
+
+	static MapData& GetInstance()
+	{
+		static MapData instance;
+		return instance;
+	}
 
 	void InitMapSetting(const char* _worldMapFilename);
 	void InitTownMapSetting(const char* _townMapFilename);
 	char GetTile(int _x, int _y);
 
 private:
+	~MapData() {};
+	MapData();
+	MapData(const MapData&) = delete;
+	MapData& operator=(const MapData&) = delete;
 	char	worldMap[W_WIDTH][W_HEIGHT];
 	char	townMap[TOWN_SIZE][TOWN_SIZE];
 };

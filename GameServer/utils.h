@@ -25,6 +25,7 @@ constexpr uint32 W_WIDTH = 2000;
 constexpr uint32 W_HEIGHT = 2000;
 
 constexpr int PORT_NUM = 4000;
+constexpr int DB_PORT = 5000;
 constexpr int BUF_SIZE = 200;
 constexpr int NAME_SIZE = 20;
 constexpr int CHAT_SIZE = 100;
@@ -41,6 +42,7 @@ constexpr int INVALID_ID = -1;
 constexpr int DELAY_LIMIT = 100;
 constexpr int DELAY_LIMIT2 = 150;
 constexpr int ACCEPT_DELY = 50;
+
 
 enum
 {
@@ -103,7 +105,7 @@ struct STAT
 	int32	maxExp;
 };
 
-struct SAVEDB
+struct USER_INFO
 {
 	string	name;
 	int32	posy;
@@ -115,8 +117,54 @@ struct SAVEDB
 	int32	maxHp;
 	int32	maxMp;
 	int32	maxExp;
+	int32	gold;
 };
 
+struct ITEM_INFO
+{
+	int32 itemId;
+	string name;
+	int32 itemType;
+	int32 equipType;
+	int32 effectType;
+	int32 effectValue;
+	int32 requiredLevel;
+	string description;
+
+	struct EQUIPMENT_INFO
+	{
+		int32 attackPower;
+		int32 defensePower;
+		int32 magicPower;
+		int32 strength;
+	} equipmentInfo;
+};
+
+struct USER_EQUIPMENT
+{
+	string userId;
+	int32 slotWeapon;
+	int32 slotHelmet;
+	int32 slotTop;
+	int32 slotBottom;
+};
+
+struct USER_INVENTORY
+{
+	string userId;
+	int32 itemId;
+	int32 quantity;
+	int32 tab_type;
+	int32 slot_index;
+};
+
+enum Equipment
+{
+	WEAPON,
+	HELMET,
+	TOP,
+	BOTTOM
+};
 
 struct TP
 {
@@ -152,9 +200,11 @@ enum SystemBox
 #define	MAPDATA				MapData::GetInstance()
 #define	SFSYSTEM			SFSystem::GetInstance()
 #define TILE				Tile::GetInstance()
-#define DB					DataBase::GetInstance()
-#define ROOMMANAGER			GRoomManager
-#define GAMESESSIONMANAGER	GGameSessionManager
+#define ROOMMANAGER			RoomManager::GetInstance()
+#define GAMESESSIONMANAGER	GameSessionManager::GetInstance()
+#define ITEM				item::GetInstance()
+
+#define DUMMYMANAGER		DummyManager::GetInstance()
 
 #define PLAYERMOVETIME		session->GetPlayer()->GetTP().moveTime
 #define NOW					chrono::system_clock::now()
@@ -196,4 +246,6 @@ enum SystemBox
 
 #define SCRACH				1
 #define TOWN				1010,1010
+
+#define IP					L"127.0.0.1"
 #endif 

@@ -7,18 +7,18 @@
 #include "GameSessionManager.h"
 #include "BufferWriter.h"
 #include "ClientPacketHandler.h"
+#include "GameDBPacketHandler.h"
 #include "Job.h"
 #include "Logger.h"
 
-#include "DataBase.h"
 #include "MapData.h"
+#include "DBGameSession.h"
 
 #include <concurrent_priority_queue.h>
 #include <sqlext.h>
 #include <locale>
 
 #include "utils.h"
-
 
 extern "C"
 {
@@ -27,9 +27,7 @@ extern "C"
 #include "include\lualib.h"
 }
 
-using namespace std;
-
-
+#include "Item.h"
 void DoWorkerJob(ServerServiceRef& service)
 {
 	while (true)
@@ -51,10 +49,11 @@ void DoWorkerJob(ServerServiceRef& service)
 
 int main()
 {
-	DB->InitDB();
-	MAPDATA->InitMAP();
+	
+	MAPDATA.InitMAP();
 	ClientPacketHandler::Init();
-	GAMESESSIONMANAGER->InitializeNPC();
+	GameDBPacketHandler::Init();
+	GAMESESSIONMANAGER.InitializeNPC();
 	//Logger::GetInstance().Init("GameServer");
 
 	ServerServiceRef service = MakeShared<ServerService>(
@@ -64,14 +63,33 @@ int main()
 		MAX_USER
 		);
 
+	ServerServiceRef dbservice = MakeShared<ServerService>(
+		NetAddress(L"127.0.0.1", DB_PORT),
+		MakeShared<IocpCore>(),
+		MakeShared<DBGameSession>,
+		1
+		);
+
+
 	ASSERT_CRASH(service->Start());
-	int num_threads = std::thread::hardware_concurrency();
+	ASSERT_CRASH(dbservice->Start());
+
+	int num_threads = std::thread::hardware_concurrency() - 3;
+	int db_num_threads = 3;
 
 	for (int32 i = 0; i < num_threads; ++i)
 	{
 		GThreadManager->Launch([&service]()
 			{
 				DoWorkerJob(service);
+			});
+	}
+
+	for (int32 i = 0; i < db_num_threads; ++i)
+	{
+		GThreadManager->Launch([&dbservice]()
+			{
+				DoWorkerJob(dbservice);
 			});
 	}
 

@@ -10,11 +10,10 @@
 #pragma comment(lib, "Protobuf\\Release\\libprotobuf.lib")
 #endif
 
+#include "../GameServer/utils.h"
 #include "CorePch.h"
-//#include "Enum.pb.h"
+#include "DBStruct.h"
 
 using namespace chrono;
 
-using ServerSessionRef = shared_ptr<class ServerSession>;
-using ClientRef = shared_ptr<class Client>;
-using PlayerRef = shared_ptr<class Player>;
+using DBSessionRef = shared_ptr<class DBSession>;

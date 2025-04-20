@@ -1,5 +1,5 @@
 class ProtoParser():
-    def __init__(self, start_id, recv_prefix, send_prefix):
+    def __init__(self, start_id, recv_prefix, send_prefix, is_db=False):
         self.recv_pkt = [] 
         self.send_pkt = [] 
         self.total_pkt = [] 
@@ -7,6 +7,7 @@ class ProtoParser():
         self.id = start_id
         self.recv_prefix = recv_prefix
         self.send_prefix = send_prefix
+        self.is_db = is_db
 
     def parse_proto(self, path):
         f = open(path, 'r')

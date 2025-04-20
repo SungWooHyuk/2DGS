@@ -3,7 +3,6 @@
 #include "DummySession.h"
 #include "Service.h"
 #include "Client.h"
-shared_ptr<DummyManager> GDummyManager = make_shared<DummyManager>();
 
 using namespace chrono;
 

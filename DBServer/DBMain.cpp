@@ -1,48 +1,49 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "pch.h"
+#include "DBPacketHandler.h"
 #include "ThreadManager.h"
-#include "Service.h"
 #include "Session.h"
+#include "DBSession.h"
+
+#include "Service.h"
 #include "BufferWriter.h"
+
 #include "Job.h"
 #include "Logger.h"
-#include <concurrent_priority_queue.h>
-#include <sqlext.h>
-#include <locale>
 
 using namespace std;
 
 
-void DoWorkerJob(ServerServiceRef& service)
+void DoWorkerJob(DBServiceRef& service)
 {
 	while (true)
 	{
 		LEndTickCount = ::GetTickCount64() + WORKER_TICK;
 
-		// ³×Æ®¿öÅ© ÀÔÃâ·Â Ã³¸® -> ÀÎ°ÔÀÓ ·ÎÁ÷±îÁö (ÆÐÅ¶ ÇÚµé·¯¿¡ ÀÇÇØ)
+		// IOCP ì´ë²¤íŠ¸ ì²˜ë¦¬
 		service->GetIocpCore()->Dispatch(10);
 
-		// ¿¹¾àµÈ ÀÏ°¨ Ã³¸®
+		// ì˜ˆì•½ëœ ìž‘ì—… ì²˜ë¦¬
 		ThreadManager::DistributeReservedJobs();
 
-		// ±Û·Î¹ú Å¥
+		// ê¸€ë¡œë²Œ í ìž‘ì—…
 		ThreadManager::DoGlobalQueueWork();
 
-		//ThreadManager::DoLogger();
 	}
 }
 
 int main()
 {
-	DB->InitDB();
-	//ClientPacketHandler::Init();
-	//Logger::GetInstance().Init("GameServer");
 
-	ServerServiceRef service = MakeShared<ServerService>(
-		NetAddress(L"127.0.0.1", 4000),
+	// íŒ¨í‚· í•¸ë“¤ëŸ¬ ì´ˆê¸°í™”
+	DBPacketHandler::Init();
+
+	// ì„œë¹„ìŠ¤ ì‹œìž‘
+	DBServiceRef service = MakeShared<DBService>( // connect
+		NetAddress(IP, DB_PORT),
 		MakeShared<IocpCore>(),
-		MakeShared<GameSession>,
-		MAX_USER
+		MakeShared<DBSession>,
+		1
 		);
 
 	ASSERT_CRASH(service->Start());
@@ -56,7 +57,11 @@ int main()
 			});
 	}
 
+	// ë©”ì¸ ìŠ¤ë ˆë“œë„ ì›Œì»¤ë¡œ ì‚¬ìš©
 	DoWorkerJob(service);
+
+	// ëª¨ë“  ìŠ¤ë ˆë“œ ì¢…ë£Œ ëŒ€ê¸°
 	GThreadManager->Join();
 
+	return 0;
 }

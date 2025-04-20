@@ -7,14 +7,13 @@
 
 class SFSystem
 {
-private:
-	SFSystem();
-	static SFSystem*	s_instance;
-
 public:
-	~SFSystem();
-	static SFSystem*	GetInstance();
-
+	static SFSystem& GetInstance()
+	{
+		static SFSystem instance;
+		return instance;
+	}
+	
 	void InitText();
 	void InitBox();
 
@@ -46,6 +45,11 @@ public:
 public:
 	sf::TcpSocket				socket;
 
+private:
+	SFSystem(); 
+	~SFSystem();
+	SFSystem(const SFSystem&) = delete;
+	SFSystem& operator=(const SFSystem&) = delete;
 private:
 	USE_LOCK;
 	vector<sf::Text>			text;

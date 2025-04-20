@@ -130,7 +130,7 @@ int DrawGLScene(GLvoid)									// Here's Where We Do All The Drawing
 {
 	int size = 1;
 	float* points = nullptr;
-	GDummyManager->GetPointCloud(&size, &points);
+	DUMMYMANAGER.GetPointCloud(&size, &points);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clear Screen And Depth Buffer
 	glLoadIdentity();									// Reset The Current Modelview Matrix

@@ -17,8 +17,8 @@ bool Handle_S_LOGIN(PacketSessionRef& session, Protocol::S_LOGIN& pkt)
 	{
 		for (const auto& cli : pkt.players())
 		{
-			GDummyManager->Login(dummySession, cli.id(), cli.x(), cli.y());
-			GDummyManager->Add(dummySession);
+			DUMMYMANAGER.Login(dummySession, cli.id(), cli.x(), cli.y());
+			DUMMYMANAGER.Add(dummySession);
 			return true;
 		}
 	}
@@ -46,7 +46,7 @@ bool Handle_S_MOVE_OBJECT(PacketSessionRef& session, Protocol::S_MOVE_OBJECT& pk
 		uint64 y = cli.y();
 		int64  move_time = cli.move_time();
 
-		GDummyManager->Move(serverSession, id, x, y, move_time);
+		DUMMYMANAGER.Move(serverSession, id, x, y, move_time);
 	}
 
 	return true;

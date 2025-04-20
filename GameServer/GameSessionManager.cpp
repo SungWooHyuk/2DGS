@@ -7,11 +7,8 @@
 #include "Player.h"
 #include "MapData.h"
 #include "RoomManager.h"
-#include "DataBase.h"
 #include "Protocol.pb.h"
 #include <fstream>
-
-shared_ptr<GameSessionManager> GGameSessionManager = make_shared<GameSessionManager>();
 
 void GameSessionManager::Add(GameSessionRef _session)
 {
@@ -46,7 +43,7 @@ void GameSessionManager::Remove(GameSessionRef _session)
 
 		if (gamesession->GetCurrentPlayer()->GetPT() == Protocol::PLAYER_TYPE_CLIENT)
 			if (gamesession->GetCurrentPlayer()->GetName().substr(0, 5) != "dummy")
-				ASSERT_CRASH(SaveDBPlayer(id));
+				ASSERT_CRASH(UserInfoPlayer(id));
 		
 
 		unordered_set<uint64> vl = sessions[id]->GetViewPlayer();
@@ -89,13 +86,13 @@ void GameSessionManager::Respawn(GameSessionRef _session)
 		player = gamesession->GetCurrentPlayer();
 	}
 
-	ROOMMANAGER->EnterRoom(_session); // 룸 다시 입장.
+	ROOMMANAGER.EnterRoom(_session); // 룸 다시 입장.
 
 	gamesession->s_lock.lock();
 	player->SetStatHp(player->GetStat().maxHp);
 	gamesession->s_lock.unlock();
 
-	unordered_set<uint64> vl = ROOMMANAGER->ViewList(gamesession, true);
+	unordered_set<uint64> vl = ROOMMANAGER.ViewList(gamesession, true);
 	gamesession->SetViewPlayer(vl);
 
 	for (auto _vl : vl)
@@ -128,7 +125,7 @@ void GameSessionManager::PlayerRespawn(uint64 _id)
 		sessions[_id]->GetCurrentPlayer()->SetState(ST_INGAME);
 		sessions[_id]->s_lock.unlock();
 	}
-	ROOMMANAGER->EnterRoom(sessions[_id]);
+	ROOMMANAGER.EnterRoom(sessions[_id]);
 	sessions[_id]->RespawnPkt(sessions[_id]->GetCurrentPlayer()->GetStat().hp, pos, sessions[_id]->GetCurrentPlayer()->GetStat().exp);
 }
 
@@ -163,7 +160,7 @@ void GameSessionManager::WakeNpc(PlayerRef _player, PlayerRef _toPlayer)
 		target = _toPlayer;
 	}
 
-	unordered_set<uint64> vl = ROOMMANAGER->ViewList(player->GetOwnerSession(), true);
+	unordered_set<uint64> vl = ROOMMANAGER.ViewList(player->GetOwnerSession(), true);
 	player->GetOwnerSession()->SetViewPlayer(vl);
 
 	if (player->GetPT() == Protocol::PLAYER_TYPE_CLIENT) return;
@@ -298,7 +295,7 @@ bool GameSessionManager::DoNpcRandomMove(uint64 _id)
 
 	MoveNpcToRandomPosition(gamesession, player);
 
-	unordered_set<uint64> new_vl = ROOMMANAGER->ViewList(gamesession, true);
+	unordered_set<uint64> new_vl = ROOMMANAGER.ViewList(gamesession, true);
 
 	HandleNPCViewListChanges(gamesession, player, old_vl, new_vl);
 
@@ -319,7 +316,7 @@ bool GameSessionManager::DoNpcAstarMove(uint64 _id)
 
 	AstarMove(gamesession, player);
 
-	unordered_set<uint64> new_vl = ROOMMANAGER->ViewList(gamesession, true);
+	unordered_set<uint64> new_vl = ROOMMANAGER.ViewList(gamesession, true);
 
 	HandleNPCViewListChanges(gamesession, player, old_vl, new_vl);
 
@@ -465,7 +462,7 @@ void GameSessionManager::Move(GameSessionRef& _session, uint64 _direction, int64
 
 	UpdatePlayerPosition(player, _direction);
 
-	unordered_set<uint64> new_vl = ROOMMANAGER->ViewList(gamesession, false); // 움직인 후 주변애들 + WakeNPC까지 진행완료
+	unordered_set<uint64> new_vl = ROOMMANAGER.ViewList(gamesession, false); // 움직인 후 주변애들 + WakeNPC까지 진행완료
 
 	if (player->GetPT() == Protocol::PLAYER_TYPE_CLIENT)
 		HandleCollisions(gamesession, player, new_vl);
@@ -484,10 +481,10 @@ bool GameSessionManager::IsPlayer(uint64 _id)
 	return _id < MAX_USER;
 }
 
-bool GameSessionManager::SaveDBPlayer(uint64 _id)
+bool GameSessionManager::UserInfoPlayer(uint64 _id)
 {
 	GameSessionRef gamesession;
-	SAVEDB db;
+	USER_INFO db;
 	{
 		gamesession = sessions[_id];
 	}
@@ -499,11 +496,12 @@ bool GameSessionManager::SaveDBPlayer(uint64 _id)
 		db.maxMp = gamesession->GetCurrentPlayer()->GetStat().maxMp;
 		db.exp = gamesession->GetCurrentPlayer()->GetStat().exp;
 		db.maxExp = gamesession->GetCurrentPlayer()->GetStat().maxExp;
-		db.name = gamesession->GetCurrentPlayer()->GetName();
+		//db.name = gamesession->GetCurrentPlayer()->GetName();
 		db.posx = gamesession->GetCurrentPlayer()->GetPos().posx;
 		db.posy = gamesession->GetCurrentPlayer()->GetPos().posy;
 	}
-	return DB->SaveDB(db);
+	
+	return true;
 }
 
 void GameSessionManager::UpdatePlayerPosition(PlayerRef& _player, uint64 _direction)
@@ -517,19 +515,19 @@ void GameSessionManager::UpdatePlayerPosition(PlayerRef& _player, uint64 _direct
 	switch (_direction)
 	{
 	case LEFT:
-		if (pos.posx > 0 && MAPDATA->GetTile(pos.posy, pos.posx - 1) != MAPDATA->e_OBSTACLE)
+		if (pos.posx > 0 && MAPDATA.GetTile(pos.posy, pos.posx - 1) != MAPDATA.e_OBSTACLE)
 			--pos.posx;
 		break;
 	case RIGHT:
-		if (pos.posx < W_WIDTH - 1 && MAPDATA->GetTile(pos.posy, pos.posx + 1) != MAPDATA->e_OBSTACLE)
+		if (pos.posx < W_WIDTH - 1 && MAPDATA.GetTile(pos.posy, pos.posx + 1) != MAPDATA.e_OBSTACLE)
 			++pos.posx;
 		break;
 	case UP:
-		if (pos.posy > 0 && MAPDATA->GetTile(pos.posy - 1, pos.posx) != MAPDATA->e_OBSTACLE)
+		if (pos.posy > 0 && MAPDATA.GetTile(pos.posy - 1, pos.posx) != MAPDATA.e_OBSTACLE)
 			--pos.posy;
 		break;
 	case DOWN:
-		if (pos.posy < W_HEIGHT - 1 && MAPDATA->GetTile(pos.posy + 1, pos.posx) != MAPDATA->e_OBSTACLE)
+		if (pos.posy < W_HEIGHT - 1 && MAPDATA.GetTile(pos.posy + 1, pos.posx) != MAPDATA.e_OBSTACLE)
 			++pos.posy;
 		break;
 	}
@@ -612,7 +610,7 @@ void GameSessionManager::HandlePlayerDeath(GameSessionRef& _gamesession, PlayerR
 	}
 
 	gamesession->ResetViewPlayer();
-	ROOMMANAGER->LeaveRoom(gamesession);
+	ROOMMANAGER.LeaveRoom(gamesession);
 
 	stringstream ss;
 	ss << "Player " << sessions[_killerId]->GetCurrentPlayer()->GetName() << " Die ";
@@ -781,7 +779,7 @@ void GameSessionManager::MoveNpcToRandomPosition(GameSessionRef& _gamesession, P
 		int newX = player->POSX + pp.first;
 		int newY = player->POSY + pp.second;
 
-		if (newX >= 0 && newX < W_WIDTH && newY >= 0 && newY < W_HEIGHT && MAPDATA->GetTile(newY, newX) == MAPDATA->e_PLAT) {
+		if (newX >= 0 && newX < W_WIDTH && newY >= 0 && newY < W_HEIGHT && MAPDATA.GetTile(newY, newX) == MAPDATA.e_PLAT) {
 			POS pos = { newX, newY };
 			{
 				player->GetOwnerSession()->s_lock.lock();
@@ -906,7 +904,7 @@ void GameSessionManager::HandleNPCDeath(uint64 _attackerId, uint64 _targetId)
 		target_gamesession->GetCurrentPlayer()->SetState(ST_SLEEP);
 		target_gamesession->s_lock.unlock();
 	}
-	ROOMMANAGER->LeaveRoom(sessions[_targetId]);
+	ROOMMANAGER.LeaveRoom(sessions[_targetId]);
 	DoTimer(10000, &GameSessionManager::Respawn, target_gamesession);
 }
 
@@ -954,7 +952,7 @@ void GameSessionManager::SetupPlayerAndSession(int _id, const string& _name, con
 	{
 		sessions[_id] = session;
 	}
-	ROOMMANAGER->EnterRoom(session);
+	ROOMMANAGER.EnterRoom(session);
 }
 
 void GameSessionManager::GenerateNPCAttributes(int _id, string& _name, STAT& _st, POS& _pos, Protocol::PlayerType& _pt)
@@ -967,7 +965,7 @@ void GameSessionManager::GenerateNPCAttributes(int _id, string& _name, STAT& _st
 		int x = rand() % 2000;
 		int y = rand() % 2000;
 
-		if (MAPDATA->GetTile(y, x) == MAPDATA->e_PLAT) {
+		if (MAPDATA.GetTile(y, x) == MAPDATA.e_PLAT) {
 			_pos = { x, y };
 			break;
 		}

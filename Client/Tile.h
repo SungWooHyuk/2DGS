@@ -3,19 +3,25 @@
 
 class Tile
 {
-private:
-	Tile();
-	static	Tile* o_instance;
-	Tile(Tile* _tile, sf::Texture& t, int _x, int _y, int _x2, int _y2);
-
 public:
-	~Tile();
-	static Tile* GetInstance();
+	
+	static Tile& GetInstance()
+	{
+		static Tile instance;
+		return instance;
+	}
 
-
+	void	Init(Tile* _tile, sf::Texture& t, int _x, int _y, int _x2, int _y2);
 	void	TileDraw();
+	
 	void	Draw(Tile* _tile);
 	void	Move(Tile* _tile, int _x, int _y);
+
+private:
+	~Tile();
+	Tile();
+	Tile(const Tile&) = delete;
+	Tile& operator=(const Tile&) = delete;
 
 private:
 	Tile*		platTile;

@@ -4,17 +4,18 @@
 #include "GameSession.h"
 #include "GameSessionManager.h"
 #include "ClientPacketHandler.h"
+#include "GameDBPacketHandler.h"
 #include "Player.h"
 #include "RoomManager.h"
 
 void GameSession::OnConnected()
 {
-	GAMESESSIONMANAGER->Add(static_pointer_cast<GameSession>(shared_from_this()));
+	GAMESESSIONMANAGER.Add(static_pointer_cast<GameSession>(shared_from_this()));
 }
 
 void GameSession::OnDisconnected()
 {
-	GAMESESSIONMANAGER->Remove(static_pointer_cast<GameSession>(shared_from_this()));
+	GAMESESSIONMANAGER.Remove(static_pointer_cast<GameSession>(shared_from_this()));
 
 	if (currentPlayer)
 	{
@@ -30,8 +31,8 @@ void GameSession::OnRecvPacket(BYTE* buffer, int32 len)
 	PacketSessionRef session = GetPacketSessionRef();
 	PacketHeader* header = reinterpret_cast<PacketHeader*>(buffer);
 
-	// TODO : packetId �뿪 üũ
 	ClientPacketHandler::HandlePacket(session, buffer, len);
+	
 }
 
 void GameSession::OnSend(int32 len)
@@ -50,7 +51,7 @@ vector<int> GameSession::GetRandomDirectionIndices()
 
 bool GameSession::CanGo(POS _pos)
 {
-	if (MAPDATA->GetTile(_pos.posy, _pos.posx) != MAPDATA->e_OBSTACLE)
+	if (MAPDATA.GetTile(_pos.posy, _pos.posx) != MAPDATA.e_OBSTACLE)
 		return true;
 	return false;
 }

@@ -1,0 +1,130 @@
+[
+    {
+        "item_id": 1001,
+        "name": "potion_hp",
+        "item_type": 2,
+        "equip_type": null,
+        "effect_type": 1,
+        "effect_value": 50,
+        "required_level": 1,
+        "description": "hp"
+    },
+    {
+        "item_id": 1002,
+        "name": "potion_mp",
+        "item_type": 2,
+        "equip_type": null,
+        "effect_type": 2,
+        "effect_value": 30,
+        "required_level": 1,
+        "description": "mp"
+    },
+    {
+        "item_id": 2001,
+        "name": "lv1_head",
+        "item_type": 3,
+        "equip_type": null,
+        "effect_type": null,
+        "effect_value": null,
+        "required_level": 1,
+        "description": "lv1_monster"
+    },
+    {
+        "item_id": 2002,
+        "name": "lv2_head",
+        "item_type": 3,
+        "equip_type": null,
+        "effect_type": null,
+        "effect_value": null,
+        "required_level": 1,
+        "description": "lv2_monster"
+    },
+    {
+        "item_id": 2003,
+        "name": "lv3_head",
+        "item_type": 3,
+        "equip_type": null,
+        "effect_type": null,
+        "effect_value": null,
+        "required_level": 1,
+        "description": "lv3_monster"
+    },
+    {
+        "item_id": 2004,
+        "name": "lv4_head",
+        "item_type": 3,
+        "equip_type": null,
+        "effect_type": null,
+        "effect_value": null,
+        "required_level": 1,
+        "description": "lv4_monster"
+    },
+    {
+        "item_id": 3001,
+        "name": "basic_sword",
+        "item_type": 1,
+        "equip_type": 1,
+        "effect_type": null,
+        "effect_value": null,
+        "required_level": 1,
+        "description": "sword",
+        "equipment_data": {
+            "item_id": 3001,
+            "attack_power": 10,
+            "defence_power": 0,
+            "magic_power": 0,
+            "strength": 0
+        }
+    },
+    {
+        "item_id": 3002,
+        "name": "basic_helmet",
+        "item_type": 1,
+        "equip_type": 2,
+        "effect_type": null,
+        "effect_value": null,
+        "required_level": 1,
+        "description": "helmet",
+        "equipment_data": {
+            "item_id": 3002,
+            "attack_power": 0,
+            "defence_power": 20,
+            "magic_power": 0,
+            "strength": 0
+        }
+    },
+    {
+        "item_id": 3003,
+        "name": "basic_top",
+        "item_type": 1,
+        "equip_type": 3,
+        "effect_type": null,
+        "effect_value": null,
+        "required_level": 1,
+        "description": "top",
+        "equipment_data": {
+            "item_id": 3003,
+            "attack_power": 0,
+            "defence_power": 10,
+            "magic_power": 0,
+            "strength": 10
+        }
+    },
+    {
+        "item_id": 3004,
+        "name": "basic_bottom",
+        "item_type": 1,
+        "equip_type": 4,
+        "effect_type": null,
+        "effect_value": null,
+        "required_level": 1,
+        "description": "bottom",
+        "equipment_data": {
+            "item_id": 3004,
+            "attack_power": 0,
+            "defence_power": 10,
+            "magic_power": 0,
+            "strength": 10
+        }
+    }
+]
