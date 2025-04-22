@@ -79,6 +79,36 @@ bool Handle_C_LOGIN(PacketSessionRef& session, Protocol::C_LOGIN& pkt)
 	return false;
 }
 
+bool Handle_C_CONSUME_ITEM(PacketSessionRef& session, Protocol::C_CONSUME_ITEM& pkt)
+{
+	return false;
+}
+
+bool Handle_C_DROP_ITEM(PacketSessionRef& session, Protocol::C_DROP_ITEM& pkt)
+{
+	return false;
+}
+
+bool Handle_C_MOVE_INVENTORY_ITEM(PacketSessionRef& session, Protocol::C_MOVE_INVENTORY_ITEM& pkt)
+{
+	return false;
+}
+
+bool Handle_C_EQUIP(PacketSessionRef& session, Protocol::C_EQUIP& pkt)
+{
+	return false;
+}
+
+bool Handle_C_UNEQUIP(PacketSessionRef& session, Protocol::C_UNEQUIP& pkt)
+{
+	return false;
+}
+
+bool Handle_C_SORT_INVENTORY(PacketSessionRef& session, Protocol::C_SORT_INVENTORY& pkt)
+{
+	return false;
+}
+
 bool Handle_C_MOVE(PacketSessionRef& session, Protocol::C_MOVE& pkt)
 {
 	GameSessionRef gamesession = static_pointer_cast<GameSession>(session);

@@ -165,6 +165,9 @@
     <ClInclude Include="Logger.h">
       <Filter>Log</Filter>
     </ClInclude>
+    <ClInclude Include="GLogger.h">
+      <Filter>Log</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CorePch.cpp">

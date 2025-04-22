@@ -10,7 +10,7 @@
 
 #include "Job.h"
 #include "Logger.h"
-
+#include "GLogger.h"
 using namespace std;
 
 
@@ -34,7 +34,7 @@ void DoWorkerJob(DBServiceRef& service)
 
 int main()
 {
-
+	GLogger::Init("DBServer");
 	// 패킷 핸들러 초기화
 	DBPacketHandler::Init();
 

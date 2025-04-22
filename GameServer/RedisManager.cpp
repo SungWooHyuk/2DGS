@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "RedisManager.h"
+#include "GLogger.h"
 #include <sstream>
 
 bool RedisManager::Init() {

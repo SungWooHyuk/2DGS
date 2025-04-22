@@ -30,7 +30,7 @@ public:
 		GJobTimer = new JobTimer();
 		GDeadLockProfiler = new DeadLockProfiler();
 		GDBConnectionPool = new DBConnectionPool();
-		GConsoleLogger = new ConsoleLog();
+		//GConsoleLogger = new ConsoleLog();
 		SocketUtils::Init();
 	}
 
@@ -43,7 +43,7 @@ public:
 		delete GJobTimer;
 		delete GDeadLockProfiler;
 		delete GDBConnectionPool;
-		delete GConsoleLogger;
+		//delete GConsoleLogger;
 		SocketUtils::Clear();
 	}
 } GCoreGlobal;
