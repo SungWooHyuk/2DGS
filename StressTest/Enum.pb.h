@@ -86,6 +86,32 @@ inline bool PlayerType_Parse(
   return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<PlayerType>(
     PlayerType_descriptor(), name, value);
 }
+enum GetType : int {
+  PLAYER_INFO = 0,
+  INVENTORY_INFO = 1,
+  EQUIPMENT_INFO = 2,
+  GetType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
+  GetType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
+};
+bool GetType_IsValid(int value);
+constexpr GetType GetType_MIN = PLAYER_INFO;
+constexpr GetType GetType_MAX = EQUIPMENT_INFO;
+constexpr int GetType_ARRAYSIZE = GetType_MAX + 1;
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* GetType_descriptor();
+template<typename T>
+inline const std::string& GetType_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, GetType>::value ||
+    ::std::is_integral<T>::value,
+    "Incorrect type passed to function GetType_Name.");
+  return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
+    GetType_descriptor(), enum_t_value);
+}
+inline bool GetType_Parse(
+    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, GetType* value) {
+  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<GetType>(
+    GetType_descriptor(), name, value);
+}
 // ===================================================================
 
 
@@ -112,6 +138,11 @@ template <> struct is_proto_enum< ::Protocol::PlayerType> : ::std::true_type {};
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::Protocol::PlayerType>() {
   return ::Protocol::PlayerType_descriptor();
+}
+template <> struct is_proto_enum< ::Protocol::GetType> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::Protocol::GetType>() {
+  return ::Protocol::GetType_descriptor();
 }
 
 PROTOBUF_NAMESPACE_CLOSE

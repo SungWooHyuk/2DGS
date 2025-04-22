@@ -11,3 +11,10 @@ enum PlayerType
 	PLAYER_TYPE_LV4 = 5;
 	PLAYER_TYPE_DUMMY = 6;
 }
+
+enum GetType
+{
+	PLAYER_INFO = 0;
+	INVENTORY_INFO = 1;
+	EQUIPMENT_INFO = 2;
+}

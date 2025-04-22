@@ -7,24 +7,46 @@ extern PacketHandlerFunc GPacketHandler[UINT16_MAX];
 enum : uint16
 {
 	PKT_C_LOGIN = 1000,
-	PKT_C_MOVE = 1001,
-	PKT_C_CHAT = 1002,
-	PKT_C_TELEPORT = 1003,
-	PKT_C_ATTACK = 1004,
-	PKT_C_LOGOUT = 1005,
-	PKT_S_LOGIN = 1006,
-	PKT_S_ADD_OBJECT = 1007,
-	PKT_S_REMOVE_OBJECT = 1008,
-	PKT_S_MOVE_OBJECT = 1009,
-	PKT_S_CHAT = 1010,
-	PKT_S_STAT_CHANGE = 1011,
-	PKT_S_DAMAGE = 1012,
-	PKT_S_RESPAWN = 1013,
+	PKT_C_CONSUME_ITEM = 1001,
+	PKT_C_DROP_ITEM = 1002,
+	PKT_C_MOVE_INVENTORY_ITEM = 1003,
+	PKT_C_EQUIP = 1004,
+	PKT_C_UNEQUIP = 1005,
+	PKT_C_SORT_INVENTORY = 1006,
+	PKT_C_MOVE = 1007,
+	PKT_C_CHAT = 1008,
+	PKT_C_TELEPORT = 1009,
+	PKT_C_ATTACK = 1010,
+	PKT_C_LOGOUT = 1011,
+	PKT_S_LOGIN = 1012,
+	PKT_S_LOAD_INVENTORY = 1013,
+	PKT_S_LOAD_EQUIPMENT = 1014,
+	PKT_S_CONSUME_RESULT = 1015,
+	PKT_S_DROP_RESULT = 1016,
+	PKT_S_MOVE_INVENTORY_RESULT = 1017,
+	PKT_S_EQUIP_RESULT = 1018,
+	PKT_S_UNEQUIP_RESULT = 1019,
+	PKT_S_GOLD_CHANGE = 1020,
+	PKT_S_ADD_OBJECT = 1021,
+	PKT_S_REMOVE_OBJECT = 1022,
+	PKT_S_MOVE_OBJECT = 1023,
+	PKT_S_CHAT = 1024,
+	PKT_S_STAT_CHANGE = 1025,
+	PKT_S_DAMAGE = 1026,
+	PKT_S_RESPAWN = 1027,
 };
 
 // Custom Handlers
 bool Handle_INVALID(PacketSessionRef& session, BYTE* buffer, int32 len);
 bool Handle_S_LOGIN(PacketSessionRef& session, Protocol::S_LOGIN& pkt);
+bool Handle_S_LOAD_INVENTORY(PacketSessionRef& session, Protocol::S_LOAD_INVENTORY& pkt);
+bool Handle_S_LOAD_EQUIPMENT(PacketSessionRef& session, Protocol::S_LOAD_EQUIPMENT& pkt);
+bool Handle_S_CONSUME_RESULT(PacketSessionRef& session, Protocol::S_CONSUME_RESULT& pkt);
+bool Handle_S_DROP_RESULT(PacketSessionRef& session, Protocol::S_DROP_RESULT& pkt);
+bool Handle_S_MOVE_INVENTORY_RESULT(PacketSessionRef& session, Protocol::S_MOVE_INVENTORY_RESULT& pkt);
+bool Handle_S_EQUIP_RESULT(PacketSessionRef& session, Protocol::S_EQUIP_RESULT& pkt);
+bool Handle_S_UNEQUIP_RESULT(PacketSessionRef& session, Protocol::S_UNEQUIP_RESULT& pkt);
+bool Handle_S_GOLD_CHANGE(PacketSessionRef& session, Protocol::S_GOLD_CHANGE& pkt);
 bool Handle_S_ADD_OBJECT(PacketSessionRef& session, Protocol::S_ADD_OBJECT& pkt);
 bool Handle_S_REMOVE_OBJECT(PacketSessionRef& session, Protocol::S_REMOVE_OBJECT& pkt);
 bool Handle_S_MOVE_OBJECT(PacketSessionRef& session, Protocol::S_MOVE_OBJECT& pkt);
@@ -41,6 +63,14 @@ public:
 		for (int32 i = 0; i < UINT16_MAX; i++)
 			GPacketHandler[i] = Handle_INVALID;
 		GPacketHandler[PKT_S_LOGIN] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_LOGIN>(Handle_S_LOGIN, session, buffer, len); };
+		GPacketHandler[PKT_S_LOAD_INVENTORY] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_LOAD_INVENTORY>(Handle_S_LOAD_INVENTORY, session, buffer, len); };
+		GPacketHandler[PKT_S_LOAD_EQUIPMENT] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_LOAD_EQUIPMENT>(Handle_S_LOAD_EQUIPMENT, session, buffer, len); };
+		GPacketHandler[PKT_S_CONSUME_RESULT] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_CONSUME_RESULT>(Handle_S_CONSUME_RESULT, session, buffer, len); };
+		GPacketHandler[PKT_S_DROP_RESULT] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_DROP_RESULT>(Handle_S_DROP_RESULT, session, buffer, len); };
+		GPacketHandler[PKT_S_MOVE_INVENTORY_RESULT] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_MOVE_INVENTORY_RESULT>(Handle_S_MOVE_INVENTORY_RESULT, session, buffer, len); };
+		GPacketHandler[PKT_S_EQUIP_RESULT] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_EQUIP_RESULT>(Handle_S_EQUIP_RESULT, session, buffer, len); };
+		GPacketHandler[PKT_S_UNEQUIP_RESULT] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_UNEQUIP_RESULT>(Handle_S_UNEQUIP_RESULT, session, buffer, len); };
+		GPacketHandler[PKT_S_GOLD_CHANGE] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_GOLD_CHANGE>(Handle_S_GOLD_CHANGE, session, buffer, len); };
 		GPacketHandler[PKT_S_ADD_OBJECT] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_ADD_OBJECT>(Handle_S_ADD_OBJECT, session, buffer, len); };
 		GPacketHandler[PKT_S_REMOVE_OBJECT] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_REMOVE_OBJECT>(Handle_S_REMOVE_OBJECT, session, buffer, len); };
 		GPacketHandler[PKT_S_MOVE_OBJECT] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_MOVE_OBJECT>(Handle_S_MOVE_OBJECT, session, buffer, len); };
@@ -56,6 +86,12 @@ public:
 		return GPacketHandler[header->id](session, buffer, len);
 	}
 	static SendBufferRef MakeSendBuffer(Protocol::C_LOGIN& pkt) { return MakeSendBuffer(pkt, PKT_C_LOGIN); }
+	static SendBufferRef MakeSendBuffer(Protocol::C_CONSUME_ITEM& pkt) { return MakeSendBuffer(pkt, PKT_C_CONSUME_ITEM); }
+	static SendBufferRef MakeSendBuffer(Protocol::C_DROP_ITEM& pkt) { return MakeSendBuffer(pkt, PKT_C_DROP_ITEM); }
+	static SendBufferRef MakeSendBuffer(Protocol::C_MOVE_INVENTORY_ITEM& pkt) { return MakeSendBuffer(pkt, PKT_C_MOVE_INVENTORY_ITEM); }
+	static SendBufferRef MakeSendBuffer(Protocol::C_EQUIP& pkt) { return MakeSendBuffer(pkt, PKT_C_EQUIP); }
+	static SendBufferRef MakeSendBuffer(Protocol::C_UNEQUIP& pkt) { return MakeSendBuffer(pkt, PKT_C_UNEQUIP); }
+	static SendBufferRef MakeSendBuffer(Protocol::C_SORT_INVENTORY& pkt) { return MakeSendBuffer(pkt, PKT_C_SORT_INVENTORY); }
 	static SendBufferRef MakeSendBuffer(Protocol::C_MOVE& pkt) { return MakeSendBuffer(pkt, PKT_C_MOVE); }
 	static SendBufferRef MakeSendBuffer(Protocol::C_CHAT& pkt) { return MakeSendBuffer(pkt, PKT_C_CHAT); }
 	static SendBufferRef MakeSendBuffer(Protocol::C_TELEPORT& pkt) { return MakeSendBuffer(pkt, PKT_C_TELEPORT); }

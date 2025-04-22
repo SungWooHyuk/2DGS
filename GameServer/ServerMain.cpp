@@ -10,6 +10,7 @@
 #include "GameDBPacketHandler.h"
 #include "Job.h"
 #include "Logger.h"
+#include <spdlog/spdlog.h>
 
 #include "MapData.h"
 #include "DBGameSession.h"
@@ -49,51 +50,51 @@ void DoWorkerJob(ServerServiceRef& service)
 
 int main()
 {
-	
-	MAPDATA.InitMAP();
-	ClientPacketHandler::Init();
-	GameDBPacketHandler::Init();
-	GAMESESSIONMANAGER.InitializeNPC();
-	//Logger::GetInstance().Init("GameServer");
+	spdlog::info("Hello, spdlog!");
+	//MAPDATA.InitMAP();
+	//ClientPacketHandler::Init();
+	//GameDBPacketHandler::Init();
+	//GAMESESSIONMANAGER.InitializeNPC();
+	////Logger::GetInstance().Init("GameServer");
 
-	ServerServiceRef service = MakeShared<ServerService>(
-		NetAddress(L"127.0.0.1", 4000),
-		MakeShared<IocpCore>(),
-		MakeShared<GameSession>,
-		MAX_USER
-		);
+	//ServerServiceRef service = MakeShared<ServerService>(
+	//	NetAddress(L"127.0.0.1", 4000),
+	//	MakeShared<IocpCore>(),
+	//	MakeShared<GameSession>,
+	//	MAX_USER
+	//	);
 
-	ServerServiceRef dbservice = MakeShared<ServerService>(
-		NetAddress(L"127.0.0.1", DB_PORT),
-		MakeShared<IocpCore>(),
-		MakeShared<DBGameSession>,
-		1
-		);
+	//ServerServiceRef dbservice = MakeShared<ServerService>(
+	//	NetAddress(L"127.0.0.1", DB_PORT),
+	//	MakeShared<IocpCore>(),
+	//	MakeShared<DBGameSession>,
+	//	1
+	//	);
 
 
-	ASSERT_CRASH(service->Start());
-	ASSERT_CRASH(dbservice->Start());
+	//ASSERT_CRASH(service->Start());
+	//ASSERT_CRASH(dbservice->Start());
 
-	int num_threads = std::thread::hardware_concurrency() - 3;
-	int db_num_threads = 3;
+	//int num_threads = std::thread::hardware_concurrency() - 3;
+	//int db_num_threads = 3;
 
-	for (int32 i = 0; i < num_threads; ++i)
-	{
-		GThreadManager->Launch([&service]()
-			{
-				DoWorkerJob(service);
-			});
-	}
+	//for (int32 i = 0; i < num_threads; ++i)
+	//{
+	//	GThreadManager->Launch([&service]()
+	//		{
+	//			DoWorkerJob(service);
+	//		});
+	//}
 
-	for (int32 i = 0; i < db_num_threads; ++i)
-	{
-		GThreadManager->Launch([&dbservice]()
-			{
-				DoWorkerJob(dbservice);
-			});
-	}
+	//for (int32 i = 0; i < db_num_threads; ++i)
+	//{
+	//	GThreadManager->Launch([&dbservice]()
+	//		{
+	//			DoWorkerJob(dbservice);
+	//		});
+	//}
 
-	DoWorkerJob(service);
-	GThreadManager->Join();
+	//DoWorkerJob(service);
+	//GThreadManager->Join();
 
 }

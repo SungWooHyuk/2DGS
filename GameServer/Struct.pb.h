@@ -47,7 +47,7 @@ struct TableStruct_Struct_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[5]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[7]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -58,6 +58,12 @@ namespace Protocol {
 class AddPlayer;
 struct AddPlayerDefaultTypeInternal;
 extern AddPlayerDefaultTypeInternal _AddPlayer_default_instance_;
+class EquipmentItem;
+struct EquipmentItemDefaultTypeInternal;
+extern EquipmentItemDefaultTypeInternal _EquipmentItem_default_instance_;
+class InventorySlot;
+struct InventorySlotDefaultTypeInternal;
+extern InventorySlotDefaultTypeInternal _InventorySlot_default_instance_;
 class Mess;
 struct MessDefaultTypeInternal;
 extern MessDefaultTypeInternal _Mess_default_instance_;
@@ -73,6 +79,8 @@ extern StatDefaultTypeInternal _Stat_default_instance_;
 }  // namespace Protocol
 PROTOBUF_NAMESPACE_OPEN
 template<> ::Protocol::AddPlayer* Arena::CreateMaybeMessage<::Protocol::AddPlayer>(Arena*);
+template<> ::Protocol::EquipmentItem* Arena::CreateMaybeMessage<::Protocol::EquipmentItem>(Arena*);
+template<> ::Protocol::InventorySlot* Arena::CreateMaybeMessage<::Protocol::InventorySlot>(Arena*);
 template<> ::Protocol::Mess* Arena::CreateMaybeMessage<::Protocol::Mess>(Arena*);
 template<> ::Protocol::Move* Arena::CreateMaybeMessage<::Protocol::Move>(Arena*);
 template<> ::Protocol::Player* Arena::CreateMaybeMessage<::Protocol::Player>(Arena*);
@@ -216,6 +224,7 @@ class Player final :
     kMaxmpFieldNumber = 10,
     kExpFieldNumber = 11,
     kMaxexpFieldNumber = 12,
+    kGoldFieldNumber = 13,
   };
   // repeated .Protocol.PlayerType playertype = 1;
   int playertype_size() const;
@@ -338,6 +347,15 @@ class Player final :
   void _internal_set_maxexp(uint64_t value);
   public:
 
+  // uint64 gold = 13;
+  void clear_gold();
+  uint64_t gold() const;
+  void set_gold(uint64_t value);
+  private:
+  uint64_t _internal_gold() const;
+  void _internal_set_gold(uint64_t value);
+  public:
+
   // @@protoc_insertion_point(class_scope:Protocol.Player)
  private:
   class _Internal;
@@ -358,6 +376,7 @@ class Player final :
   uint64_t maxmp_;
   uint64_t exp_;
   uint64_t maxexp_;
+  uint64_t gold_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Struct_2eproto;
 };
@@ -492,6 +511,9 @@ class Stat final :
     kMaxhpFieldNumber = 5,
     kMpFieldNumber = 6,
     kMaxmpFieldNumber = 7,
+    kAttackPowerFieldNumber = 8,
+    kDefensePowerFieldNumber = 9,
+    kMagicPowerFieldNumber = 10,
   };
   // uint64 level = 1;
   void clear_level();
@@ -556,6 +578,33 @@ class Stat final :
   void _internal_set_maxmp(uint64_t value);
   public:
 
+  // uint64 attackPower = 8;
+  void clear_attackpower();
+  uint64_t attackpower() const;
+  void set_attackpower(uint64_t value);
+  private:
+  uint64_t _internal_attackpower() const;
+  void _internal_set_attackpower(uint64_t value);
+  public:
+
+  // uint64 defensePower = 9;
+  void clear_defensepower();
+  uint64_t defensepower() const;
+  void set_defensepower(uint64_t value);
+  private:
+  uint64_t _internal_defensepower() const;
+  void _internal_set_defensepower(uint64_t value);
+  public:
+
+  // uint64 magicPower = 10;
+  void clear_magicpower();
+  uint64_t magicpower() const;
+  void set_magicpower(uint64_t value);
+  private:
+  uint64_t _internal_magicpower() const;
+  void _internal_set_magicpower(uint64_t value);
+  public:
+
   // @@protoc_insertion_point(class_scope:Protocol.Stat)
  private:
   class _Internal;
@@ -570,6 +619,367 @@ class Stat final :
   uint64_t maxhp_;
   uint64_t mp_;
   uint64_t maxmp_;
+  uint64_t attackpower_;
+  uint64_t defensepower_;
+  uint64_t magicpower_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Struct_2eproto;
+};
+// -------------------------------------------------------------------
+
+class InventorySlot final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.InventorySlot) */ {
+ public:
+  inline InventorySlot() : InventorySlot(nullptr) {}
+  ~InventorySlot() override;
+  explicit constexpr InventorySlot(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  InventorySlot(const InventorySlot& from);
+  InventorySlot(InventorySlot&& from) noexcept
+    : InventorySlot() {
+    *this = ::std::move(from);
+  }
+
+  inline InventorySlot& operator=(const InventorySlot& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline InventorySlot& operator=(InventorySlot&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const InventorySlot& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const InventorySlot* internal_default_instance() {
+    return reinterpret_cast<const InventorySlot*>(
+               &_InventorySlot_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    2;
+
+  friend void swap(InventorySlot& a, InventorySlot& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(InventorySlot* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(InventorySlot* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  InventorySlot* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<InventorySlot>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const InventorySlot& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const InventorySlot& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(InventorySlot* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.InventorySlot";
+  }
+  protected:
+  explicit InventorySlot(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kItemIdFieldNumber = 1,
+    kQuantityFieldNumber = 2,
+    kTabTypeFieldNumber = 3,
+    kSlotIndexFieldNumber = 4,
+  };
+  // uint64 item_id = 1;
+  void clear_item_id();
+  uint64_t item_id() const;
+  void set_item_id(uint64_t value);
+  private:
+  uint64_t _internal_item_id() const;
+  void _internal_set_item_id(uint64_t value);
+  public:
+
+  // uint64 quantity = 2;
+  void clear_quantity();
+  uint64_t quantity() const;
+  void set_quantity(uint64_t value);
+  private:
+  uint64_t _internal_quantity() const;
+  void _internal_set_quantity(uint64_t value);
+  public:
+
+  // uint64 tab_type = 3;
+  void clear_tab_type();
+  uint64_t tab_type() const;
+  void set_tab_type(uint64_t value);
+  private:
+  uint64_t _internal_tab_type() const;
+  void _internal_set_tab_type(uint64_t value);
+  public:
+
+  // uint64 slot_index = 4;
+  void clear_slot_index();
+  uint64_t slot_index() const;
+  void set_slot_index(uint64_t value);
+  private:
+  uint64_t _internal_slot_index() const;
+  void _internal_set_slot_index(uint64_t value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:Protocol.InventorySlot)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  uint64_t item_id_;
+  uint64_t quantity_;
+  uint64_t tab_type_;
+  uint64_t slot_index_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Struct_2eproto;
+};
+// -------------------------------------------------------------------
+
+class EquipmentItem final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.EquipmentItem) */ {
+ public:
+  inline EquipmentItem() : EquipmentItem(nullptr) {}
+  ~EquipmentItem() override;
+  explicit constexpr EquipmentItem(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  EquipmentItem(const EquipmentItem& from);
+  EquipmentItem(EquipmentItem&& from) noexcept
+    : EquipmentItem() {
+    *this = ::std::move(from);
+  }
+
+  inline EquipmentItem& operator=(const EquipmentItem& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline EquipmentItem& operator=(EquipmentItem&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const EquipmentItem& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const EquipmentItem* internal_default_instance() {
+    return reinterpret_cast<const EquipmentItem*>(
+               &_EquipmentItem_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    3;
+
+  friend void swap(EquipmentItem& a, EquipmentItem& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(EquipmentItem* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(EquipmentItem* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  EquipmentItem* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<EquipmentItem>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const EquipmentItem& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const EquipmentItem& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(EquipmentItem* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.EquipmentItem";
+  }
+  protected:
+  explicit EquipmentItem(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kWeaponFieldNumber = 1,
+    kHelmetFieldNumber = 2,
+    kTopFieldNumber = 3,
+    kBottomFieldNumber = 4,
+  };
+  // uint64 weapon = 1;
+  void clear_weapon();
+  uint64_t weapon() const;
+  void set_weapon(uint64_t value);
+  private:
+  uint64_t _internal_weapon() const;
+  void _internal_set_weapon(uint64_t value);
+  public:
+
+  // uint64 helmet = 2;
+  void clear_helmet();
+  uint64_t helmet() const;
+  void set_helmet(uint64_t value);
+  private:
+  uint64_t _internal_helmet() const;
+  void _internal_set_helmet(uint64_t value);
+  public:
+
+  // uint64 top = 3;
+  void clear_top();
+  uint64_t top() const;
+  void set_top(uint64_t value);
+  private:
+  uint64_t _internal_top() const;
+  void _internal_set_top(uint64_t value);
+  public:
+
+  // uint64 bottom = 4;
+  void clear_bottom();
+  uint64_t bottom() const;
+  void set_bottom(uint64_t value);
+  private:
+  uint64_t _internal_bottom() const;
+  void _internal_set_bottom(uint64_t value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:Protocol.EquipmentItem)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  uint64_t weapon_;
+  uint64_t helmet_;
+  uint64_t top_;
+  uint64_t bottom_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Struct_2eproto;
 };
@@ -623,7 +1033,7 @@ class AddPlayer final :
                &_AddPlayer_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    2;
+    4;
 
   friend void swap(AddPlayer& a, AddPlayer& b) {
     a.Swap(&b);
@@ -827,7 +1237,7 @@ class Move final :
                &_Move_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    3;
+    5;
 
   friend void swap(Move& a, Move& b) {
     a.Swap(&b);
@@ -1006,7 +1416,7 @@ class Mess final :
                &_Mess_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    4;
+    6;
 
   friend void swap(Mess& a, Mess& b) {
     a.Swap(&b);
@@ -1423,6 +1833,26 @@ inline void Player::set_maxexp(uint64_t value) {
   // @@protoc_insertion_point(field_set:Protocol.Player.maxexp)
 }
 
+// uint64 gold = 13;
+inline void Player::clear_gold() {
+  gold_ = uint64_t{0u};
+}
+inline uint64_t Player::_internal_gold() const {
+  return gold_;
+}
+inline uint64_t Player::gold() const {
+  // @@protoc_insertion_point(field_get:Protocol.Player.gold)
+  return _internal_gold();
+}
+inline void Player::_internal_set_gold(uint64_t value) {
+  
+  gold_ = value;
+}
+inline void Player::set_gold(uint64_t value) {
+  _internal_set_gold(value);
+  // @@protoc_insertion_point(field_set:Protocol.Player.gold)
+}
+
 // -------------------------------------------------------------------
 
 // Stat
@@ -1565,6 +1995,234 @@ inline void Stat::_internal_set_maxmp(uint64_t value) {
 inline void Stat::set_maxmp(uint64_t value) {
   _internal_set_maxmp(value);
   // @@protoc_insertion_point(field_set:Protocol.Stat.maxmp)
+}
+
+// uint64 attackPower = 8;
+inline void Stat::clear_attackpower() {
+  attackpower_ = uint64_t{0u};
+}
+inline uint64_t Stat::_internal_attackpower() const {
+  return attackpower_;
+}
+inline uint64_t Stat::attackpower() const {
+  // @@protoc_insertion_point(field_get:Protocol.Stat.attackPower)
+  return _internal_attackpower();
+}
+inline void Stat::_internal_set_attackpower(uint64_t value) {
+  
+  attackpower_ = value;
+}
+inline void Stat::set_attackpower(uint64_t value) {
+  _internal_set_attackpower(value);
+  // @@protoc_insertion_point(field_set:Protocol.Stat.attackPower)
+}
+
+// uint64 defensePower = 9;
+inline void Stat::clear_defensepower() {
+  defensepower_ = uint64_t{0u};
+}
+inline uint64_t Stat::_internal_defensepower() const {
+  return defensepower_;
+}
+inline uint64_t Stat::defensepower() const {
+  // @@protoc_insertion_point(field_get:Protocol.Stat.defensePower)
+  return _internal_defensepower();
+}
+inline void Stat::_internal_set_defensepower(uint64_t value) {
+  
+  defensepower_ = value;
+}
+inline void Stat::set_defensepower(uint64_t value) {
+  _internal_set_defensepower(value);
+  // @@protoc_insertion_point(field_set:Protocol.Stat.defensePower)
+}
+
+// uint64 magicPower = 10;
+inline void Stat::clear_magicpower() {
+  magicpower_ = uint64_t{0u};
+}
+inline uint64_t Stat::_internal_magicpower() const {
+  return magicpower_;
+}
+inline uint64_t Stat::magicpower() const {
+  // @@protoc_insertion_point(field_get:Protocol.Stat.magicPower)
+  return _internal_magicpower();
+}
+inline void Stat::_internal_set_magicpower(uint64_t value) {
+  
+  magicpower_ = value;
+}
+inline void Stat::set_magicpower(uint64_t value) {
+  _internal_set_magicpower(value);
+  // @@protoc_insertion_point(field_set:Protocol.Stat.magicPower)
+}
+
+// -------------------------------------------------------------------
+
+// InventorySlot
+
+// uint64 item_id = 1;
+inline void InventorySlot::clear_item_id() {
+  item_id_ = uint64_t{0u};
+}
+inline uint64_t InventorySlot::_internal_item_id() const {
+  return item_id_;
+}
+inline uint64_t InventorySlot::item_id() const {
+  // @@protoc_insertion_point(field_get:Protocol.InventorySlot.item_id)
+  return _internal_item_id();
+}
+inline void InventorySlot::_internal_set_item_id(uint64_t value) {
+  
+  item_id_ = value;
+}
+inline void InventorySlot::set_item_id(uint64_t value) {
+  _internal_set_item_id(value);
+  // @@protoc_insertion_point(field_set:Protocol.InventorySlot.item_id)
+}
+
+// uint64 quantity = 2;
+inline void InventorySlot::clear_quantity() {
+  quantity_ = uint64_t{0u};
+}
+inline uint64_t InventorySlot::_internal_quantity() const {
+  return quantity_;
+}
+inline uint64_t InventorySlot::quantity() const {
+  // @@protoc_insertion_point(field_get:Protocol.InventorySlot.quantity)
+  return _internal_quantity();
+}
+inline void InventorySlot::_internal_set_quantity(uint64_t value) {
+  
+  quantity_ = value;
+}
+inline void InventorySlot::set_quantity(uint64_t value) {
+  _internal_set_quantity(value);
+  // @@protoc_insertion_point(field_set:Protocol.InventorySlot.quantity)
+}
+
+// uint64 tab_type = 3;
+inline void InventorySlot::clear_tab_type() {
+  tab_type_ = uint64_t{0u};
+}
+inline uint64_t InventorySlot::_internal_tab_type() const {
+  return tab_type_;
+}
+inline uint64_t InventorySlot::tab_type() const {
+  // @@protoc_insertion_point(field_get:Protocol.InventorySlot.tab_type)
+  return _internal_tab_type();
+}
+inline void InventorySlot::_internal_set_tab_type(uint64_t value) {
+  
+  tab_type_ = value;
+}
+inline void InventorySlot::set_tab_type(uint64_t value) {
+  _internal_set_tab_type(value);
+  // @@protoc_insertion_point(field_set:Protocol.InventorySlot.tab_type)
+}
+
+// uint64 slot_index = 4;
+inline void InventorySlot::clear_slot_index() {
+  slot_index_ = uint64_t{0u};
+}
+inline uint64_t InventorySlot::_internal_slot_index() const {
+  return slot_index_;
+}
+inline uint64_t InventorySlot::slot_index() const {
+  // @@protoc_insertion_point(field_get:Protocol.InventorySlot.slot_index)
+  return _internal_slot_index();
+}
+inline void InventorySlot::_internal_set_slot_index(uint64_t value) {
+  
+  slot_index_ = value;
+}
+inline void InventorySlot::set_slot_index(uint64_t value) {
+  _internal_set_slot_index(value);
+  // @@protoc_insertion_point(field_set:Protocol.InventorySlot.slot_index)
+}
+
+// -------------------------------------------------------------------
+
+// EquipmentItem
+
+// uint64 weapon = 1;
+inline void EquipmentItem::clear_weapon() {
+  weapon_ = uint64_t{0u};
+}
+inline uint64_t EquipmentItem::_internal_weapon() const {
+  return weapon_;
+}
+inline uint64_t EquipmentItem::weapon() const {
+  // @@protoc_insertion_point(field_get:Protocol.EquipmentItem.weapon)
+  return _internal_weapon();
+}
+inline void EquipmentItem::_internal_set_weapon(uint64_t value) {
+  
+  weapon_ = value;
+}
+inline void EquipmentItem::set_weapon(uint64_t value) {
+  _internal_set_weapon(value);
+  // @@protoc_insertion_point(field_set:Protocol.EquipmentItem.weapon)
+}
+
+// uint64 helmet = 2;
+inline void EquipmentItem::clear_helmet() {
+  helmet_ = uint64_t{0u};
+}
+inline uint64_t EquipmentItem::_internal_helmet() const {
+  return helmet_;
+}
+inline uint64_t EquipmentItem::helmet() const {
+  // @@protoc_insertion_point(field_get:Protocol.EquipmentItem.helmet)
+  return _internal_helmet();
+}
+inline void EquipmentItem::_internal_set_helmet(uint64_t value) {
+  
+  helmet_ = value;
+}
+inline void EquipmentItem::set_helmet(uint64_t value) {
+  _internal_set_helmet(value);
+  // @@protoc_insertion_point(field_set:Protocol.EquipmentItem.helmet)
+}
+
+// uint64 top = 3;
+inline void EquipmentItem::clear_top() {
+  top_ = uint64_t{0u};
+}
+inline uint64_t EquipmentItem::_internal_top() const {
+  return top_;
+}
+inline uint64_t EquipmentItem::top() const {
+  // @@protoc_insertion_point(field_get:Protocol.EquipmentItem.top)
+  return _internal_top();
+}
+inline void EquipmentItem::_internal_set_top(uint64_t value) {
+  
+  top_ = value;
+}
+inline void EquipmentItem::set_top(uint64_t value) {
+  _internal_set_top(value);
+  // @@protoc_insertion_point(field_set:Protocol.EquipmentItem.top)
+}
+
+// uint64 bottom = 4;
+inline void EquipmentItem::clear_bottom() {
+  bottom_ = uint64_t{0u};
+}
+inline uint64_t EquipmentItem::_internal_bottom() const {
+  return bottom_;
+}
+inline uint64_t EquipmentItem::bottom() const {
+  // @@protoc_insertion_point(field_get:Protocol.EquipmentItem.bottom)
+  return _internal_bottom();
+}
+inline void EquipmentItem::_internal_set_bottom(uint64_t value) {
+  
+  bottom_ = value;
+}
+inline void EquipmentItem::set_bottom(uint64_t value) {
+  _internal_set_bottom(value);
+  // @@protoc_insertion_point(field_set:Protocol.EquipmentItem.bottom)
 }
 
 // -------------------------------------------------------------------
@@ -1887,6 +2545,10 @@ inline void Mess::set_allocated_mess(std::string* mess) {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

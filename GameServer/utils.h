@@ -103,6 +103,11 @@ struct STAT
 	int32	maxHp;
 	int32	maxMp;
 	int32	maxExp;
+
+	int32	attackPower;
+	int32	defencePower;
+	int32	magicPower;
+	int32	strength;
 };
 
 struct USER_INFO

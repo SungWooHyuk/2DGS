@@ -17,6 +17,7 @@ message Player
 	uint64 maxmp = 10;
 	uint64 exp = 11;
 	uint64 maxexp = 12;
+	uint64 gold = 13;
 }
 
 message Stat
@@ -28,8 +29,27 @@ message Stat
 	uint64 maxhp = 5;
 	uint64 mp = 6;
 	uint64 maxmp = 7;
+
+	uint64 attackPower = 8;
+	uint64 defensePower = 9;
+	uint64 magicPower = 10;
 }
 
+message InventorySlot
+{
+	uint64 item_id = 1;
+	uint64 quantity = 2;
+	uint64 tab_type = 3;
+	uint64 slot_index = 4;
+}
+
+message EquipmentItem
+{
+	uint64 weapon = 1;
+	uint64 helmet = 2;
+	uint64 top = 3;
+	uint64 bottom = 4;
+}
 message AddPlayer
 {
 	repeated PlayerType playertype = 1;

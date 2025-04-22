@@ -25,5 +25,4 @@ private:
     std::queue<string> _logQueue;
     string _baseFilename;
 };
-
 #define LOG_PUSH(message) Logger::GetInstance().Push(message)

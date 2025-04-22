@@ -11,10 +11,11 @@ bool Handle_DS_LOGIN(PacketSessionRef& session, DBProtocol::DS_LOGIN& pkt)
 {
 	return true;
 }
-bool Handle_DS_SAVE_PLAYER(PacketSessionRef& session, DBProtocol::DS_SAVE_PLAYER& pkt)
+bool Handle_DS_REGISTER(PacketSessionRef& session, DBProtocol::DS_REGISTER& pkt)
 {
-	return true;
+	return false;
 }
+
 bool Handle_DS_UPDATE_GOLD(PacketSessionRef& session, DBProtocol::DS_UPDATE_GOLD& pkt)
 {
 	return true;
