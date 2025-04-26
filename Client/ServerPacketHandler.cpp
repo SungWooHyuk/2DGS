@@ -13,42 +13,119 @@ bool Handle_INVALID(PacketSessionRef& session, BYTE* buffer, int32 len)
 }
 bool Handle_S_LOGIN(PacketSessionRef& session, Protocol::S_LOGIN& pkt)
 {
-
 	ServerSessionRef serverSession = static_pointer_cast<ServerSession>(session);
 
-	if (pkt.success())
+	if (!pkt.success())
+		return false;
+
+	for (const auto& player : pkt.players())
 	{
-		for (const auto& player : pkt.players())
+		POS ps;
+		TP tp;
+
+		ps.posx = player.x();
+		ps.posy = player.y();
+
+		tp.attackEndTime = chrono::system_clock::now();
+		tp.attackTime = chrono::system_clock::now();
+		tp.moveTime = chrono::system_clock::now();
+
+		PlayerRef pl = MakeShared<Player>(*SFSYSTEM.GetPlayerAttack(),
+			*SFSYSTEM.GetPlayer(),
+			0, 0, 65, 65, ps, tp,
+			player.id(), player.name(), player.gold());
+
+
+		if (pkt.stats_size() > 0)
 		{
-			STAT st;
-			POS ps;
-			TP tp;
-
-			st.exp = player.exp();
-			st.hp = player.hp();
-			st.mp = player.mp();
-			st.level = player.level();
-			st.maxExp = player.maxexp();
-			st.maxHp = player.maxhp();
-			st.maxMp = player.maxmp();
-			ps.posx = player.x();
-			ps.posy = player.y();
-			tp.attackEndTime = chrono::system_clock::now();
-			tp.attackTime = chrono::system_clock::now();
-			tp.moveTime = chrono::system_clock::now();
-
-			PlayerRef pl = MakeShared<Player>(*SFSYSTEM.GetPlayerAttack(),
-				*SFSYSTEM.GetPlayer(),
-				0, 0, 65, 65, st, ps, tp,
-				player.id(), player.name());
-
-			g_left_x	= ps.posx - SCREEN_WIDTH / 2;
-			g_top_y		= ps.posy - SCREEN_HEIGHT / 2;
-			serverSession->SetPlayer(pl);
+			const auto& s = pkt.stats(0);
+			STAT stats;
+			stats.exp = s.exp();
+			stats.hp = s.hp();
+			stats.mp = s.mp();
+			stats.level = s.level();
+			stats.maxExp = s.maxexp();
+			stats.maxHp = s.maxhp();
+			stats.maxMp = s.maxmp();
+			stats.attackPower = s.attackpower();
+			stats.defencePower = s.defensepower();
+			stats.magicPower = s.magicpower();
+			stats.strength = s.strenth();
+			pl->SetStat(stats); // 있으면 세터 호출
 		}
 
-		return true;
+
+		vector<INVEN> inventoryList;
+		if (pkt.has_inventory())
+		{
+			for (const auto& item : pkt.inventory().inventory())
+			{
+				INVEN inv;
+				inv.itemId = item.item_id();
+				inv.quantity = item.quantity();
+				inv.tab_type = item.tab_type();
+				inv.slot_index = item.slot_index();
+				inventoryList.push_back(inv);
+			}
+			pl->SetInventory(inventoryList);
+		}
+
+	
+		if (pkt.equipment().equipment_size() > 0)
+		{
+			const auto& eq = pkt.equipment().equipment(0);
+			if (eq.weapon() != 0)  pl->SetEquip(E_EQUIP::WEAPON, eq.weapon());
+			if (eq.helmet() != 0)  pl->SetEquip(E_EQUIP::HELMET, eq.helmet());
+			if (eq.top() != 0)     pl->SetEquip(E_EQUIP::TOP, eq.top());
+			if (eq.bottom() != 0)  pl->SetEquip(E_EQUIP::BOTTOM, eq.bottom());
+		}
+
+		serverSession->SetPlayer(pl);
+
+		g_left_x = ps.posx - SCREEN_WIDTH / 2;
+		g_top_y = ps.posy - SCREEN_HEIGHT / 2;
 	}
+
+	return true;
+}
+
+bool Handle_S_LOAD_INVENTORY(PacketSessionRef& session, Protocol::S_LOAD_INVENTORY& pkt)
+{
+	return false;
+}
+
+bool Handle_S_LOAD_EQUIPMENT(PacketSessionRef& session, Protocol::S_LOAD_EQUIPMENT& pkt)
+{
+	return false;
+}
+
+bool Handle_S_CONSUME_RESULT(PacketSessionRef& session, Protocol::S_CONSUME_RESULT& pkt)
+{
+	return false;
+}
+
+bool Handle_S_DROP_RESULT(PacketSessionRef& session, Protocol::S_DROP_RESULT& pkt)
+{
+	return false;
+}
+
+bool Handle_S_MOVE_INVENTORY_RESULT(PacketSessionRef& session, Protocol::S_MOVE_INVENTORY_RESULT& pkt)
+{
+	return false;
+}
+
+bool Handle_S_EQUIP_RESULT(PacketSessionRef& session, Protocol::S_EQUIP_RESULT& pkt)
+{
+	return false;
+}
+
+bool Handle_S_UNEQUIP_RESULT(PacketSessionRef& session, Protocol::S_UNEQUIP_RESULT& pkt)
+{
+	return false;
+}
+
+bool Handle_S_GOLD_CHANGE(PacketSessionRef& session, Protocol::S_GOLD_CHANGE& pkt)
+{
 	return false;
 }
 

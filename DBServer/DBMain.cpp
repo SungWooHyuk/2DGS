@@ -14,7 +14,7 @@
 using namespace std;
 
 
-void DoWorkerJob(DBServiceRef& service)
+void DoWorkerJob(DBServerServiceRef& service)
 {
 	while (true)
 	{
@@ -39,7 +39,7 @@ int main()
 	DBPacketHandler::Init();
 
 	// 서비스 시작
-	DBServiceRef service = MakeShared<DBService>( // connect
+	DBServerServiceRef service = MakeShared<DBServerService>( // connect
 		NetAddress(IP, DB_PORT),
 		MakeShared<IocpCore>(),
 		MakeShared<DBSession>,

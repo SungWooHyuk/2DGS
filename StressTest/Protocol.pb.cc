@@ -177,6 +177,7 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT C_LOGOUTDefaultTypeInternal _C_
 constexpr S_LOGIN::S_LOGIN(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
   : players_()
+  , stats_()
   , inventory_(nullptr)
   , equipment_(nullptr)
   , success_(false){}
@@ -503,6 +504,7 @@ const uint32_t TableStruct_Protocol_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE
   ~0u,  // no _inlined_string_donated_
   PROTOBUF_FIELD_OFFSET(::Protocol::S_LOGIN, success_),
   PROTOBUF_FIELD_OFFSET(::Protocol::S_LOGIN, players_),
+  PROTOBUF_FIELD_OFFSET(::Protocol::S_LOGIN, stats_),
   PROTOBUF_FIELD_OFFSET(::Protocol::S_LOGIN, inventory_),
   PROTOBUF_FIELD_OFFSET(::Protocol::S_LOGIN, equipment_),
   ~0u,  // no _has_bits_
@@ -648,21 +650,21 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOB
   { 82, -1, -1, sizeof(::Protocol::C_ATTACK)},
   { 90, -1, -1, sizeof(::Protocol::C_LOGOUT)},
   { 97, -1, -1, sizeof(::Protocol::S_LOGIN)},
-  { 107, -1, -1, sizeof(::Protocol::S_LOAD_INVENTORY)},
-  { 114, -1, -1, sizeof(::Protocol::S_LOAD_EQUIPMENT)},
-  { 121, -1, -1, sizeof(::Protocol::S_CONSUME_RESULT)},
-  { 132, -1, -1, sizeof(::Protocol::S_DROP_RESULT)},
-  { 142, -1, -1, sizeof(::Protocol::S_MOVE_INVENTORY_RESULT)},
-  { 155, -1, -1, sizeof(::Protocol::S_EQUIP_RESULT)},
-  { 164, -1, -1, sizeof(::Protocol::S_UNEQUIP_RESULT)},
-  { 175, -1, -1, sizeof(::Protocol::S_GOLD_CHANGE)},
-  { 183, -1, -1, sizeof(::Protocol::S_ADD_OBJECT)},
-  { 190, -1, -1, sizeof(::Protocol::S_REMOVE_OBJECT)},
-  { 197, -1, -1, sizeof(::Protocol::S_MOVE_OBJECT)},
-  { 204, -1, -1, sizeof(::Protocol::S_CHAT)},
-  { 211, -1, -1, sizeof(::Protocol::S_STAT_CHANGE)},
-  { 218, -1, -1, sizeof(::Protocol::S_DAMAGE)},
-  { 225, -1, -1, sizeof(::Protocol::S_RESPAWN)},
+  { 108, -1, -1, sizeof(::Protocol::S_LOAD_INVENTORY)},
+  { 115, -1, -1, sizeof(::Protocol::S_LOAD_EQUIPMENT)},
+  { 122, -1, -1, sizeof(::Protocol::S_CONSUME_RESULT)},
+  { 133, -1, -1, sizeof(::Protocol::S_DROP_RESULT)},
+  { 143, -1, -1, sizeof(::Protocol::S_MOVE_INVENTORY_RESULT)},
+  { 156, -1, -1, sizeof(::Protocol::S_EQUIP_RESULT)},
+  { 165, -1, -1, sizeof(::Protocol::S_UNEQUIP_RESULT)},
+  { 176, -1, -1, sizeof(::Protocol::S_GOLD_CHANGE)},
+  { 184, -1, -1, sizeof(::Protocol::S_ADD_OBJECT)},
+  { 191, -1, -1, sizeof(::Protocol::S_REMOVE_OBJECT)},
+  { 198, -1, -1, sizeof(::Protocol::S_MOVE_OBJECT)},
+  { 205, -1, -1, sizeof(::Protocol::S_CHAT)},
+  { 212, -1, -1, sizeof(::Protocol::S_STAT_CHANGE)},
+  { 219, -1, -1, sizeof(::Protocol::S_DAMAGE)},
+  { 226, -1, -1, sizeof(::Protocol::S_RESPAWN)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -713,37 +715,38 @@ const char descriptor_table_protodef_Protocol_2eproto[] PROTOBUF_SECTION_VARIABL
   "\tmove_time\030\002 \001(\003\"\025\n\006C_CHAT\022\013\n\003msg\030\001 \001(\t\""
   "\030\n\nC_TELEPORT\022\n\n\002id\030\001 \001(\004\"%\n\010C_ATTACK\022\n\n"
   "\002id\030\001 \001(\004\022\r\n\005skill\030\002 \001(\004\"\026\n\010C_LOGOUT\022\n\n\002"
-  "id\030\001 \001(\004\"\233\001\n\007S_LOGIN\022\017\n\007success\030\001 \001(\010\022!\n"
-  "\007players\030\002 \003(\0132\020.Protocol.Player\022-\n\tinve"
-  "ntory\030\003 \001(\0132\032.Protocol.S_LOAD_INVENTORY\022"
-  "-\n\tequipment\030\004 \001(\0132\032.Protocol.S_LOAD_EQU"
-  "IPMENT\">\n\020S_LOAD_INVENTORY\022*\n\tinventory\030"
-  "\001 \003(\0132\027.Protocol.InventorySlot\">\n\020S_LOAD"
-  "_EQUIPMENT\022*\n\tequipment\030\001 \003(\0132\027.Protocol"
-  ".EquipmentItem\"p\n\020S_CONSUME_RESULT\022\017\n\007su"
-  "ccess\030\001 \001(\010\022\017\n\007item_id\030\002 \001(\004\022\020\n\010tab_type"
-  "\030\003 \001(\004\022\022\n\nslot_index\030\004 \001(\004\022\024\n\014new_quanti"
-  "ty\030\005 \001(\004\"W\n\rS_DROP_RESULT\022\017\n\007success\030\001 \001"
-  "(\010\022\017\n\007item_id\030\002 \001(\004\022\020\n\010tab_type\030\003 \001(\004\022\022\n"
-  "\nslot_index\030\004 \001(\004\"\233\001\n\027S_MOVE_INVENTORY_R"
-  "ESULT\022\017\n\007success\030\001 \001(\010\022\020\n\010from_tab\030\002 \001(\004"
-  "\022\022\n\nfrom_index\030\003 \001(\004\022\016\n\006to_tab\030\004 \001(\004\022\020\n\010"
-  "to_index\030\005 \001(\004\022\025\n\rmoved_item_id\030\006 \001(\004\022\020\n"
-  "\010quantity\030\007 \001(\004\"E\n\016S_EQUIP_RESULT\022\017\n\007suc"
-  "cess\030\001 \001(\010\022\017\n\007item_id\030\002 \001(\004\022\021\n\tslot_type"
-  "\030\003 \001(\004\"s\n\020S_UNEQUIP_RESULT\022\017\n\007success\030\001 "
-  "\001(\010\022\017\n\007item_id\030\002 \001(\004\022\021\n\tslot_type\030\003 \001(\004\022"
-  "\023\n\013to_tab_type\030\004 \001(\004\022\025\n\rto_slot_index\030\005 "
-  "\001(\004\"0\n\rS_GOLD_CHANGE\022\020\n\010new_gold\030\001 \001(\004\022\r"
-  "\n\005delta\030\002 \001(\003\"4\n\014S_ADD_OBJECT\022$\n\007players"
-  "\030\001 \003(\0132\023.Protocol.AddPlayer\"\035\n\017S_REMOVE_"
-  "OBJECT\022\n\n\002id\030\001 \001(\004\".\n\rS_MOVE_OBJECT\022\035\n\005m"
-  "oves\030\001 \003(\0132\016.Protocol.Move\"*\n\006S_CHAT\022 \n\010"
-  "messages\030\001 \003(\0132\016.Protocol.Mess\".\n\rS_STAT"
-  "_CHANGE\022\035\n\005stats\030\001 \003(\0132\016.Protocol.Stat\"\032"
-  "\n\010S_DAMAGE\022\016\n\006damage\030\001 \001(\004\":\n\tS_RESPAWN\022"
-  "\n\n\002hp\030\001 \001(\004\022\t\n\001x\030\002 \001(\004\022\t\n\001y\030\003 \001(\004\022\013\n\003exp"
-  "\030\004 \001(\004b\006proto3"
+  "id\030\001 \001(\004\"\270\001\n\007S_LOGIN\022\017\n\007success\030\001 \001(\010\022\037\n"
+  "\007players\030\002 \003(\0132\016.Protocol.User\022\035\n\005stats\030"
+  "\003 \003(\0132\016.Protocol.Stat\022-\n\tinventory\030\004 \001(\013"
+  "2\032.Protocol.S_LOAD_INVENTORY\022-\n\tequipmen"
+  "t\030\005 \001(\0132\032.Protocol.S_LOAD_EQUIPMENT\">\n\020S"
+  "_LOAD_INVENTORY\022*\n\tinventory\030\001 \003(\0132\027.Pro"
+  "tocol.InventorySlot\">\n\020S_LOAD_EQUIPMENT\022"
+  "*\n\tequipment\030\001 \003(\0132\027.Protocol.EquipmentI"
+  "tem\"p\n\020S_CONSUME_RESULT\022\017\n\007success\030\001 \001(\010"
+  "\022\017\n\007item_id\030\002 \001(\004\022\020\n\010tab_type\030\003 \001(\004\022\022\n\ns"
+  "lot_index\030\004 \001(\004\022\024\n\014new_quantity\030\005 \001(\004\"W\n"
+  "\rS_DROP_RESULT\022\017\n\007success\030\001 \001(\010\022\017\n\007item_"
+  "id\030\002 \001(\004\022\020\n\010tab_type\030\003 \001(\004\022\022\n\nslot_index"
+  "\030\004 \001(\004\"\233\001\n\027S_MOVE_INVENTORY_RESULT\022\017\n\007su"
+  "ccess\030\001 \001(\010\022\020\n\010from_tab\030\002 \001(\004\022\022\n\nfrom_in"
+  "dex\030\003 \001(\004\022\016\n\006to_tab\030\004 \001(\004\022\020\n\010to_index\030\005 "
+  "\001(\004\022\025\n\rmoved_item_id\030\006 \001(\004\022\020\n\010quantity\030\007"
+  " \001(\004\"E\n\016S_EQUIP_RESULT\022\017\n\007success\030\001 \001(\010\022"
+  "\017\n\007item_id\030\002 \001(\004\022\021\n\tslot_type\030\003 \001(\004\"s\n\020S"
+  "_UNEQUIP_RESULT\022\017\n\007success\030\001 \001(\010\022\017\n\007item"
+  "_id\030\002 \001(\004\022\021\n\tslot_type\030\003 \001(\004\022\023\n\013to_tab_t"
+  "ype\030\004 \001(\004\022\025\n\rto_slot_index\030\005 \001(\004\"0\n\rS_GO"
+  "LD_CHANGE\022\020\n\010new_gold\030\001 \001(\004\022\r\n\005delta\030\002 \001"
+  "(\003\"4\n\014S_ADD_OBJECT\022$\n\007players\030\001 \003(\0132\023.Pr"
+  "otocol.AddPlayer\"\035\n\017S_REMOVE_OBJECT\022\n\n\002i"
+  "d\030\001 \001(\004\".\n\rS_MOVE_OBJECT\022\035\n\005moves\030\001 \003(\0132"
+  "\016.Protocol.Move\"*\n\006S_CHAT\022 \n\010messages\030\001 "
+  "\003(\0132\016.Protocol.Mess\".\n\rS_STAT_CHANGE\022\035\n\005"
+  "stats\030\001 \003(\0132\016.Protocol.Stat\"\032\n\010S_DAMAGE\022"
+  "\016\n\006damage\030\001 \001(\004\":\n\tS_RESPAWN\022\n\n\002hp\030\001 \001(\004"
+  "\022\t\n\001x\030\002 \001(\004\022\t\n\001y\030\003 \001(\004\022\013\n\003exp\030\004 \001(\004b\006pro"
+  "to3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_Protocol_2eproto_deps[2] = {
   &::descriptor_table_Enum_2eproto,
@@ -751,7 +754,7 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_Protocol_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Protocol_2eproto = {
-  false, false, 1854, descriptor_table_protodef_Protocol_2eproto, "Protocol.proto", 
+  false, false, 1883, descriptor_table_protodef_Protocol_2eproto, "Protocol.proto", 
   &descriptor_table_Protocol_2eproto_once, descriptor_table_Protocol_2eproto_deps, 2, 28,
   schemas, file_default_instances, TableStruct_Protocol_2eproto::offsets,
   file_level_metadata_Protocol_2eproto, file_level_enum_descriptors_Protocol_2eproto, file_level_service_descriptors_Protocol_2eproto,
@@ -3339,10 +3342,14 @@ S_LOGIN::_Internal::equipment(const S_LOGIN* msg) {
 void S_LOGIN::clear_players() {
   players_.Clear();
 }
+void S_LOGIN::clear_stats() {
+  stats_.Clear();
+}
 S_LOGIN::S_LOGIN(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned),
-  players_(arena) {
+  players_(arena),
+  stats_(arena) {
   SharedCtor();
   if (!is_message_owned) {
     RegisterArenaDtor(arena);
@@ -3351,7 +3358,8 @@ S_LOGIN::S_LOGIN(::PROTOBUF_NAMESPACE_ID::Arena* arena,
 }
 S_LOGIN::S_LOGIN(const S_LOGIN& from)
   : ::PROTOBUF_NAMESPACE_ID::Message(),
-      players_(from.players_) {
+      players_(from.players_),
+      stats_(from.stats_) {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   if (from._internal_has_inventory()) {
     inventory_ = new ::Protocol::S_LOAD_INVENTORY(*from.inventory_);
@@ -3404,6 +3412,7 @@ void S_LOGIN::Clear() {
   (void) cached_has_bits;
 
   players_.Clear();
+  stats_.Clear();
   if (GetArenaForAllocation() == nullptr && inventory_ != nullptr) {
     delete inventory_;
   }
@@ -3430,7 +3439,7 @@ const char* S_LOGIN::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::in
         } else
           goto handle_unusual;
         continue;
-      // repeated .Protocol.Player players = 2;
+      // repeated .Protocol.User players = 2;
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
           ptr -= 1;
@@ -3443,17 +3452,30 @@ const char* S_LOGIN::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::in
         } else
           goto handle_unusual;
         continue;
-      // .Protocol.S_LOAD_INVENTORY inventory = 3;
+      // repeated .Protocol.Stat stats = 3;
       case 3:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 26)) {
+          ptr -= 1;
+          do {
+            ptr += 1;
+            ptr = ctx->ParseMessage(_internal_add_stats(), ptr);
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<26>(ptr));
+        } else
+          goto handle_unusual;
+        continue;
+      // .Protocol.S_LOAD_INVENTORY inventory = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 34)) {
           ptr = ctx->ParseMessage(_internal_mutable_inventory(), ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
-      // .Protocol.S_LOAD_EQUIPMENT equipment = 4;
-      case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 34)) {
+      // .Protocol.S_LOAD_EQUIPMENT equipment = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 42)) {
           ptr = ctx->ParseMessage(_internal_mutable_equipment(), ptr);
           CHK_(ptr);
         } else
@@ -3494,7 +3516,7 @@ uint8_t* S_LOGIN::_InternalSerialize(
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(1, this->_internal_success(), target);
   }
 
-  // repeated .Protocol.Player players = 2;
+  // repeated .Protocol.User players = 2;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->_internal_players_size()); i < n; i++) {
     target = stream->EnsureSpace(target);
@@ -3502,20 +3524,28 @@ uint8_t* S_LOGIN::_InternalSerialize(
       InternalWriteMessage(2, this->_internal_players(i), target, stream);
   }
 
-  // .Protocol.S_LOAD_INVENTORY inventory = 3;
+  // repeated .Protocol.Stat stats = 3;
+  for (unsigned int i = 0,
+      n = static_cast<unsigned int>(this->_internal_stats_size()); i < n; i++) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(3, this->_internal_stats(i), target, stream);
+  }
+
+  // .Protocol.S_LOAD_INVENTORY inventory = 4;
   if (this->_internal_has_inventory()) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessage(
-        3, _Internal::inventory(this), target, stream);
+        4, _Internal::inventory(this), target, stream);
   }
 
-  // .Protocol.S_LOAD_EQUIPMENT equipment = 4;
+  // .Protocol.S_LOAD_EQUIPMENT equipment = 5;
   if (this->_internal_has_equipment()) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessage(
-        4, _Internal::equipment(this), target, stream);
+        5, _Internal::equipment(this), target, stream);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -3534,21 +3564,28 @@ size_t S_LOGIN::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // repeated .Protocol.Player players = 2;
+  // repeated .Protocol.User players = 2;
   total_size += 1UL * this->_internal_players_size();
   for (const auto& msg : this->players_) {
     total_size +=
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
   }
 
-  // .Protocol.S_LOAD_INVENTORY inventory = 3;
+  // repeated .Protocol.Stat stats = 3;
+  total_size += 1UL * this->_internal_stats_size();
+  for (const auto& msg : this->stats_) {
+    total_size +=
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
+  }
+
+  // .Protocol.S_LOAD_INVENTORY inventory = 4;
   if (this->_internal_has_inventory()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
         *inventory_);
   }
 
-  // .Protocol.S_LOAD_EQUIPMENT equipment = 4;
+  // .Protocol.S_LOAD_EQUIPMENT equipment = 5;
   if (this->_internal_has_equipment()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
@@ -3583,6 +3620,7 @@ void S_LOGIN::MergeFrom(const S_LOGIN& from) {
   (void) cached_has_bits;
 
   players_.MergeFrom(from.players_);
+  stats_.MergeFrom(from.stats_);
   if (from._internal_has_inventory()) {
     _internal_mutable_inventory()->::Protocol::S_LOAD_INVENTORY::MergeFrom(from._internal_inventory());
   }
@@ -3610,6 +3648,7 @@ void S_LOGIN::InternalSwap(S_LOGIN* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   players_.InternalSwap(&other->players_);
+  stats_.InternalSwap(&other->stats_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
       PROTOBUF_FIELD_OFFSET(S_LOGIN, success_)
       + sizeof(S_LOGIN::success_)

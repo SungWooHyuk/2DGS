@@ -77,9 +77,10 @@ message C_LOGOUT
 message S_LOGIN
 {
 	bool success = 1;
-	repeated Player players = 2;
-	S_LOAD_INVENTORY inventory = 3;
-	S_LOAD_EQUIPMENT equipment = 4;
+	repeated User players = 2;
+	repeated Stat stats = 3;
+	S_LOAD_INVENTORY inventory = 4;
+	S_LOAD_EQUIPMENT equipment = 5;
 }
 
 message S_LOAD_INVENTORY

@@ -17,9 +17,11 @@
 
 #include "CorePch.h"
 #include "Enum.pb.h"
+#include "nlohmann/json.hpp""
 
 using namespace chrono;
 
+using json = nlohmann::json;
 using ServerSessionRef = shared_ptr<class ServerSession>;
 using ClientRef = shared_ptr<class Client>;
 using PlayerRef = shared_ptr<class Player>;

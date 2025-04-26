@@ -189,6 +189,7 @@
   <ItemGroup>
     <ClInclude Include="ClientPacketHandler.h" />
     <ClInclude Include="DBGameSession.h" />
+    <ClInclude Include="DBGameSessionManager.h" />
     <ClInclude Include="DBProtocol.pb.h" />
     <ClInclude Include="Enum.pb.h" />
     <ClInclude Include="GameDBPacketHandler.h" />
@@ -213,6 +214,7 @@
   <ItemGroup>
     <ClCompile Include="ClientPacketHandler.cpp" />
     <ClCompile Include="DBGameSession.cpp" />
+    <ClCompile Include="DBGameSessionManager.cpp" />
     <ClCompile Include="DBProtocol.pb.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>

@@ -3,10 +3,14 @@
 #include "utils.h"
 #include "GameSession.h"
 #include "Room.h"
+#include "Protocol.pb.h"
 
 class Player
 {
 public:
+	using InventoryMap = unordered_map<int32, INVEN>;		// slot_index -> item
+	using EquipmentMap = unordered_map<E_EQUIP, ITEM_INFO>;		// equip_slot -> item
+
 	Player();
 	~Player();
 	Player(string _name, STAT _stat, POS _pos, S_STATE _state, uint32 _room, Protocol::PlayerType _pt);
@@ -19,7 +23,7 @@ public:
 	void					SetName(string _name) { myName = _name; };
 	const string&			GetName() const { return myName; };
 	
-	void					SetStat(STAT _stat) { myStat = _stat; };
+	void					SetStat(STAT _stat) { myStat = _stat; UpdateStatByEquipment(); };
 	const STAT&				GetStat() const { return myStat; };
 
 	void					SetStatLevel(int32 _level) { myStat.level = _level; }
@@ -42,9 +46,37 @@ public:
 	uint32					GetCurrentroom() const { return currentRoom; };
 	void					SetPT(Protocol::PlayerType _pt) { PT = _pt; };
 	Protocol::PlayerType	GetPT() const { return PT; };
+	void					SetGold(uint64 _gold) { myGold = _gold; };
+	const uint64			GetGold() const { return myGold; };
 
 	void					SetOwnerSession(GameSessionRef& _session) { ownerSession = _session; };
 	GameSessionRef&			GetOwnerSession() { return ownerSession; };
+
+	// 인벤토리 관련
+	void AddInventoryItem(const INVEN& _item) { myInven[_item.slot_index] = _item; }
+	bool RemoveInventoryItem(int32 _slotIndex) { return myInven.erase(_slotIndex) > 0; }
+	const INVEN* GetInventoryItem(int32 slotIndex) const {
+		auto it = myInven.find(slotIndex);
+		if (it != myInven.end())
+			return &it->second;
+		else
+			return nullptr;
+	}
+	const InventoryMap& GetInventory() const { return myInven; }
+
+	// 장비 관련
+	void EquipItem(E_EQUIP slot, const ITEM_INFO& item) { myEquip[slot] = item; UpdateStatByEquipment();}
+	bool UnequipItem(E_EQUIP slot) { return myEquip.erase(slot) > 0; }
+	const ITEM_INFO* GetEquippedItem(E_EQUIP slot) const {
+		auto it = myEquip.find(slot);
+		if (it != myEquip.end())
+			return &it->second;
+		else
+			return nullptr;
+	}
+	const EquipmentMap& GetEquipments() const { return myEquip; }
+
+	void	UpdateStatByEquipment();
 
 private:
 	GameSessionRef ownerSession;
@@ -52,13 +84,15 @@ private:
 private:
 	uint64					myId;
 	string					myName;
-	STAT					myStat;
 	POS						myPos;
+	STAT					myStat;
 	S_STATE					myState;
 	uint64					myGold;
 	uint32					currentRoom;
 	Protocol::PlayerType	PT;
-
+	
+	InventoryMap			myInven;
+	EquipmentMap			myEquip;
 public:
 	atomic<bool>			active;
 };

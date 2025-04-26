@@ -1,15 +1,16 @@
 #include "pch.h"
 #include "DBGameSession.h"
+#include "DBGameSessionManager.h"
 #include "GameDBPacketHandler.h"
 
 void DBGameSession::OnConnected()
 {
-	cout << "DB Hello" << endl;
+	DBMANAGER.SetSession(static_pointer_cast<DBGameSession>(shared_from_this()));
 }
 
 void DBGameSession::OnDisconnected()
 {
-
+	DBMANAGER.RemoveSession();
 }
 
 void DBGameSession::OnRecvPacket(BYTE* buffer, int32 len)

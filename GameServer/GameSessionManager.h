@@ -29,6 +29,8 @@ public:
 
 	int				GetNewClientId();
 
+	void			AddSession(uint64 _id, GameSessionRef session);
+
 	void			NpcRandomMove(uint64 _id);
 	void			NpcAstarMove(uint64 _id);
 	void			NpcAstarMoveTo(uint64 _id, uint64 _targetid);

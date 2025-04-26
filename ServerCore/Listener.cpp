@@ -21,7 +21,7 @@ Listener::~Listener()
 	}
 }
 
-bool Listener::StartAccept(ServerServiceRef service)
+bool Listener::StartAccept(ServiceRef service)
 {
 	_service = service;
 	if (_service == nullptr)

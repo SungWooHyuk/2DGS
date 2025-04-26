@@ -28,7 +28,7 @@ public:
 
 public:
 	void							SetCurrentPlayer(const PlayerRef& _player) { currentPlayer = _player; }
-	const PlayerRef& GetCurrentPlayer() const { return currentPlayer; }
+	const PlayerRef&				GetCurrentPlayer() const { return currentPlayer; }
 
 	void							SetRoom(const weak_ptr<Room>& _roomPtr) { room = _roomPtr; }
 	weak_ptr<Room>					GetRoom() const { return room; }
@@ -55,6 +55,7 @@ public:
 	void							ChatPkt(uint64 _id, string _mess);
 	void							StatChangePkt(int32 _level, int32 _hp, int32 _maxhp, int32 _mp, int32 _maxmp, int32 _exp, int32 _maxexp);
 	void							LoginPkt(bool _success, uint64 _id, Protocol::PlayerType _pt, string _name, POS _pos, STAT _stat);
+	void							LoginPkt(bool _success, PlayerRef _player);
 	void							LoginPkt(bool _success);
 
 	mutex			s_lock;

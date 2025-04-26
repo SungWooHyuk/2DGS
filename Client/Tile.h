@@ -11,11 +11,11 @@ public:
 		return instance;
 	}
 
-	void	Init(Tile* _tile, sf::Texture& t, int _x, int _y, int _x2, int _y2);
+	void	Init();
 	void	TileDraw();
 	
-	void	Draw(Tile* _tile);
-	void	Move(Tile* _tile, int _x, int _y);
+	void	Draw(sf::Sprite& sprite);
+	void	Move(sf::Sprite& sprite, int _x, int _y);
 
 private:
 	~Tile();
@@ -24,12 +24,9 @@ private:
 	Tile& operator=(const Tile&) = delete;
 
 private:
-	Tile*		platTile;
-	Tile*		obstacleTile;
-	Tile*		blueTownTile;
-	Tile*		greyTownTile;
-	
-private:
-	sf::Sprite	tileSprite;
+	sf::Sprite platSprite;
+	sf::Sprite obstacleSprite;
+	sf::Sprite blueTownSprite;
+	sf::Sprite greyTownSprite;
 };
 

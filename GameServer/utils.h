@@ -67,16 +67,16 @@ struct POS
 	}
 
 	POS operator+(const POS& other) const {
-		return { posx + other.posx, posy + other.posy };  // ´õ °£°áÇÏ°Ô ÃÊ±âÈ­
+		return { posx + other.posx, posy + other.posy };  // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½Ê±ï¿½È­
 	}
 
-	// ºñ±³ ¿¬»êÀÚ Ãß°¡
+	// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
 	bool operator<(const POS& other) const {
-		return std::tie(posy, posx) < std::tie(other.posy, other.posx); // posy°¡ °°À¸¸é posx ºñ±³
+		return std::tie(posy, posx) < std::tie(other.posy, other.posx); // posyï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ posx ï¿½ï¿½
 	}
 
 	bool operator>(const POS& other) const {
-		return std::tie(posy, posx) > std::tie(other.posy, other.posx); // posy°¡ °°À¸¸é posx ºñ±³
+		return std::tie(posy, posx) > std::tie(other.posy, other.posx); // posyï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ posx ï¿½ï¿½
 	}
 
 };
@@ -135,6 +135,7 @@ struct ITEM_INFO
 	int32 effectValue;
 	int32 requiredLevel;
 	string description;
+	string iconPath;
 
 	struct EQUIPMENT_INFO
 	{
@@ -163,7 +164,23 @@ struct USER_INVENTORY
 	int32 slot_index;
 };
 
-enum Equipment
+struct EQUIPMENT
+{
+	int32 slotWeapon;
+	int32 slotHelmet;
+	int32 slotTop;
+	int32 slotBottom;
+};
+
+struct INVEN
+{
+	int32		itemId;
+	int32		quantity;
+	int32		tab_type;
+	int32		slot_index;
+};
+
+enum class E_EQUIP
 {
 	WEAPON,
 	HELMET,
@@ -171,6 +188,12 @@ enum Equipment
 	BOTTOM
 };
 
+enum class E_TabType
+{
+	EQUIP,
+	CONSUME,
+	ETC
+};
 struct TP
 {
 	chrono::system_clock::time_point	attackTime;
@@ -207,7 +230,8 @@ enum SystemBox
 #define TILE				Tile::GetInstance()
 #define ROOMMANAGER			RoomManager::GetInstance()
 #define GAMESESSIONMANAGER	GameSessionManager::GetInstance()
-#define ITEM				item::GetInstance()
+#define DBMANAGER			DBSessionManager::GetInstance()
+#define ITEM				Item::GetInstance()
 
 #define DUMMYMANAGER		DummyManager::GetInstance()
 

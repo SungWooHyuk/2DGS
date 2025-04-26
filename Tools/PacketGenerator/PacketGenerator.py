@@ -13,6 +13,7 @@ def main():
 
     is_db = args.recv.startswith('D') or args.send.startswith('D')
     protocol_ns = 'DBProtocol' if is_db else 'Protocol'
+    handler_var_name = 'GDBPacketHandler' if is_db else 'GPacketHandler'
     count_num = 2000 if is_db else 1000
     parser = ProtoParser.ProtoParser(count_num, args.recv, args.send, is_db)
     parser.parse_proto(args.path)
@@ -20,7 +21,7 @@ def main():
     env = jinja2.Environment(loader=file_loader)
    
     template = env.get_template('PacketHandler.h')
-    output = template.render(parser = parser, output=args.output, protocol_ns=protocol_ns)
+    output = template.render(parser = parser, output=args.output, protocol_ns=protocol_ns, handler_var_name=handler_var_name)
   
     f = open(args.output+'.h', 'w+')
     f.write(output)

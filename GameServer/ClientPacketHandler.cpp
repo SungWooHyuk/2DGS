@@ -7,6 +7,8 @@
 #include "Player.h"
 #include "RoomManager.h"
 #include "GameDBPacketHandler.h"
+#include "DBGameSessionManager.h"
+#include "DBGameSession.h"
 
 PacketHandlerFunc GPacketHandler[UINT16_MAX];
 
@@ -17,66 +19,23 @@ bool Handle_INVALID(PacketSessionRef& session, BYTE* buffer, int32 len)
 
 bool Handle_C_LOGIN(PacketSessionRef& session, Protocol::C_LOGIN& pkt)
 {
-	// Validation check
-	//GameSessionRef gamesession = static_pointer_cast<GameSession>(session);
-	//string pktName = pkt.name();
-	//
-	//if (DB.CheckDB(pktName, gamesession))
-	//{
-	//	PlayerRef player = gamesession->GetCurrentPlayer();
-	//	player->SetId(gamesession->GetId());
-	//	player->SetOwnerSession(gamesession);
+	GameSessionRef gamesession = static_pointer_cast<GameSession>(session);
+	string pktName = pkt.name();
+	
+	if (pktName.substr(0, 5) == "dummy")
+	{
+		// 더미 로그인 따로 처리
+	}
+	else
+	{
+		DBProtocol::SD_LOGIN pkt;
+		pkt.set_name(pktName);
+		pkt.set_user_id(gamesession->GetId());
+		auto sendBuffer = GameDBPacketHandler::MakeSendBuffer(pkt);
+		DBMANAGER.GetSession()->Send(sendBuffer);
+	}
 
-	//	ROOMMANAGER.EnterRoom(gamesession);
-	//	POS pos = { player->POSX, player->POSY };
-	//	STAT stat = { player->GetStat().level, player->GetStat().hp, player->GetStat().mp, player->GetStat().exp, player->GetStat().maxHp, player->GetStat().maxMp, player->GetStat().maxExp };
-	//	gamesession->LoginPkt(true, player->GetId(), player->GetPT(), player->GetName(), pos, stat);
-
-	//	unordered_set<uint64> vl = ROOMMANAGER.ViewList(gamesession, false);
-
-	//	gamesession->SetViewPlayer(vl); // first viewlist enroll
-	//	
-	//	for (const auto vp : vl)
-	//	{
-	//		if (GAMESESSIONMANAGER.GetSession(vp))
-	//		{
-	//			POS vpPos = { GAMESESSIONMANAGER.GetSession(vp)->GetCurrentPlayer()->POSX , GAMESESSIONMANAGER.GetSession(vp)->GetCurrentPlayer()->POSY };
-
-	//			if (gamesession->GetCurrentPlayer()->GetPT() != Protocol::PLAYER_TYPE_DUMMY)
-	//			{
-	//				gamesession->AddObjectPkt(
-	//					GAMESESSIONMANAGER.GetSession(vp)->GetCurrentPlayer()->GetPT(),
-	//					GAMESESSIONMANAGER.GetSession(vp)->GetCurrentPlayer()->GetId(),
-	//					GAMESESSIONMANAGER.GetSession(vp)->GetCurrentPlayer()->GetName(),
-	//					vpPos);
-	//			}
-	//			
-	//			if (GAMESESSIONMANAGER.GetSession(vp)->GetCurrentPlayer()->GetPT() == Protocol::PlayerType::PLAYER_TYPE_CLIENT)
-	//			{
-
-	//				POS plPos = { player->POSX, player->POSY };
-
-	//				GAMESESSIONMANAGER.GetSession(vp)->AddObjectPkt(
-	//					player->GetPT(),
-	//					player->GetId(),
-	//					player->GetName(),
-	//					plPos
-	//				);
-	//			}
-	//		}
-	//		else
-	//		{
-	//			// session�� �ҷ��µ� nullptr ? �������ִ�. �ֳĸ� ViewList�� �ִµ�, �Ŵ������� ���ٴ°Ŵϱ� ��ȣ����ġ.
-	//		}
-	//	}
-
-	//	return true;
-	//	// �ٸ� Ŭ���̾�Ʈ RoomManager üŷ�ϱ�.
-	//}
-
-	//gamesession->LoginPkt(false);
-
-	return false;
+	return true;
 }
 
 bool Handle_C_CONSUME_ITEM(PacketSessionRef& session, Protocol::C_CONSUME_ITEM& pkt)

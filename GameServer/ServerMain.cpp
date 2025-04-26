@@ -15,6 +15,7 @@
 
 #include "MapData.h"
 #include "DBGameSession.h"
+#include "DBGameSessionManager.h"
 
 #include <concurrent_priority_queue.h>
 #include <sqlext.h>
@@ -30,25 +31,27 @@ extern "C"
 }
 
 #include "Item.h"
-void DoWorkerJob(ServerServiceRef& service)
+void DoGameWorkerJob(ServerServiceRef& service)
 {
 	while (true)
 	{
 		LEndTickCount = ::GetTickCount64() + WORKER_TICK;
-
-		// ��Ʈ��ũ ����� ó�� -> �ΰ��� �������� (��Ŷ �ڵ鷯�� ����)
 		service->GetIocpCore()->Dispatch(10);
-
-		// ����� �ϰ� ó��
 		ThreadManager::DistributeReservedJobs();
-
-		// �۷ι� ť
 		ThreadManager::DoGlobalQueueWork();
-
-		//ThreadManager::DoLogger();
 	}
 }
 
+void DoDBWorkerJob(DBServiceRef& service)
+{
+	while (true)
+	{
+		LEndTickCount = ::GetTickCount64() + WORKER_TICK;
+		service->GetIocpCore()->Dispatch(10);
+		ThreadManager::DistributeReservedJobs();
+		ThreadManager::DoGlobalQueueWork();
+	}
+}
 int main()
 {
 	GLogger::Init("GameServer");
@@ -57,7 +60,7 @@ int main()
 	GameDBPacketHandler::Init();
 	GAMESESSIONMANAGER.InitializeNPC();
 	
-	GLogger::Log(spdlog::level::err, "Begin");
+	//GLogger::Log(spdlog::level::err, "Begin");
 
 	ServerServiceRef service = MakeShared<ServerService>(
 		NetAddress(L"127.0.0.1", 4000),
@@ -66,16 +69,15 @@ int main()
 		MAX_USER
 		);
 
-	ServerServiceRef dbservice = MakeShared<ServerService>(
+	DBServiceRef dbservice = MakeShared<DBService>(
 		NetAddress(L"127.0.0.1", DB_PORT),
 		MakeShared<IocpCore>(),
 		MakeShared<DBGameSession>,
 		1
 		);
 
-
-	ASSERT_CRASH(service->Start());
 	ASSERT_CRASH(dbservice->Start());
+	ASSERT_CRASH(service->Start());
 
 	int num_threads = std::thread::hardware_concurrency() - 3;
 	int db_num_threads = 3;
@@ -84,19 +86,21 @@ int main()
 	{
 		GThreadManager->Launch([&service]()
 			{
-				DoWorkerJob(service);
+				DoGameWorkerJob(service);
 			});
 	}
 
+	// DB 서비스 스레드
 	for (int32 i = 0; i < db_num_threads; ++i)
 	{
 		GThreadManager->Launch([&dbservice]()
 			{
-				DoWorkerJob(dbservice);
+				DoDBWorkerJob(dbservice);
 			});
 	}
 
-	DoWorkerJob(service);
+
+	DoGameWorkerJob(service);
 	GThreadManager->Join();
 
 }

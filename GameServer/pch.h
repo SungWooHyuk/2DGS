@@ -25,5 +25,6 @@
 using namespace std;
 using json = nlohmann::json;
 using GameSessionRef = shared_ptr<class GameSession>;
+using DBGameSessionRef = shared_ptr<class DBGameSession>;
 using PlayerRef = shared_ptr<class Player>;
 using RoomRef = shared_ptr<class Room>;

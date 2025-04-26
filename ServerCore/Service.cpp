@@ -89,6 +89,39 @@ bool ClientService::Start()
 	return true;
 }
 
+/*-----------------
+	DBServerService
+------------------*/
+
+DBServerService::DBServerService(NetAddress targetAddress, IocpCoreRef core, SessionFactory factory, int32 maxSessionCount)
+	: Service(ServiceType::DBServer, targetAddress, core, factory, maxSessionCount)
+{
+}
+
+SessionRef DBServerService::GetSession()
+{
+	if (_sessions.empty())
+		return nullptr;
+
+	return *_sessions.begin();
+}
+
+bool DBServerService::Start()
+{
+	if (CanStart() == false)
+		return false;
+
+	const int32 sessionCount = GetMaxSessionCount();
+	for (int32 i = 0; i < sessionCount; i++)
+	{
+		SessionRef session = CreateSession();
+		if (session->Connect() == false)
+			return false;
+	}
+
+	return true;
+}
+
 ServerService::ServerService(NetAddress address, IocpCoreRef core, SessionFactory factory, int32 maxSessionCount)
 	: Service(ServiceType::Server, address, core, factory, maxSessionCount)
 {
@@ -152,8 +185,12 @@ bool DBService::Start()
 	if (CanStart() == false)
 		return false;
 
-	SessionRef session = CreateSession();
-	if (session->Connect() == false)
+	_listener = MakeShared<Listener>();
+	if (_listener == nullptr)
+		return false;
+
+	DBServiceRef dbservice = static_pointer_cast<DBService>(shared_from_this());
+	if (_listener->StartAccept(dbservice) == false)
 		return false;
 
 	return true;

@@ -2,7 +2,7 @@
 #include "DBProtocol.pb.h"
 
 using PacketHandlerFunc = std::function<bool(PacketSessionRef&, BYTE*, int32)>;
-extern PacketHandlerFunc GPacketHandler[UINT16_MAX];
+extern PacketHandlerFunc GDBPacketHandler[UINT16_MAX];
 
 enum : uint16
 {
@@ -51,24 +51,24 @@ public:
 	static void Init()
 	{
 		for (int32 i = 0; i < UINT16_MAX; i++)
-			GPacketHandler[i] = Handle_INVALID;
-		GPacketHandler[PKT_DS_LOGIN] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<DBProtocol::DS_LOGIN>(Handle_DS_LOGIN, session, buffer, len); };
-		GPacketHandler[PKT_DS_REGISTER] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<DBProtocol::DS_REGISTER>(Handle_DS_REGISTER, session, buffer, len); };
-		GPacketHandler[PKT_DS_SAVE_RESULT] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<DBProtocol::DS_SAVE_RESULT>(Handle_DS_SAVE_RESULT, session, buffer, len); };
-		GPacketHandler[PKT_DS_USER_INFORMATION] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<DBProtocol::DS_USER_INFORMATION>(Handle_DS_USER_INFORMATION, session, buffer, len); };
-		GPacketHandler[PKT_DS_INVENTORY_INFORMATION] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<DBProtocol::DS_INVENTORY_INFORMATION>(Handle_DS_INVENTORY_INFORMATION, session, buffer, len); };
-		GPacketHandler[PKT_DS_EQUIP_INFORMATION] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<DBProtocol::DS_EQUIP_INFORMATION>(Handle_DS_EQUIP_INFORMATION, session, buffer, len); };
-		GPacketHandler[PKT_DS_EQUIP_ITEM] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<DBProtocol::DS_EQUIP_ITEM>(Handle_DS_EQUIP_ITEM, session, buffer, len); };
-		GPacketHandler[PKT_DS_FARMING_RESULT] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<DBProtocol::DS_FARMING_RESULT>(Handle_DS_FARMING_RESULT, session, buffer, len); };
-		GPacketHandler[PKT_DS_CONSUME_ITEM] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<DBProtocol::DS_CONSUME_ITEM>(Handle_DS_CONSUME_ITEM, session, buffer, len); };
-		GPacketHandler[PKT_DS_MOVE_RESULT] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<DBProtocol::DS_MOVE_RESULT>(Handle_DS_MOVE_RESULT, session, buffer, len); };
-		GPacketHandler[PKT_DS_UPDATE_GOLD] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<DBProtocol::DS_UPDATE_GOLD>(Handle_DS_UPDATE_GOLD, session, buffer, len); };
+			GDBPacketHandler[i] = Handle_INVALID;
+		GDBPacketHandler[PKT_DS_LOGIN] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<DBProtocol::DS_LOGIN>(Handle_DS_LOGIN, session, buffer, len); };
+		GDBPacketHandler[PKT_DS_REGISTER] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<DBProtocol::DS_REGISTER>(Handle_DS_REGISTER, session, buffer, len); };
+		GDBPacketHandler[PKT_DS_SAVE_RESULT] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<DBProtocol::DS_SAVE_RESULT>(Handle_DS_SAVE_RESULT, session, buffer, len); };
+		GDBPacketHandler[PKT_DS_USER_INFORMATION] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<DBProtocol::DS_USER_INFORMATION>(Handle_DS_USER_INFORMATION, session, buffer, len); };
+		GDBPacketHandler[PKT_DS_INVENTORY_INFORMATION] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<DBProtocol::DS_INVENTORY_INFORMATION>(Handle_DS_INVENTORY_INFORMATION, session, buffer, len); };
+		GDBPacketHandler[PKT_DS_EQUIP_INFORMATION] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<DBProtocol::DS_EQUIP_INFORMATION>(Handle_DS_EQUIP_INFORMATION, session, buffer, len); };
+		GDBPacketHandler[PKT_DS_EQUIP_ITEM] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<DBProtocol::DS_EQUIP_ITEM>(Handle_DS_EQUIP_ITEM, session, buffer, len); };
+		GDBPacketHandler[PKT_DS_FARMING_RESULT] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<DBProtocol::DS_FARMING_RESULT>(Handle_DS_FARMING_RESULT, session, buffer, len); };
+		GDBPacketHandler[PKT_DS_CONSUME_ITEM] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<DBProtocol::DS_CONSUME_ITEM>(Handle_DS_CONSUME_ITEM, session, buffer, len); };
+		GDBPacketHandler[PKT_DS_MOVE_RESULT] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<DBProtocol::DS_MOVE_RESULT>(Handle_DS_MOVE_RESULT, session, buffer, len); };
+		GDBPacketHandler[PKT_DS_UPDATE_GOLD] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<DBProtocol::DS_UPDATE_GOLD>(Handle_DS_UPDATE_GOLD, session, buffer, len); };
 	}
 
 	static bool HandlePacket(PacketSessionRef& session, BYTE* buffer, int32 len)
 	{
 		PacketHeader* header = reinterpret_cast<PacketHeader*>(buffer);
-		return GPacketHandler[header->id](session, buffer, len);
+		return GDBPacketHandler[header->id](session, buffer, len);
 	}
 	static SendBufferRef MakeSendBuffer(DBProtocol::SD_LOGIN& pkt) { return MakeSendBuffer(pkt, PKT_SD_LOGIN); }
 	static SendBufferRef MakeSendBuffer(DBProtocol::SD_SAVE_PLAYER& pkt) { return MakeSendBuffer(pkt, PKT_SD_SAVE_PLAYER); }

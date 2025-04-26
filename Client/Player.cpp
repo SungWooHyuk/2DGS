@@ -3,17 +3,14 @@
 #include "Player.h"
 #include "Client.h"
 
-Player::Player(sf::Texture& _attackT, sf::Texture& _playerT, int _x, int _y, int _x2, int _y2, STAT _st, POS _pos, TP _tp, int32 _id, const string& _name)
-	:Client(Protocol::PLAYER_TYPE_CLIENT, _pos, _id, _name)
+Player::Player(sf::Texture& _attackT, sf::Texture& _playerT, int _x, int _y, int _x2, int _y2, POS _pos, TP _tp, int32 _id, const string& _name, const uint64 _gold)
+	:Client(Protocol::PLAYER_TYPE_CLIENT, _pos, _id, _name), myTp(_tp), myGold(_gold)
 {
 	Sprite.setTexture(_playerT);
 	Sprite.setTextureRect(sf::IntRect(_x, _y, _x2, _y2));
 
 	attackSprite.setTexture(_attackT);
 	attackSprite.setTextureRect(sf::IntRect(_x, _y, _x2, _y2));
-
-	myTp = _tp;
-	myStat = _st;
 
 	Move(myPos.posx, myPos.posy);
 }

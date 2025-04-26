@@ -278,6 +278,7 @@ class SD_LOGIN final :
 
   enum : int {
     kNameFieldNumber = 1,
+    kUserIdFieldNumber = 2,
   };
   // string name = 1;
   void clear_name();
@@ -293,6 +294,15 @@ class SD_LOGIN final :
   std::string* _internal_mutable_name();
   public:
 
+  // uint64 user_id = 2;
+  void clear_user_id();
+  uint64_t user_id() const;
+  void set_user_id(uint64_t value);
+  private:
+  uint64_t _internal_user_id() const;
+  void _internal_set_user_id(uint64_t value);
+  public:
+
   // @@protoc_insertion_point(class_scope:DBProtocol.SD_LOGIN)
  private:
   class _Internal;
@@ -301,6 +311,7 @@ class SD_LOGIN final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr name_;
+  uint64_t user_id_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DBProtocol_2eproto;
 };
@@ -432,7 +443,7 @@ class SD_SAVE_PLAYER final :
     kInventoryFieldNumber = 3,
     kEquipmentFieldNumber = 4,
     kNameFieldNumber = 1,
-    kGoldFieldNumber = 5,
+    kUserIdFieldNumber = 5,
   };
   // repeated .Protocol.Player player = 2;
   int player_size() const;
@@ -502,13 +513,13 @@ class SD_SAVE_PLAYER final :
   std::string* _internal_mutable_name();
   public:
 
-  // uint64 gold = 5;
-  void clear_gold();
-  uint64_t gold() const;
-  void set_gold(uint64_t value);
+  // uint64 user_id = 5;
+  void clear_user_id();
+  uint64_t user_id() const;
+  void set_user_id(uint64_t value);
   private:
-  uint64_t _internal_gold() const;
-  void _internal_set_gold(uint64_t value);
+  uint64_t _internal_user_id() const;
+  void _internal_set_user_id(uint64_t value);
   public:
 
   // @@protoc_insertion_point(class_scope:DBProtocol.SD_SAVE_PLAYER)
@@ -522,7 +533,7 @@ class SD_SAVE_PLAYER final :
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::InventorySlot > inventory_;
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::EquipmentItem > equipment_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr name_;
-  uint64_t gold_;
+  uint64_t user_id_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DBProtocol_2eproto;
 };
@@ -652,6 +663,7 @@ class SD_GET_INFOMATION final :
   enum : int {
     kGetFieldNumber = 2,
     kNameFieldNumber = 1,
+    kUserIdFieldNumber = 3,
   };
   // repeated .Protocol.GetType get = 2;
   int get_size() const;
@@ -684,6 +696,15 @@ class SD_GET_INFOMATION final :
   std::string* _internal_mutable_name();
   public:
 
+  // uint64 user_id = 3;
+  void clear_user_id();
+  uint64_t user_id() const;
+  void set_user_id(uint64_t value);
+  private:
+  uint64_t _internal_user_id() const;
+  void _internal_set_user_id(uint64_t value);
+  public:
+
   // @@protoc_insertion_point(class_scope:DBProtocol.SD_GET_INFOMATION)
  private:
   class _Internal;
@@ -694,6 +715,7 @@ class SD_GET_INFOMATION final :
   ::PROTOBUF_NAMESPACE_ID::RepeatedField<int> get_;
   mutable std::atomic<int> _get_cached_byte_size_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr name_;
+  uint64_t user_id_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DBProtocol_2eproto;
 };
@@ -825,6 +847,7 @@ class SD_EQUIP_ITEM final :
     kItemIdFieldNumber = 2,
     kTabTypeFieldNumber = 3,
     kSlotIndexFieldNumber = 4,
+    kUserIdFieldNumber = 5,
   };
   // string name = 1;
   void clear_name();
@@ -867,6 +890,15 @@ class SD_EQUIP_ITEM final :
   void _internal_set_slot_index(uint64_t value);
   public:
 
+  // uint64 user_id = 5;
+  void clear_user_id();
+  uint64_t user_id() const;
+  void set_user_id(uint64_t value);
+  private:
+  uint64_t _internal_user_id() const;
+  void _internal_set_user_id(uint64_t value);
+  public:
+
   // @@protoc_insertion_point(class_scope:DBProtocol.SD_EQUIP_ITEM)
  private:
   class _Internal;
@@ -878,6 +910,7 @@ class SD_EQUIP_ITEM final :
   uint64_t item_id_;
   uint64_t tab_type_;
   uint64_t slot_index_;
+  uint64_t user_id_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DBProtocol_2eproto;
 };
@@ -1010,6 +1043,7 @@ class SD_FARMING_ITEM final :
     kQuantityFieldNumber = 3,
     kTabTypeFieldNumber = 4,
     kSlotIndexFieldNumber = 5,
+    kUserIdFieldNumber = 6,
   };
   // string name = 1;
   void clear_name();
@@ -1061,6 +1095,15 @@ class SD_FARMING_ITEM final :
   void _internal_set_slot_index(uint64_t value);
   public:
 
+  // uint64 user_id = 6;
+  void clear_user_id();
+  uint64_t user_id() const;
+  void set_user_id(uint64_t value);
+  private:
+  uint64_t _internal_user_id() const;
+  void _internal_set_user_id(uint64_t value);
+  public:
+
   // @@protoc_insertion_point(class_scope:DBProtocol.SD_FARMING_ITEM)
  private:
   class _Internal;
@@ -1073,6 +1116,7 @@ class SD_FARMING_ITEM final :
   uint64_t quantity_;
   uint64_t tab_type_;
   uint64_t slot_index_;
+  uint64_t user_id_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DBProtocol_2eproto;
 };
@@ -1204,6 +1248,7 @@ class SD_UNEQUIP_ITEM final :
     kItemIdFieldNumber = 2,
     kTabTypeFieldNumber = 3,
     kSlotIndexFieldNumber = 4,
+    kUserIdFieldNumber = 5,
   };
   // string name = 1;
   void clear_name();
@@ -1246,6 +1291,15 @@ class SD_UNEQUIP_ITEM final :
   void _internal_set_slot_index(uint64_t value);
   public:
 
+  // uint64 user_id = 5;
+  void clear_user_id();
+  uint64_t user_id() const;
+  void set_user_id(uint64_t value);
+  private:
+  uint64_t _internal_user_id() const;
+  void _internal_set_user_id(uint64_t value);
+  public:
+
   // @@protoc_insertion_point(class_scope:DBProtocol.SD_UNEQUIP_ITEM)
  private:
   class _Internal;
@@ -1257,6 +1311,7 @@ class SD_UNEQUIP_ITEM final :
   uint64_t item_id_;
   uint64_t tab_type_;
   uint64_t slot_index_;
+  uint64_t user_id_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DBProtocol_2eproto;
 };
@@ -1388,6 +1443,7 @@ class SD_CONSUME_ITEM final :
     kItemIdFieldNumber = 2,
     kQuantityFieldNumber = 3,
     kBeforeQuantityFieldNumber = 4,
+    kUserIdFieldNumber = 5,
   };
   // string name = 1;
   void clear_name();
@@ -1430,6 +1486,15 @@ class SD_CONSUME_ITEM final :
   void _internal_set_beforequantity(uint64_t value);
   public:
 
+  // uint64 user_id = 5;
+  void clear_user_id();
+  uint64_t user_id() const;
+  void set_user_id(uint64_t value);
+  private:
+  uint64_t _internal_user_id() const;
+  void _internal_set_user_id(uint64_t value);
+  public:
+
   // @@protoc_insertion_point(class_scope:DBProtocol.SD_CONSUME_ITEM)
  private:
   class _Internal;
@@ -1441,6 +1506,7 @@ class SD_CONSUME_ITEM final :
   uint64_t itemid_;
   uint64_t quantity_;
   uint64_t beforequantity_;
+  uint64_t user_id_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DBProtocol_2eproto;
 };
@@ -1573,6 +1639,7 @@ class SD_MOVE_ITEM final :
     kFromIndexFieldNumber = 3,
     kToTabFieldNumber = 4,
     kToIndexFieldNumber = 5,
+    kUserIdFieldNumber = 6,
   };
   // string name = 1;
   void clear_name();
@@ -1624,6 +1691,15 @@ class SD_MOVE_ITEM final :
   void _internal_set_toindex(uint64_t value);
   public:
 
+  // uint64 user_id = 6;
+  void clear_user_id();
+  uint64_t user_id() const;
+  void set_user_id(uint64_t value);
+  private:
+  uint64_t _internal_user_id() const;
+  void _internal_set_user_id(uint64_t value);
+  public:
+
   // @@protoc_insertion_point(class_scope:DBProtocol.SD_MOVE_ITEM)
  private:
   class _Internal;
@@ -1636,6 +1712,7 @@ class SD_MOVE_ITEM final :
   uint64_t fromindex_;
   uint64_t totab_;
   uint64_t toindex_;
+  uint64_t user_id_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DBProtocol_2eproto;
 };
@@ -1764,6 +1841,7 @@ class SD_REGISTER final :
 
   enum : int {
     kNameFieldNumber = 1,
+    kUserIdFieldNumber = 2,
   };
   // string name = 1;
   void clear_name();
@@ -1779,6 +1857,15 @@ class SD_REGISTER final :
   std::string* _internal_mutable_name();
   public:
 
+  // uint64 user_id = 2;
+  void clear_user_id();
+  uint64_t user_id() const;
+  void set_user_id(uint64_t value);
+  private:
+  uint64_t _internal_user_id() const;
+  void _internal_set_user_id(uint64_t value);
+  public:
+
   // @@protoc_insertion_point(class_scope:DBProtocol.SD_REGISTER)
  private:
   class _Internal;
@@ -1787,6 +1874,7 @@ class SD_REGISTER final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr name_;
+  uint64_t user_id_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DBProtocol_2eproto;
 };
@@ -1916,6 +2004,7 @@ class SD_SAVE_INVENTORY final :
   enum : int {
     kInventoryFieldNumber = 2,
     kNameFieldNumber = 1,
+    kUserIdFieldNumber = 3,
   };
   // repeated .Protocol.InventorySlot inventory = 2;
   int inventory_size() const;
@@ -1949,6 +2038,15 @@ class SD_SAVE_INVENTORY final :
   std::string* _internal_mutable_name();
   public:
 
+  // uint64 user_id = 3;
+  void clear_user_id();
+  uint64_t user_id() const;
+  void set_user_id(uint64_t value);
+  private:
+  uint64_t _internal_user_id() const;
+  void _internal_set_user_id(uint64_t value);
+  public:
+
   // @@protoc_insertion_point(class_scope:DBProtocol.SD_SAVE_INVENTORY)
  private:
   class _Internal;
@@ -1958,6 +2056,7 @@ class SD_SAVE_INVENTORY final :
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::InventorySlot > inventory_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr name_;
+  uint64_t user_id_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DBProtocol_2eproto;
 };
@@ -2087,6 +2186,7 @@ class SD_SAVE_EQUIPMENT final :
   enum : int {
     kEquipmentFieldNumber = 2,
     kNameFieldNumber = 1,
+    kUserIdFieldNumber = 3,
   };
   // repeated .Protocol.EquipmentItem equipment = 2;
   int equipment_size() const;
@@ -2120,6 +2220,15 @@ class SD_SAVE_EQUIPMENT final :
   std::string* _internal_mutable_name();
   public:
 
+  // uint64 user_id = 3;
+  void clear_user_id();
+  uint64_t user_id() const;
+  void set_user_id(uint64_t value);
+  private:
+  uint64_t _internal_user_id() const;
+  void _internal_set_user_id(uint64_t value);
+  public:
+
   // @@protoc_insertion_point(class_scope:DBProtocol.SD_SAVE_EQUIPMENT)
  private:
   class _Internal;
@@ -2129,6 +2238,7 @@ class SD_SAVE_EQUIPMENT final :
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::EquipmentItem > equipment_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr name_;
+  uint64_t user_id_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DBProtocol_2eproto;
 };
@@ -2258,6 +2368,7 @@ class SD_UPDATE_GOLD final :
   enum : int {
     kNameFieldNumber = 1,
     kGoldFieldNumber = 2,
+    kUserIdFieldNumber = 3,
   };
   // string name = 1;
   void clear_name();
@@ -2282,6 +2393,15 @@ class SD_UPDATE_GOLD final :
   void _internal_set_gold(uint64_t value);
   public:
 
+  // uint64 user_id = 3;
+  void clear_user_id();
+  uint64_t user_id() const;
+  void set_user_id(uint64_t value);
+  private:
+  uint64_t _internal_user_id() const;
+  void _internal_set_user_id(uint64_t value);
+  public:
+
   // @@protoc_insertion_point(class_scope:DBProtocol.SD_UPDATE_GOLD)
  private:
   class _Internal;
@@ -2291,6 +2411,7 @@ class SD_UPDATE_GOLD final :
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr name_;
   uint64_t gold_;
+  uint64_t user_id_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DBProtocol_2eproto;
 };
@@ -2419,9 +2540,9 @@ class DS_LOGIN final :
 
   enum : int {
     kPlayerFieldNumber = 2,
-    kInventoryFieldNumber = 5,
-    kEquipmentFieldNumber = 6,
-    kGoldFieldNumber = 4,
+    kInventoryFieldNumber = 3,
+    kEquipmentFieldNumber = 4,
+    kUserIdFieldNumber = 5,
     kSuccessFieldNumber = 1,
   };
   // repeated .Protocol.Player player = 2;
@@ -2442,7 +2563,7 @@ class DS_LOGIN final :
   const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::Player >&
       player() const;
 
-  // repeated .Protocol.InventorySlot inventory = 5;
+  // repeated .Protocol.InventorySlot inventory = 3;
   int inventory_size() const;
   private:
   int _internal_inventory_size() const;
@@ -2460,7 +2581,7 @@ class DS_LOGIN final :
   const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::InventorySlot >&
       inventory() const;
 
-  // repeated .Protocol.EquipmentItem equipment = 6;
+  // repeated .Protocol.EquipmentItem equipment = 4;
   int equipment_size() const;
   private:
   int _internal_equipment_size() const;
@@ -2478,13 +2599,13 @@ class DS_LOGIN final :
   const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::EquipmentItem >&
       equipment() const;
 
-  // uint64 gold = 4;
-  void clear_gold();
-  uint64_t gold() const;
-  void set_gold(uint64_t value);
+  // uint64 user_id = 5;
+  void clear_user_id();
+  uint64_t user_id() const;
+  void set_user_id(uint64_t value);
   private:
-  uint64_t _internal_gold() const;
-  void _internal_set_gold(uint64_t value);
+  uint64_t _internal_user_id() const;
+  void _internal_set_user_id(uint64_t value);
   public:
 
   // bool success = 1;
@@ -2506,7 +2627,7 @@ class DS_LOGIN final :
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::Player > player_;
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::InventorySlot > inventory_;
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::EquipmentItem > equipment_;
-  uint64_t gold_;
+  uint64_t user_id_;
   bool success_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DBProtocol_2eproto;
@@ -2636,6 +2757,7 @@ class DS_REGISTER final :
 
   enum : int {
     kPlayerFieldNumber = 2,
+    kUserIdFieldNumber = 3,
     kSuccessFieldNumber = 1,
   };
   // repeated .Protocol.Player player = 2;
@@ -2656,6 +2778,15 @@ class DS_REGISTER final :
   const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::Player >&
       player() const;
 
+  // uint64 user_id = 3;
+  void clear_user_id();
+  uint64_t user_id() const;
+  void set_user_id(uint64_t value);
+  private:
+  uint64_t _internal_user_id() const;
+  void _internal_set_user_id(uint64_t value);
+  public:
+
   // bool success = 1;
   void clear_success();
   bool success() const;
@@ -2673,6 +2804,7 @@ class DS_REGISTER final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::Player > player_;
+  uint64_t user_id_;
   bool success_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DBProtocol_2eproto;
@@ -2802,6 +2934,7 @@ class DS_SAVE_RESULT final :
 
   enum : int {
     kMessageFieldNumber = 2,
+    kUserIdFieldNumber = 3,
     kSuccessFieldNumber = 1,
   };
   // string message = 2;
@@ -2816,6 +2949,15 @@ class DS_SAVE_RESULT final :
   const std::string& _internal_message() const;
   inline PROTOBUF_ALWAYS_INLINE void _internal_set_message(const std::string& value);
   std::string* _internal_mutable_message();
+  public:
+
+  // uint64 user_id = 3;
+  void clear_user_id();
+  uint64_t user_id() const;
+  void set_user_id(uint64_t value);
+  private:
+  uint64_t _internal_user_id() const;
+  void _internal_set_user_id(uint64_t value);
   public:
 
   // bool success = 1;
@@ -2835,6 +2977,7 @@ class DS_SAVE_RESULT final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr message_;
+  uint64_t user_id_;
   bool success_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DBProtocol_2eproto;
@@ -2964,6 +3107,7 @@ class DS_USER_INFORMATION final :
 
   enum : int {
     kPlayerFieldNumber = 2,
+    kUserIdFieldNumber = 3,
     kSuccessFieldNumber = 1,
   };
   // repeated .Protocol.Player player = 2;
@@ -2984,6 +3128,15 @@ class DS_USER_INFORMATION final :
   const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::Player >&
       player() const;
 
+  // uint64 user_id = 3;
+  void clear_user_id();
+  uint64_t user_id() const;
+  void set_user_id(uint64_t value);
+  private:
+  uint64_t _internal_user_id() const;
+  void _internal_set_user_id(uint64_t value);
+  public:
+
   // bool success = 1;
   void clear_success();
   bool success() const;
@@ -3001,6 +3154,7 @@ class DS_USER_INFORMATION final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::Player > player_;
+  uint64_t user_id_;
   bool success_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DBProtocol_2eproto;
@@ -3130,6 +3284,7 @@ class DS_INVENTORY_INFORMATION final :
 
   enum : int {
     kInventoryFieldNumber = 2,
+    kUserIdFieldNumber = 3,
     kSuccessFieldNumber = 1,
   };
   // repeated .Protocol.InventorySlot inventory = 2;
@@ -3150,6 +3305,15 @@ class DS_INVENTORY_INFORMATION final :
   const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::InventorySlot >&
       inventory() const;
 
+  // uint64 user_id = 3;
+  void clear_user_id();
+  uint64_t user_id() const;
+  void set_user_id(uint64_t value);
+  private:
+  uint64_t _internal_user_id() const;
+  void _internal_set_user_id(uint64_t value);
+  public:
+
   // bool success = 1;
   void clear_success();
   bool success() const;
@@ -3167,6 +3331,7 @@ class DS_INVENTORY_INFORMATION final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::InventorySlot > inventory_;
+  uint64_t user_id_;
   bool success_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DBProtocol_2eproto;
@@ -3296,6 +3461,7 @@ class DS_EQUIP_INFORMATION final :
 
   enum : int {
     kEquipmentFieldNumber = 2,
+    kUserIdFieldNumber = 3,
     kSuccessFieldNumber = 1,
   };
   // repeated .Protocol.EquipmentItem equipment = 2;
@@ -3316,6 +3482,15 @@ class DS_EQUIP_INFORMATION final :
   const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::EquipmentItem >&
       equipment() const;
 
+  // uint64 user_id = 3;
+  void clear_user_id();
+  uint64_t user_id() const;
+  void set_user_id(uint64_t value);
+  private:
+  uint64_t _internal_user_id() const;
+  void _internal_set_user_id(uint64_t value);
+  public:
+
   // bool success = 1;
   void clear_success();
   bool success() const;
@@ -3333,6 +3508,7 @@ class DS_EQUIP_INFORMATION final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::EquipmentItem > equipment_;
+  uint64_t user_id_;
   bool success_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DBProtocol_2eproto;
@@ -3462,6 +3638,7 @@ class DS_EQUIP_ITEM final :
 
   enum : int {
     kUpdatedEquipmentFieldNumber = 2,
+    kUserIdFieldNumber = 3,
     kSuccessFieldNumber = 1,
   };
   // repeated .Protocol.EquipmentItem updated_equipment = 2;
@@ -3482,6 +3659,15 @@ class DS_EQUIP_ITEM final :
   const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::EquipmentItem >&
       updated_equipment() const;
 
+  // uint64 user_id = 3;
+  void clear_user_id();
+  uint64_t user_id() const;
+  void set_user_id(uint64_t value);
+  private:
+  uint64_t _internal_user_id() const;
+  void _internal_set_user_id(uint64_t value);
+  public:
+
   // bool success = 1;
   void clear_success();
   bool success() const;
@@ -3499,6 +3685,7 @@ class DS_EQUIP_ITEM final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::EquipmentItem > updated_equipment_;
+  uint64_t user_id_;
   bool success_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DBProtocol_2eproto;
@@ -3628,6 +3815,7 @@ class DS_FARMING_RESULT final :
 
   enum : int {
     kUpdatedInventoryFieldNumber = 2,
+    kUserIdFieldNumber = 3,
     kSuccessFieldNumber = 1,
   };
   // repeated .Protocol.InventorySlot updated_inventory = 2;
@@ -3648,6 +3836,15 @@ class DS_FARMING_RESULT final :
   const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::InventorySlot >&
       updated_inventory() const;
 
+  // uint64 user_id = 3;
+  void clear_user_id();
+  uint64_t user_id() const;
+  void set_user_id(uint64_t value);
+  private:
+  uint64_t _internal_user_id() const;
+  void _internal_set_user_id(uint64_t value);
+  public:
+
   // bool success = 1;
   void clear_success();
   bool success() const;
@@ -3665,6 +3862,7 @@ class DS_FARMING_RESULT final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::InventorySlot > updated_inventory_;
+  uint64_t user_id_;
   bool success_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DBProtocol_2eproto;
@@ -3796,6 +3994,7 @@ class DS_CONSUME_ITEM final :
     kUpdatedSlotFieldNumber = 2,
     kHpFieldNumber = 3,
     kMpFieldNumber = 4,
+    kUserIdFieldNumber = 5,
     kSuccessFieldNumber = 1,
   };
   // repeated .Protocol.InventorySlot updated_slot = 2;
@@ -3834,6 +4033,15 @@ class DS_CONSUME_ITEM final :
   void _internal_set_mp(uint64_t value);
   public:
 
+  // uint64 user_id = 5;
+  void clear_user_id();
+  uint64_t user_id() const;
+  void set_user_id(uint64_t value);
+  private:
+  uint64_t _internal_user_id() const;
+  void _internal_set_user_id(uint64_t value);
+  public:
+
   // bool success = 1;
   void clear_success();
   bool success() const;
@@ -3853,6 +4061,7 @@ class DS_CONSUME_ITEM final :
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::InventorySlot > updated_slot_;
   uint64_t hp_;
   uint64_t mp_;
+  uint64_t user_id_;
   bool success_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DBProtocol_2eproto;
@@ -3983,6 +4192,7 @@ class DS_MOVE_RESULT final :
   enum : int {
     kFromFieldNumber = 2,
     kToFieldNumber = 3,
+    kUserIdFieldNumber = 4,
     kSuccessFieldNumber = 1,
   };
   // repeated .Protocol.InventorySlot from = 2;
@@ -4021,6 +4231,15 @@ class DS_MOVE_RESULT final :
   const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::InventorySlot >&
       to() const;
 
+  // uint64 user_id = 4;
+  void clear_user_id();
+  uint64_t user_id() const;
+  void set_user_id(uint64_t value);
+  private:
+  uint64_t _internal_user_id() const;
+  void _internal_set_user_id(uint64_t value);
+  public:
+
   // bool success = 1;
   void clear_success();
   bool success() const;
@@ -4039,6 +4258,7 @@ class DS_MOVE_RESULT final :
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::InventorySlot > from_;
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::InventorySlot > to_;
+  uint64_t user_id_;
   bool success_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DBProtocol_2eproto;
@@ -4168,6 +4388,7 @@ class DS_UPDATE_GOLD final :
 
   enum : int {
     kGoldFieldNumber = 2,
+    kUserIdFieldNumber = 3,
     kSuccessFieldNumber = 1,
   };
   // uint64 gold = 2;
@@ -4177,6 +4398,15 @@ class DS_UPDATE_GOLD final :
   private:
   uint64_t _internal_gold() const;
   void _internal_set_gold(uint64_t value);
+  public:
+
+  // uint64 user_id = 3;
+  void clear_user_id();
+  uint64_t user_id() const;
+  void set_user_id(uint64_t value);
+  private:
+  uint64_t _internal_user_id() const;
+  void _internal_set_user_id(uint64_t value);
   public:
 
   // bool success = 1;
@@ -4196,6 +4426,7 @@ class DS_UPDATE_GOLD final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   uint64_t gold_;
+  uint64_t user_id_;
   bool success_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DBProtocol_2eproto;
@@ -4260,6 +4491,26 @@ inline void SD_LOGIN::set_allocated_name(std::string* name) {
   }
 #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   // @@protoc_insertion_point(field_set_allocated:DBProtocol.SD_LOGIN.name)
+}
+
+// uint64 user_id = 2;
+inline void SD_LOGIN::clear_user_id() {
+  user_id_ = uint64_t{0u};
+}
+inline uint64_t SD_LOGIN::_internal_user_id() const {
+  return user_id_;
+}
+inline uint64_t SD_LOGIN::user_id() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.SD_LOGIN.user_id)
+  return _internal_user_id();
+}
+inline void SD_LOGIN::_internal_set_user_id(uint64_t value) {
+  
+  user_id_ = value;
+}
+inline void SD_LOGIN::set_user_id(uint64_t value) {
+  _internal_set_user_id(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.SD_LOGIN.user_id)
 }
 
 // -------------------------------------------------------------------
@@ -4428,24 +4679,24 @@ SD_SAVE_PLAYER::equipment() const {
   return equipment_;
 }
 
-// uint64 gold = 5;
-inline void SD_SAVE_PLAYER::clear_gold() {
-  gold_ = uint64_t{0u};
+// uint64 user_id = 5;
+inline void SD_SAVE_PLAYER::clear_user_id() {
+  user_id_ = uint64_t{0u};
 }
-inline uint64_t SD_SAVE_PLAYER::_internal_gold() const {
-  return gold_;
+inline uint64_t SD_SAVE_PLAYER::_internal_user_id() const {
+  return user_id_;
 }
-inline uint64_t SD_SAVE_PLAYER::gold() const {
-  // @@protoc_insertion_point(field_get:DBProtocol.SD_SAVE_PLAYER.gold)
-  return _internal_gold();
+inline uint64_t SD_SAVE_PLAYER::user_id() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.SD_SAVE_PLAYER.user_id)
+  return _internal_user_id();
 }
-inline void SD_SAVE_PLAYER::_internal_set_gold(uint64_t value) {
+inline void SD_SAVE_PLAYER::_internal_set_user_id(uint64_t value) {
   
-  gold_ = value;
+  user_id_ = value;
 }
-inline void SD_SAVE_PLAYER::set_gold(uint64_t value) {
-  _internal_set_gold(value);
-  // @@protoc_insertion_point(field_set:DBProtocol.SD_SAVE_PLAYER.gold)
+inline void SD_SAVE_PLAYER::set_user_id(uint64_t value) {
+  _internal_set_user_id(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.SD_SAVE_PLAYER.user_id)
 }
 
 // -------------------------------------------------------------------
@@ -4544,6 +4795,26 @@ inline ::PROTOBUF_NAMESPACE_ID::RepeatedField<int>*
 SD_GET_INFOMATION::mutable_get() {
   // @@protoc_insertion_point(field_mutable_list:DBProtocol.SD_GET_INFOMATION.get)
   return _internal_mutable_get();
+}
+
+// uint64 user_id = 3;
+inline void SD_GET_INFOMATION::clear_user_id() {
+  user_id_ = uint64_t{0u};
+}
+inline uint64_t SD_GET_INFOMATION::_internal_user_id() const {
+  return user_id_;
+}
+inline uint64_t SD_GET_INFOMATION::user_id() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.SD_GET_INFOMATION.user_id)
+  return _internal_user_id();
+}
+inline void SD_GET_INFOMATION::_internal_set_user_id(uint64_t value) {
+  
+  user_id_ = value;
+}
+inline void SD_GET_INFOMATION::set_user_id(uint64_t value) {
+  _internal_set_user_id(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.SD_GET_INFOMATION.user_id)
 }
 
 // -------------------------------------------------------------------
@@ -4659,6 +4930,26 @@ inline void SD_EQUIP_ITEM::_internal_set_slot_index(uint64_t value) {
 inline void SD_EQUIP_ITEM::set_slot_index(uint64_t value) {
   _internal_set_slot_index(value);
   // @@protoc_insertion_point(field_set:DBProtocol.SD_EQUIP_ITEM.slot_index)
+}
+
+// uint64 user_id = 5;
+inline void SD_EQUIP_ITEM::clear_user_id() {
+  user_id_ = uint64_t{0u};
+}
+inline uint64_t SD_EQUIP_ITEM::_internal_user_id() const {
+  return user_id_;
+}
+inline uint64_t SD_EQUIP_ITEM::user_id() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.SD_EQUIP_ITEM.user_id)
+  return _internal_user_id();
+}
+inline void SD_EQUIP_ITEM::_internal_set_user_id(uint64_t value) {
+  
+  user_id_ = value;
+}
+inline void SD_EQUIP_ITEM::set_user_id(uint64_t value) {
+  _internal_set_user_id(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.SD_EQUIP_ITEM.user_id)
 }
 
 // -------------------------------------------------------------------
@@ -4796,6 +5087,26 @@ inline void SD_FARMING_ITEM::set_slot_index(uint64_t value) {
   // @@protoc_insertion_point(field_set:DBProtocol.SD_FARMING_ITEM.slot_index)
 }
 
+// uint64 user_id = 6;
+inline void SD_FARMING_ITEM::clear_user_id() {
+  user_id_ = uint64_t{0u};
+}
+inline uint64_t SD_FARMING_ITEM::_internal_user_id() const {
+  return user_id_;
+}
+inline uint64_t SD_FARMING_ITEM::user_id() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.SD_FARMING_ITEM.user_id)
+  return _internal_user_id();
+}
+inline void SD_FARMING_ITEM::_internal_set_user_id(uint64_t value) {
+  
+  user_id_ = value;
+}
+inline void SD_FARMING_ITEM::set_user_id(uint64_t value) {
+  _internal_set_user_id(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.SD_FARMING_ITEM.user_id)
+}
+
 // -------------------------------------------------------------------
 
 // SD_UNEQUIP_ITEM
@@ -4911,6 +5222,26 @@ inline void SD_UNEQUIP_ITEM::set_slot_index(uint64_t value) {
   // @@protoc_insertion_point(field_set:DBProtocol.SD_UNEQUIP_ITEM.slot_index)
 }
 
+// uint64 user_id = 5;
+inline void SD_UNEQUIP_ITEM::clear_user_id() {
+  user_id_ = uint64_t{0u};
+}
+inline uint64_t SD_UNEQUIP_ITEM::_internal_user_id() const {
+  return user_id_;
+}
+inline uint64_t SD_UNEQUIP_ITEM::user_id() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.SD_UNEQUIP_ITEM.user_id)
+  return _internal_user_id();
+}
+inline void SD_UNEQUIP_ITEM::_internal_set_user_id(uint64_t value) {
+  
+  user_id_ = value;
+}
+inline void SD_UNEQUIP_ITEM::set_user_id(uint64_t value) {
+  _internal_set_user_id(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.SD_UNEQUIP_ITEM.user_id)
+}
+
 // -------------------------------------------------------------------
 
 // SD_CONSUME_ITEM
@@ -5024,6 +5355,26 @@ inline void SD_CONSUME_ITEM::_internal_set_beforequantity(uint64_t value) {
 inline void SD_CONSUME_ITEM::set_beforequantity(uint64_t value) {
   _internal_set_beforequantity(value);
   // @@protoc_insertion_point(field_set:DBProtocol.SD_CONSUME_ITEM.beforeQuantity)
+}
+
+// uint64 user_id = 5;
+inline void SD_CONSUME_ITEM::clear_user_id() {
+  user_id_ = uint64_t{0u};
+}
+inline uint64_t SD_CONSUME_ITEM::_internal_user_id() const {
+  return user_id_;
+}
+inline uint64_t SD_CONSUME_ITEM::user_id() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.SD_CONSUME_ITEM.user_id)
+  return _internal_user_id();
+}
+inline void SD_CONSUME_ITEM::_internal_set_user_id(uint64_t value) {
+  
+  user_id_ = value;
+}
+inline void SD_CONSUME_ITEM::set_user_id(uint64_t value) {
+  _internal_set_user_id(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.SD_CONSUME_ITEM.user_id)
 }
 
 // -------------------------------------------------------------------
@@ -5161,6 +5512,26 @@ inline void SD_MOVE_ITEM::set_toindex(uint64_t value) {
   // @@protoc_insertion_point(field_set:DBProtocol.SD_MOVE_ITEM.toIndex)
 }
 
+// uint64 user_id = 6;
+inline void SD_MOVE_ITEM::clear_user_id() {
+  user_id_ = uint64_t{0u};
+}
+inline uint64_t SD_MOVE_ITEM::_internal_user_id() const {
+  return user_id_;
+}
+inline uint64_t SD_MOVE_ITEM::user_id() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.SD_MOVE_ITEM.user_id)
+  return _internal_user_id();
+}
+inline void SD_MOVE_ITEM::_internal_set_user_id(uint64_t value) {
+  
+  user_id_ = value;
+}
+inline void SD_MOVE_ITEM::set_user_id(uint64_t value) {
+  _internal_set_user_id(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.SD_MOVE_ITEM.user_id)
+}
+
 // -------------------------------------------------------------------
 
 // SD_REGISTER
@@ -5214,6 +5585,26 @@ inline void SD_REGISTER::set_allocated_name(std::string* name) {
   }
 #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   // @@protoc_insertion_point(field_set_allocated:DBProtocol.SD_REGISTER.name)
+}
+
+// uint64 user_id = 2;
+inline void SD_REGISTER::clear_user_id() {
+  user_id_ = uint64_t{0u};
+}
+inline uint64_t SD_REGISTER::_internal_user_id() const {
+  return user_id_;
+}
+inline uint64_t SD_REGISTER::user_id() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.SD_REGISTER.user_id)
+  return _internal_user_id();
+}
+inline void SD_REGISTER::_internal_set_user_id(uint64_t value) {
+  
+  user_id_ = value;
+}
+inline void SD_REGISTER::set_user_id(uint64_t value) {
+  _internal_set_user_id(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.SD_REGISTER.user_id)
 }
 
 // -------------------------------------------------------------------
@@ -5308,6 +5699,26 @@ SD_SAVE_INVENTORY::inventory() const {
   return inventory_;
 }
 
+// uint64 user_id = 3;
+inline void SD_SAVE_INVENTORY::clear_user_id() {
+  user_id_ = uint64_t{0u};
+}
+inline uint64_t SD_SAVE_INVENTORY::_internal_user_id() const {
+  return user_id_;
+}
+inline uint64_t SD_SAVE_INVENTORY::user_id() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.SD_SAVE_INVENTORY.user_id)
+  return _internal_user_id();
+}
+inline void SD_SAVE_INVENTORY::_internal_set_user_id(uint64_t value) {
+  
+  user_id_ = value;
+}
+inline void SD_SAVE_INVENTORY::set_user_id(uint64_t value) {
+  _internal_set_user_id(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.SD_SAVE_INVENTORY.user_id)
+}
+
 // -------------------------------------------------------------------
 
 // SD_SAVE_EQUIPMENT
@@ -5400,6 +5811,26 @@ SD_SAVE_EQUIPMENT::equipment() const {
   return equipment_;
 }
 
+// uint64 user_id = 3;
+inline void SD_SAVE_EQUIPMENT::clear_user_id() {
+  user_id_ = uint64_t{0u};
+}
+inline uint64_t SD_SAVE_EQUIPMENT::_internal_user_id() const {
+  return user_id_;
+}
+inline uint64_t SD_SAVE_EQUIPMENT::user_id() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.SD_SAVE_EQUIPMENT.user_id)
+  return _internal_user_id();
+}
+inline void SD_SAVE_EQUIPMENT::_internal_set_user_id(uint64_t value) {
+  
+  user_id_ = value;
+}
+inline void SD_SAVE_EQUIPMENT::set_user_id(uint64_t value) {
+  _internal_set_user_id(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.SD_SAVE_EQUIPMENT.user_id)
+}
+
 // -------------------------------------------------------------------
 
 // SD_UPDATE_GOLD
@@ -5475,6 +5906,26 @@ inline void SD_UPDATE_GOLD::set_gold(uint64_t value) {
   // @@protoc_insertion_point(field_set:DBProtocol.SD_UPDATE_GOLD.gold)
 }
 
+// uint64 user_id = 3;
+inline void SD_UPDATE_GOLD::clear_user_id() {
+  user_id_ = uint64_t{0u};
+}
+inline uint64_t SD_UPDATE_GOLD::_internal_user_id() const {
+  return user_id_;
+}
+inline uint64_t SD_UPDATE_GOLD::user_id() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.SD_UPDATE_GOLD.user_id)
+  return _internal_user_id();
+}
+inline void SD_UPDATE_GOLD::_internal_set_user_id(uint64_t value) {
+  
+  user_id_ = value;
+}
+inline void SD_UPDATE_GOLD::set_user_id(uint64_t value) {
+  _internal_set_user_id(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.SD_UPDATE_GOLD.user_id)
+}
+
 // -------------------------------------------------------------------
 
 // DS_LOGIN
@@ -5536,27 +5987,7 @@ DS_LOGIN::player() const {
   return player_;
 }
 
-// uint64 gold = 4;
-inline void DS_LOGIN::clear_gold() {
-  gold_ = uint64_t{0u};
-}
-inline uint64_t DS_LOGIN::_internal_gold() const {
-  return gold_;
-}
-inline uint64_t DS_LOGIN::gold() const {
-  // @@protoc_insertion_point(field_get:DBProtocol.DS_LOGIN.gold)
-  return _internal_gold();
-}
-inline void DS_LOGIN::_internal_set_gold(uint64_t value) {
-  
-  gold_ = value;
-}
-inline void DS_LOGIN::set_gold(uint64_t value) {
-  _internal_set_gold(value);
-  // @@protoc_insertion_point(field_set:DBProtocol.DS_LOGIN.gold)
-}
-
-// repeated .Protocol.InventorySlot inventory = 5;
+// repeated .Protocol.InventorySlot inventory = 3;
 inline int DS_LOGIN::_internal_inventory_size() const {
   return inventory_.size();
 }
@@ -5593,7 +6024,7 @@ DS_LOGIN::inventory() const {
   return inventory_;
 }
 
-// repeated .Protocol.EquipmentItem equipment = 6;
+// repeated .Protocol.EquipmentItem equipment = 4;
 inline int DS_LOGIN::_internal_equipment_size() const {
   return equipment_.size();
 }
@@ -5628,6 +6059,26 @@ inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::EquipmentIte
 DS_LOGIN::equipment() const {
   // @@protoc_insertion_point(field_list:DBProtocol.DS_LOGIN.equipment)
   return equipment_;
+}
+
+// uint64 user_id = 5;
+inline void DS_LOGIN::clear_user_id() {
+  user_id_ = uint64_t{0u};
+}
+inline uint64_t DS_LOGIN::_internal_user_id() const {
+  return user_id_;
+}
+inline uint64_t DS_LOGIN::user_id() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.DS_LOGIN.user_id)
+  return _internal_user_id();
+}
+inline void DS_LOGIN::_internal_set_user_id(uint64_t value) {
+  
+  user_id_ = value;
+}
+inline void DS_LOGIN::set_user_id(uint64_t value) {
+  _internal_set_user_id(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.DS_LOGIN.user_id)
 }
 
 // -------------------------------------------------------------------
@@ -5689,6 +6140,26 @@ inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::Player >&
 DS_REGISTER::player() const {
   // @@protoc_insertion_point(field_list:DBProtocol.DS_REGISTER.player)
   return player_;
+}
+
+// uint64 user_id = 3;
+inline void DS_REGISTER::clear_user_id() {
+  user_id_ = uint64_t{0u};
+}
+inline uint64_t DS_REGISTER::_internal_user_id() const {
+  return user_id_;
+}
+inline uint64_t DS_REGISTER::user_id() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.DS_REGISTER.user_id)
+  return _internal_user_id();
+}
+inline void DS_REGISTER::_internal_set_user_id(uint64_t value) {
+  
+  user_id_ = value;
+}
+inline void DS_REGISTER::set_user_id(uint64_t value) {
+  _internal_set_user_id(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.DS_REGISTER.user_id)
 }
 
 // -------------------------------------------------------------------
@@ -5766,6 +6237,26 @@ inline void DS_SAVE_RESULT::set_allocated_message(std::string* message) {
   // @@protoc_insertion_point(field_set_allocated:DBProtocol.DS_SAVE_RESULT.message)
 }
 
+// uint64 user_id = 3;
+inline void DS_SAVE_RESULT::clear_user_id() {
+  user_id_ = uint64_t{0u};
+}
+inline uint64_t DS_SAVE_RESULT::_internal_user_id() const {
+  return user_id_;
+}
+inline uint64_t DS_SAVE_RESULT::user_id() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.DS_SAVE_RESULT.user_id)
+  return _internal_user_id();
+}
+inline void DS_SAVE_RESULT::_internal_set_user_id(uint64_t value) {
+  
+  user_id_ = value;
+}
+inline void DS_SAVE_RESULT::set_user_id(uint64_t value) {
+  _internal_set_user_id(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.DS_SAVE_RESULT.user_id)
+}
+
 // -------------------------------------------------------------------
 
 // DS_USER_INFORMATION
@@ -5825,6 +6316,26 @@ inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::Player >&
 DS_USER_INFORMATION::player() const {
   // @@protoc_insertion_point(field_list:DBProtocol.DS_USER_INFORMATION.player)
   return player_;
+}
+
+// uint64 user_id = 3;
+inline void DS_USER_INFORMATION::clear_user_id() {
+  user_id_ = uint64_t{0u};
+}
+inline uint64_t DS_USER_INFORMATION::_internal_user_id() const {
+  return user_id_;
+}
+inline uint64_t DS_USER_INFORMATION::user_id() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.DS_USER_INFORMATION.user_id)
+  return _internal_user_id();
+}
+inline void DS_USER_INFORMATION::_internal_set_user_id(uint64_t value) {
+  
+  user_id_ = value;
+}
+inline void DS_USER_INFORMATION::set_user_id(uint64_t value) {
+  _internal_set_user_id(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.DS_USER_INFORMATION.user_id)
 }
 
 // -------------------------------------------------------------------
@@ -5888,6 +6399,26 @@ DS_INVENTORY_INFORMATION::inventory() const {
   return inventory_;
 }
 
+// uint64 user_id = 3;
+inline void DS_INVENTORY_INFORMATION::clear_user_id() {
+  user_id_ = uint64_t{0u};
+}
+inline uint64_t DS_INVENTORY_INFORMATION::_internal_user_id() const {
+  return user_id_;
+}
+inline uint64_t DS_INVENTORY_INFORMATION::user_id() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.DS_INVENTORY_INFORMATION.user_id)
+  return _internal_user_id();
+}
+inline void DS_INVENTORY_INFORMATION::_internal_set_user_id(uint64_t value) {
+  
+  user_id_ = value;
+}
+inline void DS_INVENTORY_INFORMATION::set_user_id(uint64_t value) {
+  _internal_set_user_id(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.DS_INVENTORY_INFORMATION.user_id)
+}
+
 // -------------------------------------------------------------------
 
 // DS_EQUIP_INFORMATION
@@ -5947,6 +6478,26 @@ inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::EquipmentIte
 DS_EQUIP_INFORMATION::equipment() const {
   // @@protoc_insertion_point(field_list:DBProtocol.DS_EQUIP_INFORMATION.equipment)
   return equipment_;
+}
+
+// uint64 user_id = 3;
+inline void DS_EQUIP_INFORMATION::clear_user_id() {
+  user_id_ = uint64_t{0u};
+}
+inline uint64_t DS_EQUIP_INFORMATION::_internal_user_id() const {
+  return user_id_;
+}
+inline uint64_t DS_EQUIP_INFORMATION::user_id() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.DS_EQUIP_INFORMATION.user_id)
+  return _internal_user_id();
+}
+inline void DS_EQUIP_INFORMATION::_internal_set_user_id(uint64_t value) {
+  
+  user_id_ = value;
+}
+inline void DS_EQUIP_INFORMATION::set_user_id(uint64_t value) {
+  _internal_set_user_id(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.DS_EQUIP_INFORMATION.user_id)
 }
 
 // -------------------------------------------------------------------
@@ -6010,6 +6561,26 @@ DS_EQUIP_ITEM::updated_equipment() const {
   return updated_equipment_;
 }
 
+// uint64 user_id = 3;
+inline void DS_EQUIP_ITEM::clear_user_id() {
+  user_id_ = uint64_t{0u};
+}
+inline uint64_t DS_EQUIP_ITEM::_internal_user_id() const {
+  return user_id_;
+}
+inline uint64_t DS_EQUIP_ITEM::user_id() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.DS_EQUIP_ITEM.user_id)
+  return _internal_user_id();
+}
+inline void DS_EQUIP_ITEM::_internal_set_user_id(uint64_t value) {
+  
+  user_id_ = value;
+}
+inline void DS_EQUIP_ITEM::set_user_id(uint64_t value) {
+  _internal_set_user_id(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.DS_EQUIP_ITEM.user_id)
+}
+
 // -------------------------------------------------------------------
 
 // DS_FARMING_RESULT
@@ -6069,6 +6640,26 @@ inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::InventorySlo
 DS_FARMING_RESULT::updated_inventory() const {
   // @@protoc_insertion_point(field_list:DBProtocol.DS_FARMING_RESULT.updated_inventory)
   return updated_inventory_;
+}
+
+// uint64 user_id = 3;
+inline void DS_FARMING_RESULT::clear_user_id() {
+  user_id_ = uint64_t{0u};
+}
+inline uint64_t DS_FARMING_RESULT::_internal_user_id() const {
+  return user_id_;
+}
+inline uint64_t DS_FARMING_RESULT::user_id() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.DS_FARMING_RESULT.user_id)
+  return _internal_user_id();
+}
+inline void DS_FARMING_RESULT::_internal_set_user_id(uint64_t value) {
+  
+  user_id_ = value;
+}
+inline void DS_FARMING_RESULT::set_user_id(uint64_t value) {
+  _internal_set_user_id(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.DS_FARMING_RESULT.user_id)
 }
 
 // -------------------------------------------------------------------
@@ -6172,6 +6763,26 @@ inline void DS_CONSUME_ITEM::set_mp(uint64_t value) {
   // @@protoc_insertion_point(field_set:DBProtocol.DS_CONSUME_ITEM.mp)
 }
 
+// uint64 user_id = 5;
+inline void DS_CONSUME_ITEM::clear_user_id() {
+  user_id_ = uint64_t{0u};
+}
+inline uint64_t DS_CONSUME_ITEM::_internal_user_id() const {
+  return user_id_;
+}
+inline uint64_t DS_CONSUME_ITEM::user_id() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.DS_CONSUME_ITEM.user_id)
+  return _internal_user_id();
+}
+inline void DS_CONSUME_ITEM::_internal_set_user_id(uint64_t value) {
+  
+  user_id_ = value;
+}
+inline void DS_CONSUME_ITEM::set_user_id(uint64_t value) {
+  _internal_set_user_id(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.DS_CONSUME_ITEM.user_id)
+}
+
 // -------------------------------------------------------------------
 
 // DS_MOVE_RESULT
@@ -6270,6 +6881,26 @@ DS_MOVE_RESULT::to() const {
   return to_;
 }
 
+// uint64 user_id = 4;
+inline void DS_MOVE_RESULT::clear_user_id() {
+  user_id_ = uint64_t{0u};
+}
+inline uint64_t DS_MOVE_RESULT::_internal_user_id() const {
+  return user_id_;
+}
+inline uint64_t DS_MOVE_RESULT::user_id() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.DS_MOVE_RESULT.user_id)
+  return _internal_user_id();
+}
+inline void DS_MOVE_RESULT::_internal_set_user_id(uint64_t value) {
+  
+  user_id_ = value;
+}
+inline void DS_MOVE_RESULT::set_user_id(uint64_t value) {
+  _internal_set_user_id(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.DS_MOVE_RESULT.user_id)
+}
+
 // -------------------------------------------------------------------
 
 // DS_UPDATE_GOLD
@@ -6312,6 +6943,26 @@ inline void DS_UPDATE_GOLD::_internal_set_gold(uint64_t value) {
 inline void DS_UPDATE_GOLD::set_gold(uint64_t value) {
   _internal_set_gold(value);
   // @@protoc_insertion_point(field_set:DBProtocol.DS_UPDATE_GOLD.gold)
+}
+
+// uint64 user_id = 3;
+inline void DS_UPDATE_GOLD::clear_user_id() {
+  user_id_ = uint64_t{0u};
+}
+inline uint64_t DS_UPDATE_GOLD::_internal_user_id() const {
+  return user_id_;
+}
+inline uint64_t DS_UPDATE_GOLD::user_id() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.DS_UPDATE_GOLD.user_id)
+  return _internal_user_id();
+}
+inline void DS_UPDATE_GOLD::_internal_set_user_id(uint64_t value) {
+  
+  user_id_ = value;
+}
+inline void DS_UPDATE_GOLD::set_user_id(uint64_t value) {
+  _internal_set_user_id(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.DS_UPDATE_GOLD.user_id)
 }
 
 #ifdef __GNUC__

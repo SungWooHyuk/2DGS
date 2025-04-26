@@ -38,3 +38,19 @@ void Player::LevelUp()
 	//RedisManager::GetInstance().UpdatePlayerLevel(myName, myStat.level);
 }
 
+void Player::UpdateStatByEquipment()
+{
+	myStat.attackPower = 0;
+	myStat.defencePower = 0;
+	myStat.magicPower= 0;
+	myStat.strength = 0;
+
+	for (const auto& [slot, item] : myEquip)
+	{
+		myStat.attackPower += item.equipmentInfo.attackPower;
+		myStat.defencePower += item.equipmentInfo.defensePower;
+		myStat.magicPower += item.equipmentInfo.magicPower;
+		myStat.strength += item.equipmentInfo.strength;
+	}
+}
+

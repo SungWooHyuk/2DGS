@@ -176,11 +176,6 @@
     <ClInclude Include="CoreMacro.h" />
     <ClInclude Include="CorePch.h" />
     <ClInclude Include="CoreTLS.h" />
-    <ClInclude Include="DBBind.h" />
-    <ClInclude Include="DBConnection.h" />
-    <ClInclude Include="DBConnectionPool.h" />
-    <ClInclude Include="DBModel.h" />
-    <ClInclude Include="DBSynchronizer.h" />
     <ClInclude Include="DeadLockProfiler.h" />
     <ClInclude Include="FileUtils.h" />
     <ClInclude Include="GlobalQueue.h" />
@@ -222,11 +217,6 @@
     <ClCompile Include="CoreGlobal.cpp" />
     <ClCompile Include="CorePch.cpp" />
     <ClCompile Include="CoreTLS.cpp" />
-    <ClCompile Include="DBBind.cpp" />
-    <ClCompile Include="DBConnection.cpp" />
-    <ClCompile Include="DBConnectionPool.cpp" />
-    <ClCompile Include="DBModel.cpp" />
-    <ClCompile Include="DBSynchronizer.cpp" />
     <ClCompile Include="DeadLockProfiler.cpp" />
     <ClCompile Include="FileUtils.cpp" />
     <ClCompile Include="GlobalQueue.cpp" />

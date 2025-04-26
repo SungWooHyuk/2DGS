@@ -4,6 +4,7 @@
 #include "Tile.h"
 #include "Player.h"
 #include "Client.h"
+#include "Item.h"
 
 #include "ThreadManager.h"
 #include "ServerPacketHandler.h"
@@ -28,7 +29,8 @@ void InitSingletons()
 {
 	MAPDATA; // Map data
 	SFSYSTEM; // Sfml data
-	TILE; // Tile data
+	TILE.Init(); // Tile data initialization
+	ITEM.LoadFromJson("../Tools/TableToJson/items_client.json")
 }
 
 int main()

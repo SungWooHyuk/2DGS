@@ -23,47 +23,42 @@ void GameSessionManager::Add(GameSessionRef _session)
 
 void GameSessionManager::Remove(GameSessionRef _session)
 {
-	GameSessionRef gamesession;
+	WRITE_LOCK;
 	{
+
 		if (!_session)
 		{
 			ASSERT_CRASH(false);
 			return;
 		}
 
-		gamesession = _session;
+		GameSessionRef gamesession = _session;
 		auto currentPlayer = gamesession->GetCurrentPlayer();
-		if (!currentPlayer)
+		if (currentPlayer)
 		{
-			ASSERT_CRASH(false);
-			return;
+			int id = currentPlayer->GetId();
+
+			if (gamesession->GetCurrentPlayer()->GetPT() == Protocol::PLAYER_TYPE_CLIENT)
+				if (gamesession->GetCurrentPlayer()->GetName().substr(0, 5) != "dummy")
+					ASSERT_CRASH(UserInfoPlayer(id));
+
+
+			unordered_set<uint64> vl = sessions[id]->GetViewPlayer();
+			for (const auto& _vl : vl)
+			{
+				if (false == IsPlayer(_vl)) continue;
+				if (_vl == id) continue;
+				if (sessions[_vl]->GetCurrentPlayer()->GetState() != ST_INGAME) continue;
+				if (sessions[_vl]->GetCurrentPlayer()->GetPT() == Protocol::PLAYER_TYPE_DUMMY) continue;
+
+				sessions[_vl]->RemovePkt(id);
+				sessions[_vl]->RemoveViewPlayer(id);
+			}
+
+			sessions[gamesession->GetCurrentPlayer()->GetId()]->GetCurrentPlayer()->SetState(ST_FREE);
+			freeId.push(gamesession->GetCurrentPlayer()->GetId());
+			sessions[gamesession->GetCurrentPlayer()->GetId()].reset();
 		}
-
-		int id = currentPlayer->GetId();
-
-		if (gamesession->GetCurrentPlayer()->GetPT() == Protocol::PLAYER_TYPE_CLIENT)
-			if (gamesession->GetCurrentPlayer()->GetName().substr(0, 5) != "dummy")
-				ASSERT_CRASH(UserInfoPlayer(id));
-		
-
-		unordered_set<uint64> vl = sessions[id]->GetViewPlayer();
-		for (const auto& _vl : vl)
-		{
-			if (false == IsPlayer(_vl)) continue;
-			if (_vl == id) continue;
-			if (sessions[_vl]->GetCurrentPlayer()->GetState() != ST_INGAME) continue;
-			if (sessions[_vl]->GetCurrentPlayer()->GetPT() == Protocol::PLAYER_TYPE_DUMMY) continue;
-
-			sessions[_vl]->RemovePkt(id);
-			sessions[_vl]->RemoveViewPlayer(id);
-		}
-	}
-	{
-
-		freeId.push(gamesession->GetCurrentPlayer()->GetId());
-
-		sessions[gamesession->GetCurrentPlayer()->GetId()]->GetCurrentPlayer()->SetState(ST_FREE);
-		sessions[gamesession->GetCurrentPlayer()->GetId()].reset();
 	}
 }
 

@@ -9,7 +9,8 @@ enum class ServiceType : uint8
 	Server,
 	Client,
 	Dummy,
-	DB
+	DB,
+	DBServer
 };
 
 /*-------------
@@ -68,6 +69,20 @@ public:
 	virtual bool	Start() override;
 };
 
+/*-------------------
+	dbserverService
+--------------------*/
+
+class DBServerService : public Service
+{
+public:
+	DBServerService(NetAddress targetAddress, IocpCoreRef core, SessionFactory factory, int32 maxSessionCount = 1);
+	~DBServerService() {}
+
+	SessionRef		GetSession();
+	virtual bool	Start() override;
+};
+
 
 /*-----------------
 	ServerService
@@ -114,4 +129,6 @@ public:
 	virtual bool	Start() override;
 	virtual void	CloseService() override;
 
+private:
+	ListenerRef		_listener = nullptr;
 };

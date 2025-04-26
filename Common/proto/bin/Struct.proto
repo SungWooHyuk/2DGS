@@ -20,6 +20,16 @@ message Player
 	uint64 gold = 13;
 }
 
+message User
+{
+	repeated PlayerType playertype = 1;
+	uint64 id = 2;
+	string name = 3;
+	uint64 x = 4;
+	uint64 y = 5;
+	uint64 gold = 6;
+}
+
 message Stat
 {
 	uint64 level = 1;
@@ -33,6 +43,7 @@ message Stat
 	uint64 attackPower = 8;
 	uint64 defensePower = 9;
 	uint64 magicPower = 10;
+	uint64 strenth = 11;
 }
 
 message InventorySlot

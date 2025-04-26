@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "DBPacketHandler.h"
 #include "DBSession.h"
-
+#include "DBProtocol.pb.h"
+#include "Struct.pb.h"
 void DBSession::OnConnected()
 {
 	cout << "DB Server Connected" << endl;
@@ -86,7 +87,6 @@ bool DBSession::GetAllItem()
 	retcode = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
 	if (retcode != SQL_SUCCESS && retcode != SQL_SUCCESS_WITH_INFO) {
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
-		cout << "SQL 문 핸들 할당 실패" << endl;
 		return false;
 	}
 
@@ -99,7 +99,6 @@ bool DBSession::GetAllItem()
 	}
 	else {
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
-		cout << "GetAllItem 실패" << endl;
 		return false;
 	}
 }
@@ -174,13 +173,13 @@ bool DBSession::FarmingItem(string _name, uint32 _itemId, uint32 _amount, uint32
 	}
 }
 
-bool DBSession::GetUserEquipment(string _name)
+bool DBSession::GetUserEquipment(string _name, vector<Protocol::EquipmentItem>& _equip)
 {
 	SQLHSTMT hstmt = 0;
 	SQLRETURN retcode;
 
 	wstring wname = wstring(_name.begin(), _name.end());
-	wstring proc = L"{CALL sp_get_equipment (?)}";
+	wstring proc = L"{CALL sp_get_user_equipment (?)}";
 
 	retcode = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
 	if (retcode != SQL_SUCCESS && retcode != SQL_SUCCESS_WITH_INFO) {
@@ -209,34 +208,25 @@ bool DBSession::GetUserEquipment(string _name)
 	retcode = SQLFetch(hstmt);
 	if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO)
 	{
-		USER_EQUIPMENT ue;
-		ue.userId = WstringToString(bindInfo.user_id);
-		ue.slotWeapon = bindInfo.slot_weapon;
-		ue.slotHelmet = bindInfo.slot_helmet;
-		ue.slotTop = bindInfo.slot_top;
-		ue.slotBottom = bindInfo.slot_bottom;
-
-		DBProtocol::DS_LOGIN pkt;
-		pkt.set_success(true);
-
-		SendBufferRef sendBuffer = DBPacketHandler::MakeSendBuffer(pkt);
-		Send(sendBuffer);
-
+		Protocol::EquipmentItem equip;
+		equip.set_weapon(bindInfo.slot_weapon);
+		equip.set_helmet(bindInfo.slot_helmet);
+		equip.set_top(bindInfo.slot_top);
+		equip.set_bottom(bindInfo.slot_bottom);
+		
+		_equip.push_back(equip);
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
 		return true;
 	}
 	else
 	{
-		cout << "inventory fail" << endl;
+		cout << "equip fail" << endl;
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
 		return false;
 	}
-
-	SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
-	return (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO);
 }
 
-bool DBSession::GetUserInfo(string _name)
+bool DBSession::GetUserInfo(string _name, uint64 _pktId)
 {
 	SQLHSTMT hstmt = 0;
 	SQLRETURN retcode;
@@ -278,26 +268,42 @@ bool DBSession::GetUserInfo(string _name)
 
 	if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO)
 	{
-		USER_INFO user;
 
-		user.name = WstringToString(bindInfo.user_id);
-		user.level = bindInfo.level;
-		user.hp = bindInfo.hp;
-		user.maxHp = bindInfo.maxhp;
-		user.mp = bindInfo.mp;
-		user.maxMp = bindInfo.maxmp;
-		user.exp = bindInfo.exp;
-		user.maxExp = bindInfo.maxexp;
-		user.posx = bindInfo.pos_x;
-		user.posy = bindInfo.pos_y;
+		vector<Protocol::InventorySlot> inventoryList;
+		vector<Protocol::EquipmentItem> equipmentList;
 
-		GetUserInventory(user.name); // 인벤토리 창 불러서 보내주기
-		GetUserEquipment(user.name); // 장비 창 불러서 보내주기
+		string name = WstringToString(bindInfo.user_id);
+		if (!GetUserInventory(name, inventoryList))
+			return false;
 
+		if (!GetUserEquipment(name, equipmentList))
+			return false;
+	
 		DBProtocol::DS_LOGIN pkt;
 		
+		pkt.set_user_id(_pktId);
 		pkt.set_success(true);
-		
+		auto player = pkt.add_player();
+		player->add_playertype(Protocol::PlayerType::PLAYER_TYPE_CLIENT);
+		player->set_id(_pktId);
+		player->set_name(name);
+		player->set_x(bindInfo.pos_x);
+		player->set_y(bindInfo.pos_y);
+		player->set_level(bindInfo.level);
+		player->set_hp(bindInfo.hp);
+		player->set_maxhp(bindInfo.maxhp);
+		player->set_mp(bindInfo.mp);
+		player->set_maxmp(bindInfo.maxmp);
+		player->set_exp(bindInfo.exp);
+		player->set_maxexp(bindInfo.maxexp);
+		player->set_gold(bindInfo.gold);
+
+		for (const auto& slot : inventoryList)
+			*pkt.add_inventory() = slot;
+
+		for (const auto& equip : equipmentList)
+			*pkt.add_equipment() = equip;
+
 		SendBufferRef sendBuffer = DBPacketHandler::MakeSendBuffer(pkt);
 		Send(sendBuffer);
 		
@@ -312,13 +318,13 @@ bool DBSession::GetUserInfo(string _name)
 	}
 }
 
-bool DBSession::GetUserInventory(string _name)
+bool DBSession::GetUserInventory(string _name, vector<Protocol::InventorySlot>& _inven)
 {
 	SQLHSTMT hstmt = 0;
 	SQLRETURN retcode;
 
 	wstring wname = wstring(_name.begin(), _name.end());
-	wstring proc = L"{CALL sp_get_inventory (?)}";
+	wstring proc = L"{CALL sp_get_user_inventory (?)}";
 
 	retcode = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
 	if (retcode != SQL_SUCCESS && retcode != SQL_SUCCESS_WITH_INFO) {
@@ -331,43 +337,30 @@ bool DBSession::GetUserInventory(string _name)
 	retcode = SQLExecDirect(hstmt, (SQLWCHAR*)proc.c_str(), SQL_NTS);
 	if (retcode != SQL_SUCCESS && retcode != SQL_SUCCESS_WITH_INFO)
 	{
-		cout << "GetUserInventory: sp_get_user_inventory 실패" << endl;
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
 		return false;
 	}
 	UserBindInventory bindInfo;
 
-	SQLBindCol(hstmt, 1, SQL_C_WCHAR, bindInfo.user_id, sizeof(bindInfo.user_id), &bindInfo.cb_user_id);
-	SQLBindCol(hstmt, 2, SQL_C_LONG, &bindInfo.item_id, 0, &bindInfo.cb_item_id);
+	SQLBindCol(hstmt, 1, SQL_C_LONG, &bindInfo.item_id, 0, &bindInfo.cb_item_id);
+	SQLBindCol(hstmt, 2, SQL_C_WCHAR, bindInfo.user_id, sizeof(bindInfo.user_id), &bindInfo.cb_user_id);
 	SQLBindCol(hstmt, 3, SQL_C_LONG, &bindInfo.quantity, 0, &bindInfo.cb_quantity);
 	SQLBindCol(hstmt, 4, SQL_C_LONG, &bindInfo.tab_type, 0, &bindInfo.cb_tab_type);
 	SQLBindCol(hstmt, 5, SQL_C_LONG, &bindInfo.slot_index, 0, &bindInfo.cb_slot_index);
 
-	retcode = SQLFetch(hstmt);
-	if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO)
+	while (SQLFetch(hstmt) == SQL_SUCCESS)
 	{
-		USER_INVENTORY ui;
-		ui.userId = WstringToString(bindInfo.user_id);
-		ui.itemId = bindInfo.item_id;
-		ui.quantity = bindInfo.quantity;
-		ui.tab_type = bindInfo.tab_type;
-		ui.slot_index = bindInfo.slot_index;
+		Protocol::InventorySlot slot;
+		slot.set_item_id(bindInfo.item_id);
+		slot.set_quantity(bindInfo.quantity);
+		slot.set_tab_type(bindInfo.tab_type);
+		slot.set_slot_index(bindInfo.slot_index);
 
-		DBProtocol::DS_LOGIN pkt;
-		pkt.set_success(true);
-
-		SendBufferRef sendBuffer = DBPacketHandler::MakeSendBuffer(pkt);
-		Send(sendBuffer);
-
-		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
-		return true;
+		_inven.push_back(slot);
 	}
-	else
-	{
-		cout << "inventory fail" << endl;
-		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
-		return false;
-	}
+
+	SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
+	return true;
 }
 
 bool DBSession::InitializeUserInventoryEquipment(string _name)
@@ -400,7 +393,7 @@ bool DBSession::InitializeUserInventoryEquipment(string _name)
 	}
 }
 
-bool DBSession::UnEquipItem(string _name, Equipment _type, uint32 _tab_type, uint32 _slot_index)
+bool DBSession::UnEquipItem(string _name, E_EQUIP _type, uint32 _tab_type, uint32 _slot_index)
 {
 	SQLHSTMT hstmt = 0;
 	SQLRETURN retcode;
@@ -409,10 +402,10 @@ bool DBSession::UnEquipItem(string _name, Equipment _type, uint32 _tab_type, uin
 
 	wstring typeStr;
 	switch (_type) {
-	case Equipment::WEAPON:  typeStr = L"weapon"; break;
-	case Equipment::HELMET:  typeStr = L"helmet"; break;
-	case Equipment::TOP:     typeStr = L"top";    break;
-	case Equipment::BOTTOM:  typeStr = L"bottom"; break;
+	case E_EQUIP::WEAPON:  typeStr = L"weapon"; break;
+	case E_EQUIP::HELMET:  typeStr = L"helmet"; break;
+	case E_EQUIP::TOP:     typeStr = L"top";    break;
+	case E_EQUIP::BOTTOM:  typeStr = L"bottom"; break;
 	default:
 		cout << "잘못된 장비 타입" << endl;
 		return false;
@@ -434,11 +427,9 @@ bool DBSession::UnEquipItem(string _name, Equipment _type, uint32 _tab_type, uin
 	SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
 
 	if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
-		cout << "UnEquipItem 성공" << endl;
 		return true;
 	}
 	else {
-		cout << "UnEquipItem 실패" << endl;
 		return false;
 	}
 }
@@ -455,7 +446,6 @@ bool DBSession::UpdateUserInfo(USER_INFO _userInfo)
 
 	if (retcode != SQL_SUCCESS && retcode != SQL_SUCCESS_WITH_INFO) {
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
-		cout << "SQL 문 핸들 할당 실패" << endl;
 		return false;
 	}
 
@@ -538,7 +528,6 @@ bool DBSession::InventoryToEquip(string _name, uint32 _itemId, uint32 _tab_type,
 
 	if (retcode != SQL_SUCCESS && retcode != SQL_SUCCESS_WITH_INFO) {
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
-		cout << "SQL 문 핸들 할당 실패" << endl;
 		return false;
 	}
 
@@ -557,6 +546,68 @@ bool DBSession::InventoryToEquip(string _name, uint32 _itemId, uint32 _tab_type,
 	else {
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
 		cout << "Inventory to equip fail" << endl;
+		return false;
+	}
+}
+
+bool DBSession::IsUserExists(string _name)
+{
+	SQLHSTMT hstmt = 0;
+	SQLRETURN retcode;
+	int result = 0;
+
+	wstring wname = wstring(_name.begin(), _name.end());
+	wstring proc = L"{CALL sp_user_exists (?)}";
+
+	retcode = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
+	if (retcode != SQL_SUCCESS && retcode != SQL_SUCCESS_WITH_INFO) {
+		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
+		return false;
+	}
+
+	SQLBindParameter(hstmt, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WCHAR, 20, 0, (SQLWCHAR*)wname.c_str(), 0, NULL);
+	
+	retcode = SQLExecDirect(hstmt, (SQLWCHAR*)proc.c_str(), SQL_NTS);
+	if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
+		if (SQLFetch(hstmt) == SQL_SUCCESS) {
+			SQLGetData(hstmt, 1, SQL_C_LONG, &result, 0, NULL);
+		}
+		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
+		return result == 1;
+	}
+
+	SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
+	return false;
+}
+
+bool DBSession::RegisterNewUser(string _name)
+{
+	SQLHSTMT hstmt = 0;
+	SQLRETURN retcode;
+
+	wstring wname = wstring(_name.begin(), _name.end());
+
+	wstring proc = L"{CALL sp_register_new_user (?)}";
+
+	retcode = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
+
+	if (retcode != SQL_SUCCESS && retcode != SQL_SUCCESS_WITH_INFO) {
+		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
+		return false;
+	}
+
+	SQLBindParameter(hstmt, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WCHAR, 20, 0, (SQLWCHAR*)wname.c_str(), 0, NULL);
+	
+	retcode = SQLExecDirect(hstmt, (SQLWCHAR*)proc.c_str(), SQL_NTS);
+
+	if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
+		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
+		cout << "reigster success" << endl;
+		return true;
+	}
+	else {
+		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
+		cout << "register fail" << endl;
 		return false;
 	}
 }

@@ -2203,29 +2203,48 @@ class S_LOGIN final :
 
   enum : int {
     kPlayersFieldNumber = 2,
-    kInventoryFieldNumber = 3,
-    kEquipmentFieldNumber = 4,
+    kStatsFieldNumber = 3,
+    kInventoryFieldNumber = 4,
+    kEquipmentFieldNumber = 5,
     kSuccessFieldNumber = 1,
   };
-  // repeated .Protocol.Player players = 2;
+  // repeated .Protocol.User players = 2;
   int players_size() const;
   private:
   int _internal_players_size() const;
   public:
   void clear_players();
-  ::Protocol::Player* mutable_players(int index);
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::Player >*
+  ::Protocol::User* mutable_players(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::User >*
       mutable_players();
   private:
-  const ::Protocol::Player& _internal_players(int index) const;
-  ::Protocol::Player* _internal_add_players();
+  const ::Protocol::User& _internal_players(int index) const;
+  ::Protocol::User* _internal_add_players();
   public:
-  const ::Protocol::Player& players(int index) const;
-  ::Protocol::Player* add_players();
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::Player >&
+  const ::Protocol::User& players(int index) const;
+  ::Protocol::User* add_players();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::User >&
       players() const;
 
-  // .Protocol.S_LOAD_INVENTORY inventory = 3;
+  // repeated .Protocol.Stat stats = 3;
+  int stats_size() const;
+  private:
+  int _internal_stats_size() const;
+  public:
+  void clear_stats();
+  ::Protocol::Stat* mutable_stats(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::Stat >*
+      mutable_stats();
+  private:
+  const ::Protocol::Stat& _internal_stats(int index) const;
+  ::Protocol::Stat* _internal_add_stats();
+  public:
+  const ::Protocol::Stat& stats(int index) const;
+  ::Protocol::Stat* add_stats();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::Stat >&
+      stats() const;
+
+  // .Protocol.S_LOAD_INVENTORY inventory = 4;
   bool has_inventory() const;
   private:
   bool _internal_has_inventory() const;
@@ -2243,7 +2262,7 @@ class S_LOGIN final :
       ::Protocol::S_LOAD_INVENTORY* inventory);
   ::Protocol::S_LOAD_INVENTORY* unsafe_arena_release_inventory();
 
-  // .Protocol.S_LOAD_EQUIPMENT equipment = 4;
+  // .Protocol.S_LOAD_EQUIPMENT equipment = 5;
   bool has_equipment() const;
   private:
   bool _internal_has_equipment() const;
@@ -2277,7 +2296,8 @@ class S_LOGIN final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::Player > players_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::User > players_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::Stat > stats_;
   ::Protocol::S_LOAD_INVENTORY* inventory_;
   ::Protocol::S_LOAD_EQUIPMENT* equipment_;
   bool success_;
@@ -5422,44 +5442,81 @@ inline void S_LOGIN::set_success(bool value) {
   // @@protoc_insertion_point(field_set:Protocol.S_LOGIN.success)
 }
 
-// repeated .Protocol.Player players = 2;
+// repeated .Protocol.User players = 2;
 inline int S_LOGIN::_internal_players_size() const {
   return players_.size();
 }
 inline int S_LOGIN::players_size() const {
   return _internal_players_size();
 }
-inline ::Protocol::Player* S_LOGIN::mutable_players(int index) {
+inline ::Protocol::User* S_LOGIN::mutable_players(int index) {
   // @@protoc_insertion_point(field_mutable:Protocol.S_LOGIN.players)
   return players_.Mutable(index);
 }
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::Player >*
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::User >*
 S_LOGIN::mutable_players() {
   // @@protoc_insertion_point(field_mutable_list:Protocol.S_LOGIN.players)
   return &players_;
 }
-inline const ::Protocol::Player& S_LOGIN::_internal_players(int index) const {
+inline const ::Protocol::User& S_LOGIN::_internal_players(int index) const {
   return players_.Get(index);
 }
-inline const ::Protocol::Player& S_LOGIN::players(int index) const {
+inline const ::Protocol::User& S_LOGIN::players(int index) const {
   // @@protoc_insertion_point(field_get:Protocol.S_LOGIN.players)
   return _internal_players(index);
 }
-inline ::Protocol::Player* S_LOGIN::_internal_add_players() {
+inline ::Protocol::User* S_LOGIN::_internal_add_players() {
   return players_.Add();
 }
-inline ::Protocol::Player* S_LOGIN::add_players() {
-  ::Protocol::Player* _add = _internal_add_players();
+inline ::Protocol::User* S_LOGIN::add_players() {
+  ::Protocol::User* _add = _internal_add_players();
   // @@protoc_insertion_point(field_add:Protocol.S_LOGIN.players)
   return _add;
 }
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::Player >&
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::User >&
 S_LOGIN::players() const {
   // @@protoc_insertion_point(field_list:Protocol.S_LOGIN.players)
   return players_;
 }
 
-// .Protocol.S_LOAD_INVENTORY inventory = 3;
+// repeated .Protocol.Stat stats = 3;
+inline int S_LOGIN::_internal_stats_size() const {
+  return stats_.size();
+}
+inline int S_LOGIN::stats_size() const {
+  return _internal_stats_size();
+}
+inline ::Protocol::Stat* S_LOGIN::mutable_stats(int index) {
+  // @@protoc_insertion_point(field_mutable:Protocol.S_LOGIN.stats)
+  return stats_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::Stat >*
+S_LOGIN::mutable_stats() {
+  // @@protoc_insertion_point(field_mutable_list:Protocol.S_LOGIN.stats)
+  return &stats_;
+}
+inline const ::Protocol::Stat& S_LOGIN::_internal_stats(int index) const {
+  return stats_.Get(index);
+}
+inline const ::Protocol::Stat& S_LOGIN::stats(int index) const {
+  // @@protoc_insertion_point(field_get:Protocol.S_LOGIN.stats)
+  return _internal_stats(index);
+}
+inline ::Protocol::Stat* S_LOGIN::_internal_add_stats() {
+  return stats_.Add();
+}
+inline ::Protocol::Stat* S_LOGIN::add_stats() {
+  ::Protocol::Stat* _add = _internal_add_stats();
+  // @@protoc_insertion_point(field_add:Protocol.S_LOGIN.stats)
+  return _add;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::Stat >&
+S_LOGIN::stats() const {
+  // @@protoc_insertion_point(field_list:Protocol.S_LOGIN.stats)
+  return stats_;
+}
+
+// .Protocol.S_LOAD_INVENTORY inventory = 4;
 inline bool S_LOGIN::_internal_has_inventory() const {
   return this != internal_default_instance() && inventory_ != nullptr;
 }
@@ -5549,7 +5606,7 @@ inline void S_LOGIN::set_allocated_inventory(::Protocol::S_LOAD_INVENTORY* inven
   // @@protoc_insertion_point(field_set_allocated:Protocol.S_LOGIN.inventory)
 }
 
-// .Protocol.S_LOAD_EQUIPMENT equipment = 4;
+// .Protocol.S_LOAD_EQUIPMENT equipment = 5;
 inline bool S_LOGIN::_internal_has_equipment() const {
   return this != internal_default_instance() && equipment_ != nullptr;
 }

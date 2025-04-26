@@ -186,15 +186,71 @@ void GameSession::LoginPkt(bool _success, uint64 _id, Protocol::PlayerType _pt, 
 	Player->set_name(_name);
 	Player->set_x(_pos.posx);
 	Player->set_y(_pos.posy);
-	Player->set_exp(_stat.exp);
-	Player->set_hp(_stat.hp);
-	Player->set_mp(_stat.mp);
-	Player->set_level(_stat.level);
-	Player->set_maxexp(_stat.maxExp);
-	Player->set_maxhp(_stat.maxHp);
-	Player->set_maxmp(_stat.maxMp);
+	//Player->set_exp(_stat.exp);
+	//Player->set_hp(_stat.hp);
+	//Player->set_mp(_stat.mp);
+	//Player->set_level(_stat.level);
+	//Player->set_maxexp(_stat.maxExp);
+	//Player->set_maxhp(_stat.maxHp);
+	//Player->set_maxmp(_stat.maxMp);
 
 	auto sendBuffer = ClientPacketHandler::MakeSendBuffer(sPkt);
+	Send(sendBuffer);
+}
+
+void GameSession::LoginPkt(bool _success, PlayerRef _player)
+{
+	Protocol::S_LOGIN pkt;
+	pkt.set_success(_success);
+
+	auto Player = pkt.add_players();
+	Player->add_playertype(_player->GetPT());
+	Player->set_id(_player->GetId());
+	Player->set_name(_player->GetName());
+	Player->set_x(_player->GetPos().posx);
+	Player->set_y(_player->GetPos().posy);
+	Player->set_gold(_player->GetGold());
+
+	_player->UpdateStatByEquipment();
+
+	const STAT& stats = _player->GetStat();
+	auto Stat = pkt.add_stats();
+
+	Stat->set_exp(stats.exp);
+	Stat->set_hp(stats.hp);
+	Stat->set_mp(stats.mp);
+	Stat->set_level(stats.level);
+	Stat->set_maxexp(stats.maxExp);
+	Stat->set_maxhp(stats.maxHp);
+	Stat->set_maxmp(stats.maxMp);
+	Stat->set_attackpower(stats.attackPower);
+	Stat->set_defensepower(stats.defencePower);
+	Stat->set_magicpower(stats.magicPower);
+	Stat->set_strenth(stats.strength);
+
+	auto inven = pkt.mutable_inventory();
+	for (const auto& [slot, item] : _player->GetInventory())
+	{
+		auto slotData = inven->add_inventory();
+		slotData->set_item_id(item.itemId);
+		slotData->set_quantity(item.quantity);
+		slotData->set_tab_type(item.tab_type);
+		slotData->set_slot_index(item.slot_index);
+	}
+
+	auto equip = pkt.mutable_equipment()->add_equipment();
+	for (const auto& [slot, itemInfo] : _player->GetEquipments())
+	{
+		switch (slot)
+		{
+			case E_EQUIP::WEAPON:  equip->set_weapon(itemInfo.itemId); break;
+			case E_EQUIP::HELMET:  equip->set_helmet(itemInfo.itemId); break;
+			case E_EQUIP::TOP:     equip->set_top(itemInfo.itemId); break;
+			case E_EQUIP::BOTTOM:  equip->set_bottom(itemInfo.itemId); break;
+		}
+	}
+
+	auto sendBuffer = ClientPacketHandler::MakeSendBuffer(pkt);
 	Send(sendBuffer);
 }
 

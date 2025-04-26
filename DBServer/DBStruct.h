@@ -37,6 +37,21 @@ struct UserBindInfo {
 	SQLINTEGER gold;
 	SQLLEN cb_gold;
 };
+
+struct EquipmentInfo {
+	SQLINTEGER attack_power;
+	SQLLEN cb_attack_power;
+
+	SQLINTEGER defense_power;
+	SQLLEN cb_defense_power;
+
+	SQLINTEGER magic_power;
+	SQLLEN cb_magic_power;
+
+	SQLINTEGER strength;
+	SQLLEN cb_strength;
+};
+
 struct ItemDB {
 	SQLINTEGER item_id;
 	SQLLEN cb_item_id;
@@ -64,19 +79,7 @@ struct ItemDB {
 
 	EquipmentInfo equipmentInfo;
 };
-struct EquipmentInfo {
-	SQLINTEGER attack_power;
-	SQLLEN cb_attack_power;
 
-	SQLINTEGER defense_power;
-	SQLLEN cb_defense_power;
-
-	SQLINTEGER magic_power;
-	SQLLEN cb_magic_power;
-
-	SQLINTEGER strength;
-	SQLLEN cb_strength;
-};
 struct UserBindEquipment {
 	SQLWCHAR user_id[20];
 	SQLLEN cb_user_id;

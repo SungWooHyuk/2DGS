@@ -87,6 +87,9 @@
     <ClInclude Include="Item.h">
       <Filter>GameContents</Filter>
     </ClInclude>
+    <ClInclude Include="DBGameSessionManager.h">
+      <Filter>Main</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -139,6 +142,9 @@
     </ClCompile>
     <ClCompile Include="Item.cpp">
       <Filter>GameContents</Filter>
+    </ClCompile>
+    <ClCompile Include="DBGameSessionManager.cpp">
+      <Filter>Main</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
