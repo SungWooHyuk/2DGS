@@ -35,6 +35,8 @@ bool Handle_S_LOGIN(PacketSessionRef& session, Protocol::S_LOGIN& pkt)
 			0, 0, 65, 65, ps, tp,
 			player.id(), player.name(), player.gold());
 
+		// 골드 정보를 SFSystem에도 설정
+		SFSYSTEM.SetGold(player.gold());
 
 		if (pkt.stats_size() > 0)
 		{
@@ -51,7 +53,8 @@ bool Handle_S_LOGIN(PacketSessionRef& session, Protocol::S_LOGIN& pkt)
 			stats.defencePower = s.defensepower();
 			stats.magicPower = s.magicpower();
 			stats.strength = s.strenth();
-			pl->SetStat(stats); // ������ ���� ȣ��
+
+			pl->SetStat(stats); 
 		}
 
 
@@ -64,7 +67,7 @@ bool Handle_S_LOGIN(PacketSessionRef& session, Protocol::S_LOGIN& pkt)
 				inv.itemId = item.item_id();
 				inv.quantity = item.quantity();
 				inv.tab_type = item.tab_type();
-				inv.slot_index = item.slot_index();
+				inv.slot_index = item.inv_slot_index();
 				inventoryList.push_back(inv);
 			}
 			pl->SetInventory(inventoryList);
@@ -73,15 +76,36 @@ bool Handle_S_LOGIN(PacketSessionRef& session, Protocol::S_LOGIN& pkt)
 	
 		if (pkt.equipment().equipment_size() > 0)
 		{
-			const auto& eq = pkt.equipment().equipment(0);
-			if (eq.weapon() != 0)  pl->SetEquip(E_EQUIP::WEAPON, eq.weapon());
-			if (eq.helmet() != 0)  pl->SetEquip(E_EQUIP::HELMET, eq.helmet());
-			if (eq.top() != 0)     pl->SetEquip(E_EQUIP::TOP, eq.top());
-			if (eq.bottom() != 0)  pl->SetEquip(E_EQUIP::BOTTOM, eq.bottom());
+			const auto& equipment_list = pkt.equipment().equipment();
+			for (const auto& eq : equipment_list)
+			{
+				switch (eq.eq_slot())
+				{
+				case Protocol::WEAPON:
+					if (eq.item_id() != 0)
+						pl->SetEquip(Protocol::WEAPON, eq.item_id());
+					break;
+				case Protocol::HELMET:
+					if (eq.item_id() != 0)
+						pl->SetEquip(Protocol::HELMET, eq.item_id());
+					break;
+				case Protocol::TOP:
+					if (eq.item_id() != 0)
+						pl->SetEquip(Protocol::TOP, eq.item_id());
+					break;
+				case Protocol::BOTTOM:
+					if (eq.item_id() != 0)
+						pl->SetEquip(Protocol::BOTTOM, eq.item_id());
+					break;
+				default:
+					break;
+				}
+			}
 		}
-
+		
 		serverSession->SetPlayer(pl);
-
+		SFSYSTEM.SetUser(pl);
+		pl->SetOwnerSession(serverSession);
 		g_left_x = ps.posx - SCREEN_WIDTH / 2;
 		g_top_y = ps.posy - SCREEN_HEIGHT / 2;
 	}
@@ -91,42 +115,123 @@ bool Handle_S_LOGIN(PacketSessionRef& session, Protocol::S_LOGIN& pkt)
 
 bool Handle_S_LOAD_INVENTORY(PacketSessionRef& session, Protocol::S_LOAD_INVENTORY& pkt)
 {
+	ServerSessionRef serverSession = static_pointer_cast<ServerSession>(session);
+	vector<INVEN> inventoryList;
+
+	for (const auto& slot : pkt.inventory())
+	{
+		INVEN inv;
+		inv.itemId = slot.item_id();
+		inv.quantity = slot.quantity();
+		inv.tab_type = slot.tab_type();
+		inv.slot_index = slot.inv_slot_index();
+
+		inventoryList.push_back(inv);
+	}
+
+	if (!inventoryList.empty())
+	{
+		serverSession->GetPlayer()->SetInventory(inventoryList);
+		return true;
+	}
 	return false;
 }
 
 bool Handle_S_LOAD_EQUIPMENT(PacketSessionRef& session, Protocol::S_LOAD_EQUIPMENT& pkt)
-{
+{	
+	ServerSessionRef serverSession = static_pointer_cast<ServerSession>(session);
+	if (pkt.equipment_size() > 0)
+	{
+		const Protocol::EquipmentItem& equip = pkt.equipment(0); // 1개
+
+		// 서버로 부터 장비창 불러오기
+		return true;
+	}
+
 	return false;
 }
 
 bool Handle_S_CONSUME_RESULT(PacketSessionRef& session, Protocol::S_CONSUME_RESULT& pkt)
 {
+	ServerSessionRef serverSession = static_pointer_cast<ServerSession>(session);
+	if (pkt.success())
+	{
+		serverSession->GetPlayer()->UpdateItemQuantity(pkt.tab_type(), pkt.slot_index(), pkt.new_quantity());
+		return true;
+	}	
+	else // 실패는 수량이 0보다 작을때 실패 줄껀데, 서버에서 처리해서 그냥 다른걸로 넘겨줘도 될듯함. 일단은 이렇게 잡고.
+	{
+		if (pkt.new_quantity() <= 0)
+		{
+			serverSession->GetPlayer()->RemoveItem(pkt.tab_type(), pkt.slot_index());
+			SFSYSTEM.SetQuickSlotReset(pkt.slot_index());
+		}
+	}
 	return false;
 }
 
 bool Handle_S_DROP_RESULT(PacketSessionRef& session, Protocol::S_DROP_RESULT& pkt)
 {
+	ServerSessionRef serverSession = static_pointer_cast<ServerSession>(session);
+	if (pkt.success())
+	{
+		serverSession->GetPlayer()->RemoveItem(pkt.tab_type(), pkt.inv_slot_index());
+		return true;
+	}
 	return false;
 }
 
 bool Handle_S_MOVE_INVENTORY_RESULT(PacketSessionRef& session, Protocol::S_MOVE_INVENTORY_RESULT& pkt)
 {
+	ServerSessionRef serverSession = static_pointer_cast<ServerSession>(session);
+	if (pkt.success())
+	{
+		serverSession->GetPlayer()->MoveItem(pkt.from_tab(), pkt.inv_from_index(), pkt.to_tab(), pkt.inv_to_index(), pkt.quantity());
+		return true;
+	}
 	return false;
 }
 
 bool Handle_S_EQUIP_RESULT(PacketSessionRef& session, Protocol::S_EQUIP_RESULT& pkt)
 {
+	ServerSessionRef serverSession = static_pointer_cast<ServerSession>(session);
+	if (pkt.success())
+	{
+		serverSession->GetPlayer()->SetEquip(pkt.slot_type(), pkt.item_id());
+		return true;
+	}
 	return false;
 }
 
 bool Handle_S_UNEQUIP_RESULT(PacketSessionRef& session, Protocol::S_UNEQUIP_RESULT& pkt)
 {
+	ServerSessionRef serverSession = static_pointer_cast<ServerSession>(session);
+	if (pkt.success())
+	{
+		INVEN inv;
+		inv.itemId = pkt.item_id();
+		inv.quantity = 1;
+		inv.slot_index = pkt.inv_to_slot_index();
+		inv.tab_type = pkt.to_tab_type();
+		serverSession->GetPlayer()->SetEquipToInventory(pkt.inv_to_slot_index(), inv); // 추가
+		serverSession->GetPlayer()->UnEquip(pkt.slot_type(), pkt.item_id()); // 삭제
+		return true;
+	}
 	return false;
 }
 
 bool Handle_S_GOLD_CHANGE(PacketSessionRef& session, Protocol::S_GOLD_CHANGE& pkt)
 {
-	return false;
+	ServerSessionRef serverSession = static_pointer_cast<ServerSession>(session);
+	
+	if (pkt.new_gold() > 0)
+	{
+		serverSession->GetPlayer()->SetGold(pkt.new_gold());
+		SFSYSTEM.SetGold(serverSession->GetPlayer()->GetGold());
+		return true;
+	}
+	
+	return true;
 }
 
 bool Handle_S_ADD_OBJECT(PacketSessionRef& session, Protocol::S_ADD_OBJECT& pkt)
@@ -211,15 +316,23 @@ bool Handle_S_STAT_CHANGE(PacketSessionRef& session, Protocol::S_STAT_CHANGE& pk
 		st.maxExp = cli.maxexp();
 		st.level = cli.level();
 
+		st.attackPower = cli.attackpower();
+		st.defencePower = cli.defensepower();
+		st.magicPower = cli.magicpower();
+		st.strength = cli.strenth();
+
 		serverSession->GetPlayer()->SetStat(st);
+		return true;
 	}
 
-	return true;
+	return false;
 }
 
 bool Handle_S_DAMAGE(PacketSessionRef& session, Protocol::S_DAMAGE& pkt)
 {
-	return false;
+	ServerSessionRef serverSession = static_pointer_cast<ServerSession>(session);
+	serverSession->GetPlayer()->DamageHp(pkt.damage());
+	return true;
 }
 
 bool Handle_S_RESPAWN(PacketSessionRef& session, Protocol::S_RESPAWN& pkt)
@@ -230,4 +343,27 @@ bool Handle_S_RESPAWN(PacketSessionRef& session, Protocol::S_RESPAWN& pkt)
 		serverSession->MovePkt(-1, duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count());
 		
 	return true;
+}
+
+bool Handle_S_RANKING(PacketSessionRef& session, Protocol::S_RANKING& pkt)
+{
+	ServerSessionRef serverSession = static_pointer_cast<ServerSession>(session);
+
+	vector<GoldRanking> ranking;
+	
+	for (const auto& rank : pkt.ranking())
+	{
+		GoldRanking gr;
+		gr.name = rank.name();
+		gr.gold = rank.gold();
+		ranking.push_back(gr);
+	}
+
+	if (!ranking.empty())
+	{
+		SFSYSTEM.UpdateGoldRanking(ranking);
+		return true;
+	}
+
+	return false;
 }

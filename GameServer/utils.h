@@ -94,6 +94,7 @@ struct PQNode
 
 enum { DIR_COUNT = 4 };
 
+
 struct STAT
 {
 	int32	level;
@@ -129,8 +130,8 @@ struct ITEM_INFO
 {
 	int32 itemId;
 	string name;
-	int32 itemType;
-	int32 equipType;
+	Protocol::InventoryTab itemType;
+	Protocol::EquipmentSlot equipType;
 	int32 effectType;
 	int32 effectValue;
 	int32 requiredLevel;
@@ -160,7 +161,7 @@ struct USER_INVENTORY
 	string userId;
 	int32 itemId;
 	int32 quantity;
-	int32 tab_type;
+	Protocol::InventoryTab tab_type;
 	int32 slot_index;
 };
 
@@ -174,26 +175,28 @@ struct EQUIPMENT
 
 struct INVEN
 {
-	int32		itemId;
-	int32		quantity;
-	int32		tab_type;
-	int32		slot_index;
+	int32						itemId;
+	int32						quantity;
+	Protocol::InventoryTab		tab_type;
+	int32						slot_index;
 };
 
 enum class E_EQUIP
 {
-	WEAPON,
-	HELMET,
-	TOP,
-	BOTTOM
+	NONE = 0,
+	WEAPON = 1,
+	HELMET = 2,
+	TOP = 3,
+	BOTTOM = 4
+};
+enum class E_INVEN
+{
+	NONE = 0,
+	EQUIP = 1,
+	CONSUM = 2,
+	MISC = 3
 };
 
-enum class E_TabType
-{
-	EQUIP,
-	CONSUME,
-	ETC
-};
 struct TP
 {
 	chrono::system_clock::time_point	attackTime;

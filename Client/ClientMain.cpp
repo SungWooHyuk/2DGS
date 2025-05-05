@@ -30,12 +30,13 @@ void InitSingletons()
 	MAPDATA; // Map data
 	SFSYSTEM; // Sfml data
 	TILE.Init(); // Tile data initialization
-	ITEM.LoadFromJson("../Tools/TableToJson/items_client.json")
+	ITEM.LoadFromJson("items_client.json");
 }
 
 int main()
 {
 	InitSingletons();
+	ITEM.InitItemICons();
 	ServerPacketHandler::Init(); // packethandler init
 
 	ClientServiceRef service = MakeShared<ClientService>( // connect
@@ -61,7 +62,9 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(1365, WINDOW_HEIGHT), "2D CLIENT");
 	SFSYSTEM.SetWindow(&window);
 
-	
+	// UI 초기화
+	SFSYSTEM.InitializeUI();
+
 	while (window.isOpen())
 	{
 		ServerSessionRef session = static_pointer_cast<ServerSession>(service->GetSession());
@@ -114,13 +117,19 @@ int main()
 				if (NO_MOVE != direction) 
 					session->MovePkt(direction, duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count());
 			}
+
+			// UI 입력 처리
+			SFSYSTEM.HandleUIInput(event);
 		}
 
 		window.clear();
 		Update(service);
+
+		// UI 그리기
+		SFSYSTEM.DrawUI();
+
 		window.display();
 	}
-
 
 	GThreadManager->Join();
 }

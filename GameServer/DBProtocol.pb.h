@@ -845,9 +845,9 @@ class SD_EQUIP_ITEM final :
   enum : int {
     kNameFieldNumber = 1,
     kItemIdFieldNumber = 2,
-    kTabTypeFieldNumber = 3,
-    kSlotIndexFieldNumber = 4,
+    kInvSlotIndexFieldNumber = 4,
     kUserIdFieldNumber = 5,
+    kTabTypeFieldNumber = 3,
   };
   // string name = 1;
   void clear_name();
@@ -872,22 +872,13 @@ class SD_EQUIP_ITEM final :
   void _internal_set_item_id(uint64_t value);
   public:
 
-  // uint64 tab_type = 3;
-  void clear_tab_type();
-  uint64_t tab_type() const;
-  void set_tab_type(uint64_t value);
+  // uint64 inv_slot_index = 4;
+  void clear_inv_slot_index();
+  uint64_t inv_slot_index() const;
+  void set_inv_slot_index(uint64_t value);
   private:
-  uint64_t _internal_tab_type() const;
-  void _internal_set_tab_type(uint64_t value);
-  public:
-
-  // uint64 slot_index = 4;
-  void clear_slot_index();
-  uint64_t slot_index() const;
-  void set_slot_index(uint64_t value);
-  private:
-  uint64_t _internal_slot_index() const;
-  void _internal_set_slot_index(uint64_t value);
+  uint64_t _internal_inv_slot_index() const;
+  void _internal_set_inv_slot_index(uint64_t value);
   public:
 
   // uint64 user_id = 5;
@@ -899,6 +890,15 @@ class SD_EQUIP_ITEM final :
   void _internal_set_user_id(uint64_t value);
   public:
 
+  // .Protocol.InventoryTab tab_type = 3;
+  void clear_tab_type();
+  ::Protocol::InventoryTab tab_type() const;
+  void set_tab_type(::Protocol::InventoryTab value);
+  private:
+  ::Protocol::InventoryTab _internal_tab_type() const;
+  void _internal_set_tab_type(::Protocol::InventoryTab value);
+  public:
+
   // @@protoc_insertion_point(class_scope:DBProtocol.SD_EQUIP_ITEM)
  private:
   class _Internal;
@@ -908,9 +908,9 @@ class SD_EQUIP_ITEM final :
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr name_;
   uint64_t item_id_;
-  uint64_t tab_type_;
-  uint64_t slot_index_;
+  uint64_t inv_slot_index_;
   uint64_t user_id_;
+  int tab_type_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DBProtocol_2eproto;
 };
@@ -1041,9 +1041,9 @@ class SD_FARMING_ITEM final :
     kNameFieldNumber = 1,
     kItemIdFieldNumber = 2,
     kQuantityFieldNumber = 3,
-    kTabTypeFieldNumber = 4,
-    kSlotIndexFieldNumber = 5,
+    kInvSlotIndexFieldNumber = 5,
     kUserIdFieldNumber = 6,
+    kTabTypeFieldNumber = 4,
   };
   // string name = 1;
   void clear_name();
@@ -1077,22 +1077,13 @@ class SD_FARMING_ITEM final :
   void _internal_set_quantity(uint64_t value);
   public:
 
-  // uint64 tab_type = 4;
-  void clear_tab_type();
-  uint64_t tab_type() const;
-  void set_tab_type(uint64_t value);
+  // uint64 inv_slot_index = 5;
+  void clear_inv_slot_index();
+  uint64_t inv_slot_index() const;
+  void set_inv_slot_index(uint64_t value);
   private:
-  uint64_t _internal_tab_type() const;
-  void _internal_set_tab_type(uint64_t value);
-  public:
-
-  // uint64 slot_index = 5;
-  void clear_slot_index();
-  uint64_t slot_index() const;
-  void set_slot_index(uint64_t value);
-  private:
-  uint64_t _internal_slot_index() const;
-  void _internal_set_slot_index(uint64_t value);
+  uint64_t _internal_inv_slot_index() const;
+  void _internal_set_inv_slot_index(uint64_t value);
   public:
 
   // uint64 user_id = 6;
@@ -1102,6 +1093,15 @@ class SD_FARMING_ITEM final :
   private:
   uint64_t _internal_user_id() const;
   void _internal_set_user_id(uint64_t value);
+  public:
+
+  // .Protocol.InventoryTab tab_type = 4;
+  void clear_tab_type();
+  ::Protocol::InventoryTab tab_type() const;
+  void set_tab_type(::Protocol::InventoryTab value);
+  private:
+  ::Protocol::InventoryTab _internal_tab_type() const;
+  void _internal_set_tab_type(::Protocol::InventoryTab value);
   public:
 
   // @@protoc_insertion_point(class_scope:DBProtocol.SD_FARMING_ITEM)
@@ -1114,9 +1114,9 @@ class SD_FARMING_ITEM final :
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr name_;
   uint64_t item_id_;
   uint64_t quantity_;
-  uint64_t tab_type_;
-  uint64_t slot_index_;
+  uint64_t inv_slot_index_;
   uint64_t user_id_;
+  int tab_type_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DBProtocol_2eproto;
 };
@@ -1246,9 +1246,9 @@ class SD_UNEQUIP_ITEM final :
   enum : int {
     kNameFieldNumber = 1,
     kItemIdFieldNumber = 2,
-    kTabTypeFieldNumber = 3,
-    kSlotIndexFieldNumber = 4,
+    kInvSlotIndexFieldNumber = 4,
     kUserIdFieldNumber = 5,
+    kTabTypeFieldNumber = 3,
   };
   // string name = 1;
   void clear_name();
@@ -1273,22 +1273,13 @@ class SD_UNEQUIP_ITEM final :
   void _internal_set_item_id(uint64_t value);
   public:
 
-  // uint64 tab_type = 3;
-  void clear_tab_type();
-  uint64_t tab_type() const;
-  void set_tab_type(uint64_t value);
+  // uint64 inv_slot_index = 4;
+  void clear_inv_slot_index();
+  uint64_t inv_slot_index() const;
+  void set_inv_slot_index(uint64_t value);
   private:
-  uint64_t _internal_tab_type() const;
-  void _internal_set_tab_type(uint64_t value);
-  public:
-
-  // uint64 slot_index = 4;
-  void clear_slot_index();
-  uint64_t slot_index() const;
-  void set_slot_index(uint64_t value);
-  private:
-  uint64_t _internal_slot_index() const;
-  void _internal_set_slot_index(uint64_t value);
+  uint64_t _internal_inv_slot_index() const;
+  void _internal_set_inv_slot_index(uint64_t value);
   public:
 
   // uint64 user_id = 5;
@@ -1300,6 +1291,15 @@ class SD_UNEQUIP_ITEM final :
   void _internal_set_user_id(uint64_t value);
   public:
 
+  // .Protocol.EquipmentSlot tab_type = 3;
+  void clear_tab_type();
+  ::Protocol::EquipmentSlot tab_type() const;
+  void set_tab_type(::Protocol::EquipmentSlot value);
+  private:
+  ::Protocol::EquipmentSlot _internal_tab_type() const;
+  void _internal_set_tab_type(::Protocol::EquipmentSlot value);
+  public:
+
   // @@protoc_insertion_point(class_scope:DBProtocol.SD_UNEQUIP_ITEM)
  private:
   class _Internal;
@@ -1309,9 +1309,9 @@ class SD_UNEQUIP_ITEM final :
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr name_;
   uint64_t item_id_;
-  uint64_t tab_type_;
-  uint64_t slot_index_;
+  uint64_t inv_slot_index_;
   uint64_t user_id_;
+  int tab_type_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DBProtocol_2eproto;
 };
@@ -1443,7 +1443,9 @@ class SD_CONSUME_ITEM final :
     kItemIdFieldNumber = 2,
     kQuantityFieldNumber = 3,
     kBeforeQuantityFieldNumber = 4,
-    kUserIdFieldNumber = 5,
+    kInvSlotIndexFieldNumber = 6,
+    kUserIdFieldNumber = 7,
+    kTabTypeFieldNumber = 5,
   };
   // string name = 1;
   void clear_name();
@@ -1486,13 +1488,31 @@ class SD_CONSUME_ITEM final :
   void _internal_set_beforequantity(uint64_t value);
   public:
 
-  // uint64 user_id = 5;
+  // uint64 inv_slot_index = 6;
+  void clear_inv_slot_index();
+  uint64_t inv_slot_index() const;
+  void set_inv_slot_index(uint64_t value);
+  private:
+  uint64_t _internal_inv_slot_index() const;
+  void _internal_set_inv_slot_index(uint64_t value);
+  public:
+
+  // uint64 user_id = 7;
   void clear_user_id();
   uint64_t user_id() const;
   void set_user_id(uint64_t value);
   private:
   uint64_t _internal_user_id() const;
   void _internal_set_user_id(uint64_t value);
+  public:
+
+  // .Protocol.InventoryTab tab_type = 5;
+  void clear_tab_type();
+  ::Protocol::InventoryTab tab_type() const;
+  void set_tab_type(::Protocol::InventoryTab value);
+  private:
+  ::Protocol::InventoryTab _internal_tab_type() const;
+  void _internal_set_tab_type(::Protocol::InventoryTab value);
   public:
 
   // @@protoc_insertion_point(class_scope:DBProtocol.SD_CONSUME_ITEM)
@@ -1506,7 +1526,9 @@ class SD_CONSUME_ITEM final :
   uint64_t itemid_;
   uint64_t quantity_;
   uint64_t beforequantity_;
+  uint64_t inv_slot_index_;
   uint64_t user_id_;
+  int tab_type_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DBProtocol_2eproto;
 };
@@ -1635,10 +1657,10 @@ class SD_MOVE_ITEM final :
 
   enum : int {
     kNameFieldNumber = 1,
+    kInvFromIndexFieldNumber = 3,
     kFromTabFieldNumber = 2,
-    kFromIndexFieldNumber = 3,
     kToTabFieldNumber = 4,
-    kToIndexFieldNumber = 5,
+    kInvToIndexFieldNumber = 5,
     kUserIdFieldNumber = 6,
   };
   // string name = 1;
@@ -1655,40 +1677,40 @@ class SD_MOVE_ITEM final :
   std::string* _internal_mutable_name();
   public:
 
-  // uint64 fromTab = 2;
+  // uint64 inv_from_Index = 3;
+  void clear_inv_from_index();
+  uint64_t inv_from_index() const;
+  void set_inv_from_index(uint64_t value);
+  private:
+  uint64_t _internal_inv_from_index() const;
+  void _internal_set_inv_from_index(uint64_t value);
+  public:
+
+  // .Protocol.InventoryTab fromTab = 2;
   void clear_fromtab();
-  uint64_t fromtab() const;
-  void set_fromtab(uint64_t value);
+  ::Protocol::InventoryTab fromtab() const;
+  void set_fromtab(::Protocol::InventoryTab value);
   private:
-  uint64_t _internal_fromtab() const;
-  void _internal_set_fromtab(uint64_t value);
+  ::Protocol::InventoryTab _internal_fromtab() const;
+  void _internal_set_fromtab(::Protocol::InventoryTab value);
   public:
 
-  // uint64 fromIndex = 3;
-  void clear_fromindex();
-  uint64_t fromindex() const;
-  void set_fromindex(uint64_t value);
-  private:
-  uint64_t _internal_fromindex() const;
-  void _internal_set_fromindex(uint64_t value);
-  public:
-
-  // uint64 toTab = 4;
+  // .Protocol.InventoryTab toTab = 4;
   void clear_totab();
-  uint64_t totab() const;
-  void set_totab(uint64_t value);
+  ::Protocol::InventoryTab totab() const;
+  void set_totab(::Protocol::InventoryTab value);
   private:
-  uint64_t _internal_totab() const;
-  void _internal_set_totab(uint64_t value);
+  ::Protocol::InventoryTab _internal_totab() const;
+  void _internal_set_totab(::Protocol::InventoryTab value);
   public:
 
-  // uint64 toIndex = 5;
-  void clear_toindex();
-  uint64_t toindex() const;
-  void set_toindex(uint64_t value);
+  // uint64 inv_to_Index = 5;
+  void clear_inv_to_index();
+  uint64_t inv_to_index() const;
+  void set_inv_to_index(uint64_t value);
   private:
-  uint64_t _internal_toindex() const;
-  void _internal_set_toindex(uint64_t value);
+  uint64_t _internal_inv_to_index() const;
+  void _internal_set_inv_to_index(uint64_t value);
   public:
 
   // uint64 user_id = 6;
@@ -1708,10 +1730,10 @@ class SD_MOVE_ITEM final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr name_;
-  uint64_t fromtab_;
-  uint64_t fromindex_;
-  uint64_t totab_;
-  uint64_t toindex_;
+  uint64_t inv_from_index_;
+  int fromtab_;
+  int totab_;
+  uint64_t inv_to_index_;
   uint64_t user_id_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DBProtocol_2eproto;
@@ -4892,44 +4914,44 @@ inline void SD_EQUIP_ITEM::set_item_id(uint64_t value) {
   // @@protoc_insertion_point(field_set:DBProtocol.SD_EQUIP_ITEM.item_id)
 }
 
-// uint64 tab_type = 3;
+// .Protocol.InventoryTab tab_type = 3;
 inline void SD_EQUIP_ITEM::clear_tab_type() {
-  tab_type_ = uint64_t{0u};
+  tab_type_ = 0;
 }
-inline uint64_t SD_EQUIP_ITEM::_internal_tab_type() const {
-  return tab_type_;
+inline ::Protocol::InventoryTab SD_EQUIP_ITEM::_internal_tab_type() const {
+  return static_cast< ::Protocol::InventoryTab >(tab_type_);
 }
-inline uint64_t SD_EQUIP_ITEM::tab_type() const {
+inline ::Protocol::InventoryTab SD_EQUIP_ITEM::tab_type() const {
   // @@protoc_insertion_point(field_get:DBProtocol.SD_EQUIP_ITEM.tab_type)
   return _internal_tab_type();
 }
-inline void SD_EQUIP_ITEM::_internal_set_tab_type(uint64_t value) {
+inline void SD_EQUIP_ITEM::_internal_set_tab_type(::Protocol::InventoryTab value) {
   
   tab_type_ = value;
 }
-inline void SD_EQUIP_ITEM::set_tab_type(uint64_t value) {
+inline void SD_EQUIP_ITEM::set_tab_type(::Protocol::InventoryTab value) {
   _internal_set_tab_type(value);
   // @@protoc_insertion_point(field_set:DBProtocol.SD_EQUIP_ITEM.tab_type)
 }
 
-// uint64 slot_index = 4;
-inline void SD_EQUIP_ITEM::clear_slot_index() {
-  slot_index_ = uint64_t{0u};
+// uint64 inv_slot_index = 4;
+inline void SD_EQUIP_ITEM::clear_inv_slot_index() {
+  inv_slot_index_ = uint64_t{0u};
 }
-inline uint64_t SD_EQUIP_ITEM::_internal_slot_index() const {
-  return slot_index_;
+inline uint64_t SD_EQUIP_ITEM::_internal_inv_slot_index() const {
+  return inv_slot_index_;
 }
-inline uint64_t SD_EQUIP_ITEM::slot_index() const {
-  // @@protoc_insertion_point(field_get:DBProtocol.SD_EQUIP_ITEM.slot_index)
-  return _internal_slot_index();
+inline uint64_t SD_EQUIP_ITEM::inv_slot_index() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.SD_EQUIP_ITEM.inv_slot_index)
+  return _internal_inv_slot_index();
 }
-inline void SD_EQUIP_ITEM::_internal_set_slot_index(uint64_t value) {
+inline void SD_EQUIP_ITEM::_internal_set_inv_slot_index(uint64_t value) {
   
-  slot_index_ = value;
+  inv_slot_index_ = value;
 }
-inline void SD_EQUIP_ITEM::set_slot_index(uint64_t value) {
-  _internal_set_slot_index(value);
-  // @@protoc_insertion_point(field_set:DBProtocol.SD_EQUIP_ITEM.slot_index)
+inline void SD_EQUIP_ITEM::set_inv_slot_index(uint64_t value) {
+  _internal_set_inv_slot_index(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.SD_EQUIP_ITEM.inv_slot_index)
 }
 
 // uint64 user_id = 5;
@@ -5047,44 +5069,44 @@ inline void SD_FARMING_ITEM::set_quantity(uint64_t value) {
   // @@protoc_insertion_point(field_set:DBProtocol.SD_FARMING_ITEM.quantity)
 }
 
-// uint64 tab_type = 4;
+// .Protocol.InventoryTab tab_type = 4;
 inline void SD_FARMING_ITEM::clear_tab_type() {
-  tab_type_ = uint64_t{0u};
+  tab_type_ = 0;
 }
-inline uint64_t SD_FARMING_ITEM::_internal_tab_type() const {
-  return tab_type_;
+inline ::Protocol::InventoryTab SD_FARMING_ITEM::_internal_tab_type() const {
+  return static_cast< ::Protocol::InventoryTab >(tab_type_);
 }
-inline uint64_t SD_FARMING_ITEM::tab_type() const {
+inline ::Protocol::InventoryTab SD_FARMING_ITEM::tab_type() const {
   // @@protoc_insertion_point(field_get:DBProtocol.SD_FARMING_ITEM.tab_type)
   return _internal_tab_type();
 }
-inline void SD_FARMING_ITEM::_internal_set_tab_type(uint64_t value) {
+inline void SD_FARMING_ITEM::_internal_set_tab_type(::Protocol::InventoryTab value) {
   
   tab_type_ = value;
 }
-inline void SD_FARMING_ITEM::set_tab_type(uint64_t value) {
+inline void SD_FARMING_ITEM::set_tab_type(::Protocol::InventoryTab value) {
   _internal_set_tab_type(value);
   // @@protoc_insertion_point(field_set:DBProtocol.SD_FARMING_ITEM.tab_type)
 }
 
-// uint64 slot_index = 5;
-inline void SD_FARMING_ITEM::clear_slot_index() {
-  slot_index_ = uint64_t{0u};
+// uint64 inv_slot_index = 5;
+inline void SD_FARMING_ITEM::clear_inv_slot_index() {
+  inv_slot_index_ = uint64_t{0u};
 }
-inline uint64_t SD_FARMING_ITEM::_internal_slot_index() const {
-  return slot_index_;
+inline uint64_t SD_FARMING_ITEM::_internal_inv_slot_index() const {
+  return inv_slot_index_;
 }
-inline uint64_t SD_FARMING_ITEM::slot_index() const {
-  // @@protoc_insertion_point(field_get:DBProtocol.SD_FARMING_ITEM.slot_index)
-  return _internal_slot_index();
+inline uint64_t SD_FARMING_ITEM::inv_slot_index() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.SD_FARMING_ITEM.inv_slot_index)
+  return _internal_inv_slot_index();
 }
-inline void SD_FARMING_ITEM::_internal_set_slot_index(uint64_t value) {
+inline void SD_FARMING_ITEM::_internal_set_inv_slot_index(uint64_t value) {
   
-  slot_index_ = value;
+  inv_slot_index_ = value;
 }
-inline void SD_FARMING_ITEM::set_slot_index(uint64_t value) {
-  _internal_set_slot_index(value);
-  // @@protoc_insertion_point(field_set:DBProtocol.SD_FARMING_ITEM.slot_index)
+inline void SD_FARMING_ITEM::set_inv_slot_index(uint64_t value) {
+  _internal_set_inv_slot_index(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.SD_FARMING_ITEM.inv_slot_index)
 }
 
 // uint64 user_id = 6;
@@ -5182,44 +5204,44 @@ inline void SD_UNEQUIP_ITEM::set_item_id(uint64_t value) {
   // @@protoc_insertion_point(field_set:DBProtocol.SD_UNEQUIP_ITEM.item_id)
 }
 
-// uint64 tab_type = 3;
+// .Protocol.EquipmentSlot tab_type = 3;
 inline void SD_UNEQUIP_ITEM::clear_tab_type() {
-  tab_type_ = uint64_t{0u};
+  tab_type_ = 0;
 }
-inline uint64_t SD_UNEQUIP_ITEM::_internal_tab_type() const {
-  return tab_type_;
+inline ::Protocol::EquipmentSlot SD_UNEQUIP_ITEM::_internal_tab_type() const {
+  return static_cast< ::Protocol::EquipmentSlot >(tab_type_);
 }
-inline uint64_t SD_UNEQUIP_ITEM::tab_type() const {
+inline ::Protocol::EquipmentSlot SD_UNEQUIP_ITEM::tab_type() const {
   // @@protoc_insertion_point(field_get:DBProtocol.SD_UNEQUIP_ITEM.tab_type)
   return _internal_tab_type();
 }
-inline void SD_UNEQUIP_ITEM::_internal_set_tab_type(uint64_t value) {
+inline void SD_UNEQUIP_ITEM::_internal_set_tab_type(::Protocol::EquipmentSlot value) {
   
   tab_type_ = value;
 }
-inline void SD_UNEQUIP_ITEM::set_tab_type(uint64_t value) {
+inline void SD_UNEQUIP_ITEM::set_tab_type(::Protocol::EquipmentSlot value) {
   _internal_set_tab_type(value);
   // @@protoc_insertion_point(field_set:DBProtocol.SD_UNEQUIP_ITEM.tab_type)
 }
 
-// uint64 slot_index = 4;
-inline void SD_UNEQUIP_ITEM::clear_slot_index() {
-  slot_index_ = uint64_t{0u};
+// uint64 inv_slot_index = 4;
+inline void SD_UNEQUIP_ITEM::clear_inv_slot_index() {
+  inv_slot_index_ = uint64_t{0u};
 }
-inline uint64_t SD_UNEQUIP_ITEM::_internal_slot_index() const {
-  return slot_index_;
+inline uint64_t SD_UNEQUIP_ITEM::_internal_inv_slot_index() const {
+  return inv_slot_index_;
 }
-inline uint64_t SD_UNEQUIP_ITEM::slot_index() const {
-  // @@protoc_insertion_point(field_get:DBProtocol.SD_UNEQUIP_ITEM.slot_index)
-  return _internal_slot_index();
+inline uint64_t SD_UNEQUIP_ITEM::inv_slot_index() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.SD_UNEQUIP_ITEM.inv_slot_index)
+  return _internal_inv_slot_index();
 }
-inline void SD_UNEQUIP_ITEM::_internal_set_slot_index(uint64_t value) {
+inline void SD_UNEQUIP_ITEM::_internal_set_inv_slot_index(uint64_t value) {
   
-  slot_index_ = value;
+  inv_slot_index_ = value;
 }
-inline void SD_UNEQUIP_ITEM::set_slot_index(uint64_t value) {
-  _internal_set_slot_index(value);
-  // @@protoc_insertion_point(field_set:DBProtocol.SD_UNEQUIP_ITEM.slot_index)
+inline void SD_UNEQUIP_ITEM::set_inv_slot_index(uint64_t value) {
+  _internal_set_inv_slot_index(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.SD_UNEQUIP_ITEM.inv_slot_index)
 }
 
 // uint64 user_id = 5;
@@ -5357,7 +5379,47 @@ inline void SD_CONSUME_ITEM::set_beforequantity(uint64_t value) {
   // @@protoc_insertion_point(field_set:DBProtocol.SD_CONSUME_ITEM.beforeQuantity)
 }
 
-// uint64 user_id = 5;
+// .Protocol.InventoryTab tab_type = 5;
+inline void SD_CONSUME_ITEM::clear_tab_type() {
+  tab_type_ = 0;
+}
+inline ::Protocol::InventoryTab SD_CONSUME_ITEM::_internal_tab_type() const {
+  return static_cast< ::Protocol::InventoryTab >(tab_type_);
+}
+inline ::Protocol::InventoryTab SD_CONSUME_ITEM::tab_type() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.SD_CONSUME_ITEM.tab_type)
+  return _internal_tab_type();
+}
+inline void SD_CONSUME_ITEM::_internal_set_tab_type(::Protocol::InventoryTab value) {
+  
+  tab_type_ = value;
+}
+inline void SD_CONSUME_ITEM::set_tab_type(::Protocol::InventoryTab value) {
+  _internal_set_tab_type(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.SD_CONSUME_ITEM.tab_type)
+}
+
+// uint64 inv_slot_index = 6;
+inline void SD_CONSUME_ITEM::clear_inv_slot_index() {
+  inv_slot_index_ = uint64_t{0u};
+}
+inline uint64_t SD_CONSUME_ITEM::_internal_inv_slot_index() const {
+  return inv_slot_index_;
+}
+inline uint64_t SD_CONSUME_ITEM::inv_slot_index() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.SD_CONSUME_ITEM.inv_slot_index)
+  return _internal_inv_slot_index();
+}
+inline void SD_CONSUME_ITEM::_internal_set_inv_slot_index(uint64_t value) {
+  
+  inv_slot_index_ = value;
+}
+inline void SD_CONSUME_ITEM::set_inv_slot_index(uint64_t value) {
+  _internal_set_inv_slot_index(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.SD_CONSUME_ITEM.inv_slot_index)
+}
+
+// uint64 user_id = 7;
 inline void SD_CONSUME_ITEM::clear_user_id() {
   user_id_ = uint64_t{0u};
 }
@@ -5432,84 +5494,84 @@ inline void SD_MOVE_ITEM::set_allocated_name(std::string* name) {
   // @@protoc_insertion_point(field_set_allocated:DBProtocol.SD_MOVE_ITEM.name)
 }
 
-// uint64 fromTab = 2;
+// .Protocol.InventoryTab fromTab = 2;
 inline void SD_MOVE_ITEM::clear_fromtab() {
-  fromtab_ = uint64_t{0u};
+  fromtab_ = 0;
 }
-inline uint64_t SD_MOVE_ITEM::_internal_fromtab() const {
-  return fromtab_;
+inline ::Protocol::InventoryTab SD_MOVE_ITEM::_internal_fromtab() const {
+  return static_cast< ::Protocol::InventoryTab >(fromtab_);
 }
-inline uint64_t SD_MOVE_ITEM::fromtab() const {
+inline ::Protocol::InventoryTab SD_MOVE_ITEM::fromtab() const {
   // @@protoc_insertion_point(field_get:DBProtocol.SD_MOVE_ITEM.fromTab)
   return _internal_fromtab();
 }
-inline void SD_MOVE_ITEM::_internal_set_fromtab(uint64_t value) {
+inline void SD_MOVE_ITEM::_internal_set_fromtab(::Protocol::InventoryTab value) {
   
   fromtab_ = value;
 }
-inline void SD_MOVE_ITEM::set_fromtab(uint64_t value) {
+inline void SD_MOVE_ITEM::set_fromtab(::Protocol::InventoryTab value) {
   _internal_set_fromtab(value);
   // @@protoc_insertion_point(field_set:DBProtocol.SD_MOVE_ITEM.fromTab)
 }
 
-// uint64 fromIndex = 3;
-inline void SD_MOVE_ITEM::clear_fromindex() {
-  fromindex_ = uint64_t{0u};
+// uint64 inv_from_Index = 3;
+inline void SD_MOVE_ITEM::clear_inv_from_index() {
+  inv_from_index_ = uint64_t{0u};
 }
-inline uint64_t SD_MOVE_ITEM::_internal_fromindex() const {
-  return fromindex_;
+inline uint64_t SD_MOVE_ITEM::_internal_inv_from_index() const {
+  return inv_from_index_;
 }
-inline uint64_t SD_MOVE_ITEM::fromindex() const {
-  // @@protoc_insertion_point(field_get:DBProtocol.SD_MOVE_ITEM.fromIndex)
-  return _internal_fromindex();
+inline uint64_t SD_MOVE_ITEM::inv_from_index() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.SD_MOVE_ITEM.inv_from_Index)
+  return _internal_inv_from_index();
 }
-inline void SD_MOVE_ITEM::_internal_set_fromindex(uint64_t value) {
+inline void SD_MOVE_ITEM::_internal_set_inv_from_index(uint64_t value) {
   
-  fromindex_ = value;
+  inv_from_index_ = value;
 }
-inline void SD_MOVE_ITEM::set_fromindex(uint64_t value) {
-  _internal_set_fromindex(value);
-  // @@protoc_insertion_point(field_set:DBProtocol.SD_MOVE_ITEM.fromIndex)
+inline void SD_MOVE_ITEM::set_inv_from_index(uint64_t value) {
+  _internal_set_inv_from_index(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.SD_MOVE_ITEM.inv_from_Index)
 }
 
-// uint64 toTab = 4;
+// .Protocol.InventoryTab toTab = 4;
 inline void SD_MOVE_ITEM::clear_totab() {
-  totab_ = uint64_t{0u};
+  totab_ = 0;
 }
-inline uint64_t SD_MOVE_ITEM::_internal_totab() const {
-  return totab_;
+inline ::Protocol::InventoryTab SD_MOVE_ITEM::_internal_totab() const {
+  return static_cast< ::Protocol::InventoryTab >(totab_);
 }
-inline uint64_t SD_MOVE_ITEM::totab() const {
+inline ::Protocol::InventoryTab SD_MOVE_ITEM::totab() const {
   // @@protoc_insertion_point(field_get:DBProtocol.SD_MOVE_ITEM.toTab)
   return _internal_totab();
 }
-inline void SD_MOVE_ITEM::_internal_set_totab(uint64_t value) {
+inline void SD_MOVE_ITEM::_internal_set_totab(::Protocol::InventoryTab value) {
   
   totab_ = value;
 }
-inline void SD_MOVE_ITEM::set_totab(uint64_t value) {
+inline void SD_MOVE_ITEM::set_totab(::Protocol::InventoryTab value) {
   _internal_set_totab(value);
   // @@protoc_insertion_point(field_set:DBProtocol.SD_MOVE_ITEM.toTab)
 }
 
-// uint64 toIndex = 5;
-inline void SD_MOVE_ITEM::clear_toindex() {
-  toindex_ = uint64_t{0u};
+// uint64 inv_to_Index = 5;
+inline void SD_MOVE_ITEM::clear_inv_to_index() {
+  inv_to_index_ = uint64_t{0u};
 }
-inline uint64_t SD_MOVE_ITEM::_internal_toindex() const {
-  return toindex_;
+inline uint64_t SD_MOVE_ITEM::_internal_inv_to_index() const {
+  return inv_to_index_;
 }
-inline uint64_t SD_MOVE_ITEM::toindex() const {
-  // @@protoc_insertion_point(field_get:DBProtocol.SD_MOVE_ITEM.toIndex)
-  return _internal_toindex();
+inline uint64_t SD_MOVE_ITEM::inv_to_index() const {
+  // @@protoc_insertion_point(field_get:DBProtocol.SD_MOVE_ITEM.inv_to_Index)
+  return _internal_inv_to_index();
 }
-inline void SD_MOVE_ITEM::_internal_set_toindex(uint64_t value) {
+inline void SD_MOVE_ITEM::_internal_set_inv_to_index(uint64_t value) {
   
-  toindex_ = value;
+  inv_to_index_ = value;
 }
-inline void SD_MOVE_ITEM::set_toindex(uint64_t value) {
-  _internal_set_toindex(value);
-  // @@protoc_insertion_point(field_set:DBProtocol.SD_MOVE_ITEM.toIndex)
+inline void SD_MOVE_ITEM::set_inv_to_index(uint64_t value) {
+  _internal_set_inv_to_index(value);
+  // @@protoc_insertion_point(field_set:DBProtocol.SD_MOVE_ITEM.inv_to_Index)
 }
 
 // uint64 user_id = 6;

@@ -208,13 +208,35 @@ bool DBSession::GetUserEquipment(string _name, vector<Protocol::EquipmentItem>& 
 	retcode = SQLFetch(hstmt);
 	if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO)
 	{
-		Protocol::EquipmentItem equip;
-		equip.set_weapon(bindInfo.slot_weapon);
-		equip.set_helmet(bindInfo.slot_helmet);
-		equip.set_top(bindInfo.slot_top);
-		equip.set_bottom(bindInfo.slot_bottom);
-		
-		_equip.push_back(equip);
+		if (bindInfo.slot_weapon > 0)
+		{
+			Protocol::EquipmentItem weapon;
+			weapon.set_eq_slot(Protocol::WEAPON);
+			weapon.set_item_id(bindInfo.slot_weapon);
+			_equip.push_back(weapon);
+		}
+		if (bindInfo.slot_helmet > 0)
+		{
+			Protocol::EquipmentItem helmet;
+			helmet.set_eq_slot(Protocol::HELMET);
+			helmet.set_item_id(bindInfo.slot_helmet);
+			_equip.push_back(helmet);
+		}
+		if (bindInfo.slot_top > 0)
+		{
+			Protocol::EquipmentItem top;
+			top.set_eq_slot(Protocol::TOP);
+			top.set_item_id(bindInfo.slot_top);
+			_equip.push_back(top);
+		}
+		if (bindInfo.slot_bottom > 0)
+		{
+			Protocol::EquipmentItem bottom;
+			bottom.set_eq_slot(Protocol::BOTTOM);
+			bottom.set_item_id(bindInfo.slot_bottom);
+			_equip.push_back(bottom);
+		}
+
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
 		return true;
 	}
@@ -303,7 +325,7 @@ bool DBSession::GetUserInfo(string _name, uint64 _pktId)
 
 		for (const auto& equip : equipmentList)
 			*pkt.add_equipment() = equip;
-
+		
 		SendBufferRef sendBuffer = DBPacketHandler::MakeSendBuffer(pkt);
 		Send(sendBuffer);
 		
@@ -353,8 +375,8 @@ bool DBSession::GetUserInventory(string _name, vector<Protocol::InventorySlot>& 
 		Protocol::InventorySlot slot;
 		slot.set_item_id(bindInfo.item_id);
 		slot.set_quantity(bindInfo.quantity);
-		slot.set_tab_type(bindInfo.tab_type);
-		slot.set_slot_index(bindInfo.slot_index);
+		slot.set_tab_type(static_cast<Protocol::InventoryTab>(bindInfo.tab_type));
+		slot.set_inv_slot_index(bindInfo.slot_index);
 
 		_inven.push_back(slot);
 	}

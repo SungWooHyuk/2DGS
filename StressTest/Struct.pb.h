@@ -47,7 +47,7 @@ struct TableStruct_Struct_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[8]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[9]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -61,6 +61,9 @@ extern AddPlayerDefaultTypeInternal _AddPlayer_default_instance_;
 class EquipmentItem;
 struct EquipmentItemDefaultTypeInternal;
 extern EquipmentItemDefaultTypeInternal _EquipmentItem_default_instance_;
+class GoldRanking;
+struct GoldRankingDefaultTypeInternal;
+extern GoldRankingDefaultTypeInternal _GoldRanking_default_instance_;
 class InventorySlot;
 struct InventorySlotDefaultTypeInternal;
 extern InventorySlotDefaultTypeInternal _InventorySlot_default_instance_;
@@ -83,6 +86,7 @@ extern UserDefaultTypeInternal _User_default_instance_;
 PROTOBUF_NAMESPACE_OPEN
 template<> ::Protocol::AddPlayer* Arena::CreateMaybeMessage<::Protocol::AddPlayer>(Arena*);
 template<> ::Protocol::EquipmentItem* Arena::CreateMaybeMessage<::Protocol::EquipmentItem>(Arena*);
+template<> ::Protocol::GoldRanking* Arena::CreateMaybeMessage<::Protocol::GoldRanking>(Arena*);
 template<> ::Protocol::InventorySlot* Arena::CreateMaybeMessage<::Protocol::InventorySlot>(Arena*);
 template<> ::Protocol::Mess* Arena::CreateMaybeMessage<::Protocol::Mess>(Arena*);
 template<> ::Protocol::Move* Arena::CreateMaybeMessage<::Protocol::Move>(Arena*);
@@ -981,8 +985,8 @@ class InventorySlot final :
   enum : int {
     kItemIdFieldNumber = 1,
     kQuantityFieldNumber = 2,
+    kInvSlotIndexFieldNumber = 4,
     kTabTypeFieldNumber = 3,
-    kSlotIndexFieldNumber = 4,
   };
   // uint64 item_id = 1;
   void clear_item_id();
@@ -1002,22 +1006,22 @@ class InventorySlot final :
   void _internal_set_quantity(uint64_t value);
   public:
 
-  // uint64 tab_type = 3;
-  void clear_tab_type();
-  uint64_t tab_type() const;
-  void set_tab_type(uint64_t value);
+  // uint64 inv_slot_index = 4;
+  void clear_inv_slot_index();
+  uint64_t inv_slot_index() const;
+  void set_inv_slot_index(uint64_t value);
   private:
-  uint64_t _internal_tab_type() const;
-  void _internal_set_tab_type(uint64_t value);
+  uint64_t _internal_inv_slot_index() const;
+  void _internal_set_inv_slot_index(uint64_t value);
   public:
 
-  // uint64 slot_index = 4;
-  void clear_slot_index();
-  uint64_t slot_index() const;
-  void set_slot_index(uint64_t value);
+  // .Protocol.InventoryTab tab_type = 3;
+  void clear_tab_type();
+  ::Protocol::InventoryTab tab_type() const;
+  void set_tab_type(::Protocol::InventoryTab value);
   private:
-  uint64_t _internal_slot_index() const;
-  void _internal_set_slot_index(uint64_t value);
+  ::Protocol::InventoryTab _internal_tab_type() const;
+  void _internal_set_tab_type(::Protocol::InventoryTab value);
   public:
 
   // @@protoc_insertion_point(class_scope:Protocol.InventorySlot)
@@ -1029,8 +1033,8 @@ class InventorySlot final :
   typedef void DestructorSkippable_;
   uint64_t item_id_;
   uint64_t quantity_;
-  uint64_t tab_type_;
-  uint64_t slot_index_;
+  uint64_t inv_slot_index_;
+  int tab_type_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Struct_2eproto;
 };
@@ -1158,45 +1162,25 @@ class EquipmentItem final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kWeaponFieldNumber = 1,
-    kHelmetFieldNumber = 2,
-    kTopFieldNumber = 3,
-    kBottomFieldNumber = 4,
+    kItemIdFieldNumber = 2,
+    kEqSlotFieldNumber = 1,
   };
-  // uint64 weapon = 1;
-  void clear_weapon();
-  uint64_t weapon() const;
-  void set_weapon(uint64_t value);
+  // uint64 item_id = 2;
+  void clear_item_id();
+  uint64_t item_id() const;
+  void set_item_id(uint64_t value);
   private:
-  uint64_t _internal_weapon() const;
-  void _internal_set_weapon(uint64_t value);
+  uint64_t _internal_item_id() const;
+  void _internal_set_item_id(uint64_t value);
   public:
 
-  // uint64 helmet = 2;
-  void clear_helmet();
-  uint64_t helmet() const;
-  void set_helmet(uint64_t value);
+  // .Protocol.EquipmentSlot eq_slot = 1;
+  void clear_eq_slot();
+  ::Protocol::EquipmentSlot eq_slot() const;
+  void set_eq_slot(::Protocol::EquipmentSlot value);
   private:
-  uint64_t _internal_helmet() const;
-  void _internal_set_helmet(uint64_t value);
-  public:
-
-  // uint64 top = 3;
-  void clear_top();
-  uint64_t top() const;
-  void set_top(uint64_t value);
-  private:
-  uint64_t _internal_top() const;
-  void _internal_set_top(uint64_t value);
-  public:
-
-  // uint64 bottom = 4;
-  void clear_bottom();
-  uint64_t bottom() const;
-  void set_bottom(uint64_t value);
-  private:
-  uint64_t _internal_bottom() const;
-  void _internal_set_bottom(uint64_t value);
+  ::Protocol::EquipmentSlot _internal_eq_slot() const;
+  void _internal_set_eq_slot(::Protocol::EquipmentSlot value);
   public:
 
   // @@protoc_insertion_point(class_scope:Protocol.EquipmentItem)
@@ -1206,10 +1190,8 @@ class EquipmentItem final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  uint64_t weapon_;
-  uint64_t helmet_;
-  uint64_t top_;
-  uint64_t bottom_;
+  uint64_t item_id_;
+  int eq_slot_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Struct_2eproto;
 };
@@ -1755,6 +1737,168 @@ class Mess final :
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr mess_;
   uint64_t id_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Struct_2eproto;
+};
+// -------------------------------------------------------------------
+
+class GoldRanking final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.GoldRanking) */ {
+ public:
+  inline GoldRanking() : GoldRanking(nullptr) {}
+  ~GoldRanking() override;
+  explicit constexpr GoldRanking(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  GoldRanking(const GoldRanking& from);
+  GoldRanking(GoldRanking&& from) noexcept
+    : GoldRanking() {
+    *this = ::std::move(from);
+  }
+
+  inline GoldRanking& operator=(const GoldRanking& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline GoldRanking& operator=(GoldRanking&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const GoldRanking& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const GoldRanking* internal_default_instance() {
+    return reinterpret_cast<const GoldRanking*>(
+               &_GoldRanking_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    8;
+
+  friend void swap(GoldRanking& a, GoldRanking& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(GoldRanking* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(GoldRanking* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  GoldRanking* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<GoldRanking>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const GoldRanking& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const GoldRanking& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(GoldRanking* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.GoldRanking";
+  }
+  protected:
+  explicit GoldRanking(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kNameFieldNumber = 1,
+    kGoldFieldNumber = 2,
+  };
+  // string name = 1;
+  void clear_name();
+  const std::string& name() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_name(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_name();
+  PROTOBUF_NODISCARD std::string* release_name();
+  void set_allocated_name(std::string* name);
+  private:
+  const std::string& _internal_name() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_name(const std::string& value);
+  std::string* _internal_mutable_name();
+  public:
+
+  // uint64 gold = 2;
+  void clear_gold();
+  uint64_t gold() const;
+  void set_gold(uint64_t value);
+  private:
+  uint64_t _internal_gold() const;
+  void _internal_set_gold(uint64_t value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:Protocol.GoldRanking)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr name_;
+  uint64_t gold_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Struct_2eproto;
 };
@@ -2529,128 +2673,88 @@ inline void InventorySlot::set_quantity(uint64_t value) {
   // @@protoc_insertion_point(field_set:Protocol.InventorySlot.quantity)
 }
 
-// uint64 tab_type = 3;
+// .Protocol.InventoryTab tab_type = 3;
 inline void InventorySlot::clear_tab_type() {
-  tab_type_ = uint64_t{0u};
+  tab_type_ = 0;
 }
-inline uint64_t InventorySlot::_internal_tab_type() const {
-  return tab_type_;
+inline ::Protocol::InventoryTab InventorySlot::_internal_tab_type() const {
+  return static_cast< ::Protocol::InventoryTab >(tab_type_);
 }
-inline uint64_t InventorySlot::tab_type() const {
+inline ::Protocol::InventoryTab InventorySlot::tab_type() const {
   // @@protoc_insertion_point(field_get:Protocol.InventorySlot.tab_type)
   return _internal_tab_type();
 }
-inline void InventorySlot::_internal_set_tab_type(uint64_t value) {
+inline void InventorySlot::_internal_set_tab_type(::Protocol::InventoryTab value) {
   
   tab_type_ = value;
 }
-inline void InventorySlot::set_tab_type(uint64_t value) {
+inline void InventorySlot::set_tab_type(::Protocol::InventoryTab value) {
   _internal_set_tab_type(value);
   // @@protoc_insertion_point(field_set:Protocol.InventorySlot.tab_type)
 }
 
-// uint64 slot_index = 4;
-inline void InventorySlot::clear_slot_index() {
-  slot_index_ = uint64_t{0u};
+// uint64 inv_slot_index = 4;
+inline void InventorySlot::clear_inv_slot_index() {
+  inv_slot_index_ = uint64_t{0u};
 }
-inline uint64_t InventorySlot::_internal_slot_index() const {
-  return slot_index_;
+inline uint64_t InventorySlot::_internal_inv_slot_index() const {
+  return inv_slot_index_;
 }
-inline uint64_t InventorySlot::slot_index() const {
-  // @@protoc_insertion_point(field_get:Protocol.InventorySlot.slot_index)
-  return _internal_slot_index();
+inline uint64_t InventorySlot::inv_slot_index() const {
+  // @@protoc_insertion_point(field_get:Protocol.InventorySlot.inv_slot_index)
+  return _internal_inv_slot_index();
 }
-inline void InventorySlot::_internal_set_slot_index(uint64_t value) {
+inline void InventorySlot::_internal_set_inv_slot_index(uint64_t value) {
   
-  slot_index_ = value;
+  inv_slot_index_ = value;
 }
-inline void InventorySlot::set_slot_index(uint64_t value) {
-  _internal_set_slot_index(value);
-  // @@protoc_insertion_point(field_set:Protocol.InventorySlot.slot_index)
+inline void InventorySlot::set_inv_slot_index(uint64_t value) {
+  _internal_set_inv_slot_index(value);
+  // @@protoc_insertion_point(field_set:Protocol.InventorySlot.inv_slot_index)
 }
 
 // -------------------------------------------------------------------
 
 // EquipmentItem
 
-// uint64 weapon = 1;
-inline void EquipmentItem::clear_weapon() {
-  weapon_ = uint64_t{0u};
+// .Protocol.EquipmentSlot eq_slot = 1;
+inline void EquipmentItem::clear_eq_slot() {
+  eq_slot_ = 0;
 }
-inline uint64_t EquipmentItem::_internal_weapon() const {
-  return weapon_;
+inline ::Protocol::EquipmentSlot EquipmentItem::_internal_eq_slot() const {
+  return static_cast< ::Protocol::EquipmentSlot >(eq_slot_);
 }
-inline uint64_t EquipmentItem::weapon() const {
-  // @@protoc_insertion_point(field_get:Protocol.EquipmentItem.weapon)
-  return _internal_weapon();
+inline ::Protocol::EquipmentSlot EquipmentItem::eq_slot() const {
+  // @@protoc_insertion_point(field_get:Protocol.EquipmentItem.eq_slot)
+  return _internal_eq_slot();
 }
-inline void EquipmentItem::_internal_set_weapon(uint64_t value) {
+inline void EquipmentItem::_internal_set_eq_slot(::Protocol::EquipmentSlot value) {
   
-  weapon_ = value;
+  eq_slot_ = value;
 }
-inline void EquipmentItem::set_weapon(uint64_t value) {
-  _internal_set_weapon(value);
-  // @@protoc_insertion_point(field_set:Protocol.EquipmentItem.weapon)
+inline void EquipmentItem::set_eq_slot(::Protocol::EquipmentSlot value) {
+  _internal_set_eq_slot(value);
+  // @@protoc_insertion_point(field_set:Protocol.EquipmentItem.eq_slot)
 }
 
-// uint64 helmet = 2;
-inline void EquipmentItem::clear_helmet() {
-  helmet_ = uint64_t{0u};
+// uint64 item_id = 2;
+inline void EquipmentItem::clear_item_id() {
+  item_id_ = uint64_t{0u};
 }
-inline uint64_t EquipmentItem::_internal_helmet() const {
-  return helmet_;
+inline uint64_t EquipmentItem::_internal_item_id() const {
+  return item_id_;
 }
-inline uint64_t EquipmentItem::helmet() const {
-  // @@protoc_insertion_point(field_get:Protocol.EquipmentItem.helmet)
-  return _internal_helmet();
+inline uint64_t EquipmentItem::item_id() const {
+  // @@protoc_insertion_point(field_get:Protocol.EquipmentItem.item_id)
+  return _internal_item_id();
 }
-inline void EquipmentItem::_internal_set_helmet(uint64_t value) {
+inline void EquipmentItem::_internal_set_item_id(uint64_t value) {
   
-  helmet_ = value;
+  item_id_ = value;
 }
-inline void EquipmentItem::set_helmet(uint64_t value) {
-  _internal_set_helmet(value);
-  // @@protoc_insertion_point(field_set:Protocol.EquipmentItem.helmet)
-}
-
-// uint64 top = 3;
-inline void EquipmentItem::clear_top() {
-  top_ = uint64_t{0u};
-}
-inline uint64_t EquipmentItem::_internal_top() const {
-  return top_;
-}
-inline uint64_t EquipmentItem::top() const {
-  // @@protoc_insertion_point(field_get:Protocol.EquipmentItem.top)
-  return _internal_top();
-}
-inline void EquipmentItem::_internal_set_top(uint64_t value) {
-  
-  top_ = value;
-}
-inline void EquipmentItem::set_top(uint64_t value) {
-  _internal_set_top(value);
-  // @@protoc_insertion_point(field_set:Protocol.EquipmentItem.top)
-}
-
-// uint64 bottom = 4;
-inline void EquipmentItem::clear_bottom() {
-  bottom_ = uint64_t{0u};
-}
-inline uint64_t EquipmentItem::_internal_bottom() const {
-  return bottom_;
-}
-inline uint64_t EquipmentItem::bottom() const {
-  // @@protoc_insertion_point(field_get:Protocol.EquipmentItem.bottom)
-  return _internal_bottom();
-}
-inline void EquipmentItem::_internal_set_bottom(uint64_t value) {
-  
-  bottom_ = value;
-}
-inline void EquipmentItem::set_bottom(uint64_t value) {
-  _internal_set_bottom(value);
-  // @@protoc_insertion_point(field_set:Protocol.EquipmentItem.bottom)
+inline void EquipmentItem::set_item_id(uint64_t value) {
+  _internal_set_item_id(value);
+  // @@protoc_insertion_point(field_set:Protocol.EquipmentItem.item_id)
 }
 
 // -------------------------------------------------------------------
@@ -2970,9 +3074,86 @@ inline void Mess::set_allocated_mess(std::string* mess) {
   // @@protoc_insertion_point(field_set_allocated:Protocol.Mess.mess)
 }
 
+// -------------------------------------------------------------------
+
+// GoldRanking
+
+// string name = 1;
+inline void GoldRanking::clear_name() {
+  name_.ClearToEmpty();
+}
+inline const std::string& GoldRanking::name() const {
+  // @@protoc_insertion_point(field_get:Protocol.GoldRanking.name)
+  return _internal_name();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void GoldRanking::set_name(ArgT0&& arg0, ArgT... args) {
+ 
+ name_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:Protocol.GoldRanking.name)
+}
+inline std::string* GoldRanking::mutable_name() {
+  std::string* _s = _internal_mutable_name();
+  // @@protoc_insertion_point(field_mutable:Protocol.GoldRanking.name)
+  return _s;
+}
+inline const std::string& GoldRanking::_internal_name() const {
+  return name_.Get();
+}
+inline void GoldRanking::_internal_set_name(const std::string& value) {
+  
+  name_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+}
+inline std::string* GoldRanking::_internal_mutable_name() {
+  
+  return name_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+}
+inline std::string* GoldRanking::release_name() {
+  // @@protoc_insertion_point(field_release:Protocol.GoldRanking.name)
+  return name_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
+}
+inline void GoldRanking::set_allocated_name(std::string* name) {
+  if (name != nullptr) {
+    
+  } else {
+    
+  }
+  name_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), name,
+      GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (name_.IsDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited())) {
+    name_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:Protocol.GoldRanking.name)
+}
+
+// uint64 gold = 2;
+inline void GoldRanking::clear_gold() {
+  gold_ = uint64_t{0u};
+}
+inline uint64_t GoldRanking::_internal_gold() const {
+  return gold_;
+}
+inline uint64_t GoldRanking::gold() const {
+  // @@protoc_insertion_point(field_get:Protocol.GoldRanking.gold)
+  return _internal_gold();
+}
+inline void GoldRanking::_internal_set_gold(uint64_t value) {
+  
+  gold_ = value;
+}
+inline void GoldRanking::set_gold(uint64_t value) {
+  _internal_set_gold(value);
+  // @@protoc_insertion_point(field_set:Protocol.GoldRanking.gold)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

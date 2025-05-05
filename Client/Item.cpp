@@ -3,37 +3,53 @@
 
 void from_json(const json& j, ITEM_INFO::EQUIPMENT_INFO& e)
 {
-    j.at("attackPower").get_to(e.attackPower);
-    j.at("defensePower").get_to(e.defensePower);
-    j.at("magicPower").get_to(e.magicPower);
-    j.at("strength").get_to(e.strength);
+    e.attackPower = j.value("attack_power", 0);
+    e.defensePower = j.value("defence_power", 0); // defense 오타 수정
+    e.magicPower = j.value("magic_power", 0);
+    e.strength = j.value("strength", 0);
 }
 
 void from_json(const json& j, ITEM_INFO& item)
 {
-    j.at("itemId").get_to(item.itemId);
-    j.at("name").get_to(item.name);
-    j.at("itemType").get_to(item.itemType);
-    j.at("equipType").get_to(item.equipType);
-    j.at("effectType").get_to(item.effectType);
-    j.at("effectValue").get_to(item.effectValue);
-    j.at("requiredLevel").get_to(item.requiredLevel);
-    j.at("description").get_to(item.description);
-    j.at("icon_path").get_to(item.iconPath);
-    j.at("equipmentInfo").get_to(item.equipmentInfo);
+    item.itemId = j.value("item_id", 0);
+    item.name = j.value("name", "");
+    item.itemType = static_cast<Protocol::InventoryTab>(j.value("item_type", 0));
+
+    item.equipType = (j.contains("equip_type") && !j["equip_type"].is_null()) ? static_cast<Protocol::EquipmentSlot>(j["equip_type"].get<int32>()) : static_cast<Protocol::EquipmentSlot>(0);
+    item.effectType = (j.contains("effect_type") && !j["effect_type"].is_null()) ? j["effect_type"].get<int32>() : 0;
+    item.effectValue = (j.contains("effect_value") && !j["effect_value"].is_null()) ? j["effect_value"].get<int32>() : 0;
+
+    item.requiredLevel = j.value("required_level", 0);
+    item.description = j.value("description", "");
+
+    if (j.contains("icon_path") && !j["icon_path"].is_null())
+        item.iconPath = j["icon_path"].get<string>();
+    else
+        item.iconPath = "";
+
+    if (j.contains("equipment_data") && !j["equipment_data"].is_null())
+        j.at("equipment_data").get_to(item.equipmentInfo);
 }
 
 bool Item::LoadFromJson(const string& _filePath)
 {
-    ifstream in("../Tools/TableToJson/items_client.json");
-    //ifstream in(_filePath);
+    ifstream in(_filePath);
     if (!in.is_open())
     {
-        cerr << "file open fail\n";
+        cerr << "file open fail: " << _filePath << endl;
         return false;
     }
 
-    json data = json::parse(in);
+    json data;
+    try
+    {
+        data = json::parse(in);
+    }
+    catch (const exception& e)
+    {
+        cerr << "JSON parse error: " << e.what() << endl;
+        return false;
+    }
 
     try
     {
@@ -45,9 +61,11 @@ bool Item::LoadFromJson(const string& _filePath)
     }
     catch (const exception& e)
     {
-        cerr << "JSON parsing fail: " << e.what() << endl;
+        cerr << "JSON parsing fail during items: " << e.what() << endl;
+        return false;
     }
 
+    cout << "Item JSON loaded successfully! (" << item_map.size() << " items)" << endl;
     return true;
 }
 
@@ -59,4 +77,70 @@ const ITEM_INFO* Item::GetItem(int _itemid) const
     return nullptr;
 }
 
+void Item::InitItemICons()
+{
+    itemIconMap.clear();
+    iconTextureCache.clear();
 
+    for (const auto& pair : item_map)
+    {
+        int id = pair.first;
+        const ITEM_INFO& info = pair.second;
+        if (info.iconPath.empty()) continue;
+
+        if (iconTextureCache.find(info.iconPath) == iconTextureCache.end())
+        {
+            sf::Texture tex;
+            if (!tex.loadFromFile(info.iconPath))
+            {
+               // 로그
+                continue;
+            }
+            iconTextureCache[info.iconPath] = move(tex);
+        }
+        sf::Texture* texPtr = &iconTextureCache[info.iconPath];
+        sf::IntRect rect(0, 0, texPtr->getSize().x, texPtr->getSize().y);
+
+        itemIconMap[id] = { texPtr, rect };
+    }
+}
+
+bool Item::IsWeaponType(uint32_t itemId) const
+{
+    auto it = item_map.find(itemId);
+    if (it != item_map.end())
+    {
+        return it->second.equipType == 1;
+    }
+    return false;
+}
+
+bool Item::IsHelmentType(uint32_t itemId) const
+{
+    auto it = item_map.find(itemId);
+    if (it != item_map.end())
+    {
+        return it->second.equipType == 2;
+    }
+    return false;
+}
+
+bool Item::IsTopType(uint32_t itemId) const
+{
+    auto it = item_map.find(itemId);
+    if (it != item_map.end())
+    {
+        return it->second.equipType == 3;
+    }
+    return false;
+}
+
+bool Item::IsBottomType(uint32_t itemId) const
+{
+    auto it = item_map.find(itemId);
+    if (it != item_map.end())
+    {
+        return it->second.equipType == 4;
+    }
+    return false;
+}

@@ -222,6 +222,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Enum.pb.h" />
+    <ClInclude Include="Item.h" />
     <ClInclude Include="MapData.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="pch.h" />
@@ -241,6 +242,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Item.cpp" />
     <ClCompile Include="MapData.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="pch.cpp">

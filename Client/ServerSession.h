@@ -26,6 +26,14 @@ public:
 	void AttackPkt(uint64 _id, uint64 _skill);
 	void MovePkt(uint64 _direction, int64 _movetime);
 
+	void EquipPkt(uint64 _itemId, Protocol::InventoryTab _tabType, uint64 _invSlotIndex, Protocol::EquipmentSlot _slotIndex);
+	void UnEquipPkt(uint64 _itemId,uint64 _invSlotIndex, Protocol::InventoryTab _tabType, Protocol::EquipmentSlot _slotIndex);
+	void MoveInventoryItemPkt(Protocol::InventoryTab _fromTab, uint64 _fromIndex, Protocol::InventoryTab _toTab, uint64 _toIndex);
+	void ConsumeItemPkt(uint64 _itemid, Protocol::InventoryTab _tabType, uint64 _slotIndex);
+	void RemoveItemPkt(uint64 _itemId, Protocol::InventoryTab _tabType, uint64 _slotIndex);
+	void AddItemPkt(const INVEN& _inv);
+	void SwapItemPkt(uint64 _fromItemId, Protocol::InventoryTab _fromTab, uint64 _fromIndex, uint64 _toItemId, Protocol::InventoryTab _toTab, uint64 _toIndex);
+	void UpdateItemPkt(Protocol::InventoryTab _tabType, uint64 _itemId, uint64 _slotIndex, uint64 _quantity);
 public:
 	string Login();
 	

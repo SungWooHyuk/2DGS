@@ -5,71 +5,73 @@ import "Enum.proto";
 import "Struct.proto";
 
 message SD_LOGIN 
-{ // ÇÊ¼ö
+{ 
     string name = 1;
 	uint64 user_id = 2;
 }
 
 message SD_SAVE_PLAYER 
 {
-    string name = 1;
-	repeated Protocol.Player player = 2;
+    string							name = 1;
+	repeated Protocol.Player		player = 2;
 	repeated Protocol.InventorySlot inventory = 3;
 	repeated Protocol.EquipmentItem equipment = 4;
-	uint64 user_id = 5;
+	uint64							user_id = 5;
 }
 
 message SD_GET_INFOMATION 
 {
-    string name = 1;
-	repeated Protocol.GetType get = 2;
-	uint64 user_id = 3;
+    string						name = 1;
+	repeated Protocol.GetType	get = 2;
+	uint64						user_id = 3;
 }
 
 message SD_EQUIP_ITEM
 {
-	string name = 1;
-	uint64 item_id = 2;
-	uint64 tab_type = 3;
-	uint64 slot_index = 4;
-	uint64 user_id = 5;
+	string					name = 1;
+	uint64					item_id = 2;
+	Protocol.InventoryTab	tab_type = 3;
+	uint64					inv_slot_index = 4;
+	uint64					user_id = 5;
 }
 
 message SD_FARMING_ITEM
 {
-	string name = 1;
-	uint64 item_id = 2;
-	uint64 quantity = 3;
-	uint64 tab_type = 4;
-	uint64 slot_index = 5;
-	uint64 user_id = 6;
+	string					name = 1;
+	uint64					item_id = 2;
+	uint64					quantity = 3;
+	Protocol.InventoryTab	tab_type = 4;
+	uint64					inv_slot_index = 5;
+	uint64					user_id = 6;
 }
 message	SD_UNEQUIP_ITEM
 {
-	string name = 1;
-	uint64 item_id = 2;
-	uint64 tab_type = 3;
-	uint64 slot_index = 4;
-	uint64 user_id = 5;
+	string					name = 1;
+	uint64					item_id = 2;
+	Protocol.EquipmentSlot	tab_type = 3;
+	uint64					inv_slot_index = 4;
+	uint64					user_id = 5;
 }
 
 message SD_CONSUME_ITEM
 {
-	string name = 1;
-	uint64 itemId = 2;
-	uint64 quantity = 3;
-	uint64 beforeQuantity = 4;
-	uint64 user_id = 5;
+	string					name = 1;
+	uint64					itemId = 2;
+	uint64					quantity = 3;
+	uint64					beforeQuantity = 4;
+	Protocol.InventoryTab	tab_type = 5;
+	uint64					inv_slot_index = 6;
+	uint64					user_id = 7;
 }
 
 message SD_MOVE_ITEM
 {
-	string name = 1;
-	uint64 fromTab = 2;
-	uint64 fromIndex = 3;
-	uint64 toTab = 4;
-	uint64 toIndex = 5;
-	uint64 user_id = 6;
+	string					name = 1;
+	Protocol.InventoryTab	fromTab = 2;
+	uint64					inv_from_Index = 3;
+	Protocol.InventoryTab	toTab = 4;
+	uint64					inv_to_Index = 5;
+	uint64					user_id = 6;
 }
 
 message SD_REGISTER
@@ -80,16 +82,16 @@ message SD_REGISTER
 
 message SD_SAVE_INVENTORY
 {
-	string name = 1;
+	string							name = 1;
 	repeated Protocol.InventorySlot inventory = 2;
-	uint64 user_id = 3;
+	uint64							user_id = 3;
 }
 
 message SD_SAVE_EQUIPMENT
 {
-	string name = 1;
+	string							name = 1;
 	repeated Protocol.EquipmentItem equipment = 2;
-	uint64 user_id = 3;
+	uint64							user_id = 3;
 }
 
 message SD_UPDATE_GOLD
@@ -102,80 +104,80 @@ message SD_UPDATE_GOLD
 // DBServer -> GameServer
 message DS_LOGIN 
 {
-    bool success = 1;
-	repeated Protocol.Player player = 2;
+    bool							success = 1;
+	repeated Protocol.Player		player = 2;
 	repeated Protocol.InventorySlot inventory = 3;
 	repeated Protocol.EquipmentItem equipment = 4;
-	uint64 user_id = 5;
+	uint64							user_id = 5;
 }
 
 message DS_REGISTER
 {
-	bool success = 1;
-	repeated Protocol.Player player = 2;
-	uint64 user_id = 3;
+	bool							success = 1;
+	repeated Protocol.Player		player = 2;
+	uint64							user_id = 3;
 }
 
 message DS_SAVE_RESULT
 {
-	bool success = 1;
-	string message = 2;
-	uint64 user_id = 3;
+	bool			success = 1;
+	string			message = 2;
+	uint64			user_id = 3;
 }
 
 message DS_USER_INFORMATION
 {
-	bool success = 1;
-	repeated Protocol.Player player =2;
-	uint64 user_id = 3;
+	bool						success = 1;
+	repeated Protocol.Player	player =2;
+	uint64						user_id = 3;
 }
 message DS_INVENTORY_INFORMATION
 {
-	bool success = 1;
+	bool							success = 1;
 	repeated Protocol.InventorySlot inventory = 2;
-	uint64 user_id = 3;
+	uint64							user_id = 3;
 }
 message DS_EQUIP_INFORMATION
 {
-	bool success = 1;
+	bool							success = 1;
 	repeated Protocol.EquipmentItem equipment = 2;
-	uint64 user_id = 3;
+	uint64							user_id = 3;
 }
 
 message DS_EQUIP_ITEM
 {
-	bool success = 1;
+	bool							success = 1;
 	repeated Protocol.EquipmentItem updated_equipment = 2;
-	uint64 user_id = 3;
+	uint64							user_id = 3;
 }
 
 message DS_FARMING_RESULT
 {
-	bool success = 1;
+	bool							success = 1;
 	repeated Protocol.InventorySlot updated_inventory = 2;
-	uint64 user_id = 3;
+	uint64							user_id = 3;
 }
 
 message DS_CONSUME_ITEM
 {
-	bool success = 1;
+	bool							success = 1;
 	repeated Protocol.InventorySlot updated_slot = 2;
-	uint64 hp = 3;
-	uint64 mp = 4;
-	uint64 user_id = 5;
+	uint64							hp = 3;
+	uint64							mp = 4;
+	uint64							user_id = 5;
 }
 
 message DS_MOVE_RESULT
 {
-	bool success = 1;
+	bool							success = 1;
 	repeated Protocol.InventorySlot from = 2;
 	repeated Protocol.InventorySlot to = 3;
-	uint64 user_id = 4;
+	uint64							user_id = 4;
 }
 
 message DS_UPDATE_GOLD
 {
-	bool success = 1;
-	uint64 gold = 2;
-	uint64 user_id = 3;
+	bool							success = 1;
+	uint64							gold = 2;
+	uint64							user_id = 3;
 }

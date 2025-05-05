@@ -18,3 +18,18 @@ enum GetType
 	INVENTORY_INFO = 1;
 	EQUIPMENT_INFO = 2;
 }
+
+enum InventoryTab {
+	INVENTORY_TAB_NONE = 0;
+	EQUIP = 1;
+	CONSUME = 2;
+	MISC = 3;
+}
+
+enum EquipmentSlot {
+	EQUIPMENTSLOT_NONE = 0;
+	WEAPON = 1;
+	HELMET = 2;
+	TOP = 3;
+	BOTTOM = 4;
+}

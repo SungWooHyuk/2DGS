@@ -18,10 +18,23 @@ Player::~Player()
 	cout << "~Player()" << endl;
 }
 
-Player::Player(string _name, STAT _stat, POS _pos, S_STATE _state, uint32 _room, Protocol::PlayerType _pt)
+Player::Player(const string& _name, const STAT& _stat, const POS& _pos, S_STATE _state, uint32 _room, Protocol::PlayerType _pt)
 	:myName(_name), myStat(_stat), myPos(_pos), myState(_state), currentRoom(_room), PT(_pt)
 {
 	active = false;
+}
+
+Player::Player(const string& name, const STAT& stat, const POS& pos, S_STATE state, uint32 room, Protocol::PlayerType pt, uint64 gold, const vector<INVEN>& inventory, const vector<pair<Protocol::EquipmentSlot, ITEM_INFO>>& equipment)
+	:myName(name), myStat(stat), myPos(pos), myState(state), currentRoom(room), PT(pt), myGold(gold)
+{
+	for (const auto& inv : inventory)
+		myInven[inv.slot_index] = inv;
+
+	for (const auto& eq : equipment)
+		myEquip[eq.first] = eq.second;
+
+	active = false;
+	UpdateStatByEquipment();
 }
 
 void Player::LevelUp()

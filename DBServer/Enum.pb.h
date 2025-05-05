@@ -112,6 +112,61 @@ inline bool GetType_Parse(
   return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<GetType>(
     GetType_descriptor(), name, value);
 }
+enum InventoryTab : int {
+  INVENTORY_TAB_NONE = 0,
+  EQUIP = 1,
+  CONSUME = 2,
+  MISC = 3,
+  InventoryTab_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
+  InventoryTab_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
+};
+bool InventoryTab_IsValid(int value);
+constexpr InventoryTab InventoryTab_MIN = INVENTORY_TAB_NONE;
+constexpr InventoryTab InventoryTab_MAX = MISC;
+constexpr int InventoryTab_ARRAYSIZE = InventoryTab_MAX + 1;
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* InventoryTab_descriptor();
+template<typename T>
+inline const std::string& InventoryTab_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, InventoryTab>::value ||
+    ::std::is_integral<T>::value,
+    "Incorrect type passed to function InventoryTab_Name.");
+  return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
+    InventoryTab_descriptor(), enum_t_value);
+}
+inline bool InventoryTab_Parse(
+    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, InventoryTab* value) {
+  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<InventoryTab>(
+    InventoryTab_descriptor(), name, value);
+}
+enum EquipmentSlot : int {
+  EQUIPMENTSLOT_NONE = 0,
+  WEAPON = 1,
+  HELMET = 2,
+  TOP = 3,
+  BOTTOM = 4,
+  EquipmentSlot_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
+  EquipmentSlot_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
+};
+bool EquipmentSlot_IsValid(int value);
+constexpr EquipmentSlot EquipmentSlot_MIN = EQUIPMENTSLOT_NONE;
+constexpr EquipmentSlot EquipmentSlot_MAX = BOTTOM;
+constexpr int EquipmentSlot_ARRAYSIZE = EquipmentSlot_MAX + 1;
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* EquipmentSlot_descriptor();
+template<typename T>
+inline const std::string& EquipmentSlot_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, EquipmentSlot>::value ||
+    ::std::is_integral<T>::value,
+    "Incorrect type passed to function EquipmentSlot_Name.");
+  return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
+    EquipmentSlot_descriptor(), enum_t_value);
+}
+inline bool EquipmentSlot_Parse(
+    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, EquipmentSlot* value) {
+  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<EquipmentSlot>(
+    EquipmentSlot_descriptor(), name, value);
+}
 // ===================================================================
 
 
@@ -143,6 +198,16 @@ template <> struct is_proto_enum< ::Protocol::GetType> : ::std::true_type {};
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::Protocol::GetType>() {
   return ::Protocol::GetType_descriptor();
+}
+template <> struct is_proto_enum< ::Protocol::InventoryTab> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::Protocol::InventoryTab>() {
+  return ::Protocol::InventoryTab_descriptor();
+}
+template <> struct is_proto_enum< ::Protocol::EquipmentSlot> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::Protocol::EquipmentSlot>() {
+  return ::Protocol::EquipmentSlot_descriptor();
 }
 
 PROTOBUF_NAMESPACE_CLOSE

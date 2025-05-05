@@ -21,6 +21,11 @@
 
 using namespace chrono;
 
+struct GoldRanking {
+    string name;
+    int gold;
+};
+
 using json = nlohmann::json;
 using ServerSessionRef = shared_ptr<class ServerSession>;
 using ClientRef = shared_ptr<class Client>;

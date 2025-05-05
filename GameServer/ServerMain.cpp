@@ -59,7 +59,7 @@ int main()
 	ClientPacketHandler::Init();
 	GameDBPacketHandler::Init();
 	GAMESESSIONMANAGER.InitializeNPC();
-	
+	ITEM.LoadFromJson("items.json");
 	//GLogger::Log(spdlog::level::err, "Begin");
 
 	ServerServiceRef service = MakeShared<ServerService>(

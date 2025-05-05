@@ -48,6 +48,9 @@
     <ClInclude Include="ServerSession.h">
       <Filter>Main</Filter>
     </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>GameContents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -85,6 +88,9 @@
     </ClCompile>
     <ClCompile Include="ServerSession.cpp">
       <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>GameContents</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -48,18 +48,16 @@ message Stat
 
 message InventorySlot
 {
-	uint64 item_id = 1;
-	uint64 quantity = 2;
-	uint64 tab_type = 3;
-	uint64 slot_index = 4;
+	uint64			item_id = 1;
+	uint64			quantity = 2;
+	InventoryTab	tab_type = 3;
+	uint64			inv_slot_index = 4;
 }
 
 message EquipmentItem
 {
-	uint64 weapon = 1;
-	uint64 helmet = 2;
-	uint64 top = 3;
-	uint64 bottom = 4;
+	EquipmentSlot	eq_slot = 1;
+	uint64			item_id = 2;
 }
 message AddPlayer
 {
@@ -82,4 +80,10 @@ message Mess
 {
 	uint64 id = 1;
 	string mess = 2;
+}
+
+message GoldRanking
+{
+	string name = 1;
+	uint64 gold = 2;
 }

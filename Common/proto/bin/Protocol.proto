@@ -11,45 +11,78 @@ message C_LOGIN
 
 message C_CONSUME_ITEM
 {
-	uint64 item_id = 1;
-	uint64	tab_type = 2;
-	uint64	slot_index = 3;
+	uint64			item_id = 1;
+	InventoryTab	tab_type = 2;
+	uint64			inv_slot_index = 3;
 }
 
 message C_DROP_ITEM
 {
-	uint64	item_id = 1;
-	uint64	tab_type = 2;
-	uint64	slot_index = 3;
-	uint64	quantity = 4;
+	uint64			item_id = 1;
+	InventoryTab	tab_type = 2;
+	uint64			inv_slot_index = 3;
+	uint64			quantity = 4;
 }
 
 message C_MOVE_INVENTORY_ITEM
 {
-	uint64 from_tab = 1;
-	uint64 from_index = 2;
-	uint64 to_tab = 3;
-	uint64 to_index = 4;
+	InventoryTab	from_tab = 1;
+	uint64			inv_from_index = 2;
+	InventoryTab	to_tab = 3;
+	uint64			inv_to_index = 4;
 }
 
-message C_EQUIP
+message C_INVEN_SWAP_ITEM
 {
-	uint64	item_id = 1;
-	uint64	tab_type = 2;
-	uint64	slot_index = 3;
+	uint64			from_item_id = 1;
+	InventoryTab	from_tab = 2;
+	uint64			inv_from_index = 3;
+	uint64			to_item_id = 4;
+	InventoryTab	to_tab = 5;
+	uint64			inv_to_index = 6;
+}
+
+message C_ADD_ITEM
+{
+	uint64			item_id = 1;
+	InventoryTab	tab_type = 2;
+	uint64			inv_slot_index = 3;
+	uint64			quantity = 4;
+}
+message C_REMOVE_ITEM
+{
+	uint64			item_id = 1;
+	InventoryTab	tab_type = 2;
+	uint64			inv_slot_index = 3;
+}
+message C_EQUIP // 장착
+{
+	uint64			item_id = 1;
+	InventoryTab	tab_type = 2;
+	uint64			inv_slot_index = 3;
+	EquipmentSlot	slot_type = 4;
 }
 
 message C_UNEQUIP
 {
-	uint64 item_id = 1;
-	uint64 slot_type = 2;
+	uint64			item_id = 1;
+	uint64			inv_slot_index = 2;
+	EquipmentSlot	slot_type = 3;
+	InventoryTab	tab_type = 4;
 }
 
 message C_SORT_INVENTORY 
 {
-	uint64 tab_type = 1;
+	InventoryTab	tab_type = 1;
 }
 
+message C_UPDATE_ITEM
+{
+	InventoryTab	tab_type = 1;
+	uint64			item_id = 2;
+	uint64			inv_slot_index = 3;
+	uint64			quantity = 4;
+}
 message C_MOVE
 {
 	uint64 direction = 1;
@@ -94,43 +127,43 @@ message S_LOAD_EQUIPMENT
 }
 
 message S_CONSUME_RESULT {
-	bool success = 1; 
-	uint64 item_id = 2;
-	uint64 tab_type = 3;
-	uint64 slot_index = 4;
-	uint64 new_quantity = 5; 
+	bool			success = 1; 
+	uint64			item_id = 2;
+	InventoryTab	tab_type = 3;
+	uint64			slot_index = 4;
+	uint64			new_quantity = 5; 
 }
 message S_DROP_RESULT {
-	bool success = 1;
-	uint64 item_id = 2;
-	uint64 tab_type = 3;
-	uint64 slot_index = 4;
+	bool			success = 1;
+	uint64			item_id = 2;
+	InventoryTab	tab_type = 3;
+	uint64			inv_slot_index = 4;
 	//uint64 quantity_dropped = 5;
 	//uint64 remaining_quantity = 6;
 }
 
 message S_MOVE_INVENTORY_RESULT {
-	bool success = 1;
-	uint64 from_tab = 2;
-	uint64 from_index = 3;
-	uint64 to_tab = 4;
-	uint64 to_index = 5;
-	uint64 moved_item_id = 6;
-	uint64 quantity = 7;
+	bool			success = 1;
+	InventoryTab	from_tab = 2;
+	uint64			inv_from_index = 3;
+	InventoryTab	to_tab = 4;
+	uint64			inv_to_index = 5;
+	uint64			moved_item_id = 6;
+	uint64			quantity = 7;
 }
 
 message S_EQUIP_RESULT {
-	bool success = 1;
-	uint64 item_id = 2;
-	uint64 slot_type = 3; 
+	bool			success = 1;
+	uint64			item_id = 2;
+	EquipmentSlot	slot_type = 3; 
 }
 
 message S_UNEQUIP_RESULT {
-	bool success = 1;
-	uint64 item_id = 2;
-	uint64 slot_type = 3;
-	uint64 to_tab_type = 4;   
-	uint64 to_slot_index = 5;   // 인벤으로 돌아갈 슬롯
+	bool			success = 1;
+	uint64			item_id = 2;
+	EquipmentSlot	slot_type = 3;
+	InventoryTab	to_tab_type = 4;   
+	uint64			inv_to_slot_index = 5;   // 인벤으로 돌아갈 슬롯
 }
 
 message S_GOLD_CHANGE {
@@ -174,4 +207,9 @@ message S_RESPAWN
 	uint64 x = 2;
 	uint64 y = 3;
 	uint64 exp = 4;
+}
+
+message S_RANKING
+{
+	repeated GoldRanking ranking = 1;
 }

@@ -21,71 +21,44 @@ bool Handle_DS_LOGIN(PacketSessionRef& session, DBProtocol::DS_LOGIN& pkt)
 		return false;
 	}
 
-	// 플레이어 생성 및 기본 정보 설정
-	PlayerRef player = MakeShared<Player>();
-	player->SetId(gamesession->GetId());
-	player->SetOwnerSession(gamesession);
-	gamesession->SetCurrentPlayer(player);
-
-	// DB에서 받은 플레이어 정보 설정
-	if (pkt.player_size() > 0)
-	{
-		const auto& playerInfo = pkt.player(0);
-		POS pos{ playerInfo.x(), playerInfo.y() };
-		player->SetName(playerInfo.name());
-		player->SetStatLevel(playerInfo.level());
-		player->SetStatHp(playerInfo.hp());
-		player->SetStatMaxHp(playerInfo.maxhp());
-		player->SetStatMp(playerInfo.mp());
-		player->SetStatMaxMp(playerInfo.maxmp());
-		player->SetStatExp(playerInfo.exp());
-		player->SetStatMaxExp(playerInfo.maxexp());
-		player->SetPos(pos);
-		player->SetGold(playerInfo.gold());
-	}
+	const auto& playerInfo = pkt.player(0);
+	POS pos{ playerInfo.x(), playerInfo.y() };
+	STAT stat = {
+		playerInfo.level(), playerInfo.hp(), playerInfo.maxhp(),
+		playerInfo.mp(), playerInfo.maxmp(), playerInfo.exp(), playerInfo.maxexp()
+	};
 
 	// 인벤토리 설정
+	vector<INVEN> inventoryList;
 	for (const auto& invenSlot : pkt.inventory())
 	{
 		INVEN itemInfo;
 		itemInfo.itemId = invenSlot.item_id();
 		itemInfo.quantity = invenSlot.quantity();
-		itemInfo.slot_index = invenSlot.slot_index();
+		itemInfo.slot_index = invenSlot.inv_slot_index();
 		itemInfo.tab_type = invenSlot.tab_type();
-
-		player->AddInventoryItem(itemInfo);
+		inventoryList.push_back(itemInfo);
 	}
-
 	// 장비 설정
-	for (const auto& equipItem : pkt.equipment())
+	
+	vector<pair<Protocol::EquipmentSlot, ITEM_INFO>> equipmentList;
+	for (const auto& eq : pkt.equipment())
 	{
-		ITEM_INFO itemInfo;
+		if (eq.item_id() == 0) continue;
+		const ITEM_INFO* item = ITEM.GetItem(eq.item_id());
+		if (!item) continue;
 
-		if (equipItem.weapon() > 0)
-		{
-			auto info = ITEM.GetItem(equipItem.weapon());
-			if(info)
-				player->EquipItem(E_EQUIP::WEAPON, *info);
-		}
-		if (equipItem.helmet() > 0)
-		{
-			auto info = ITEM.GetItem(equipItem.helmet());
-			if(info)
-				player->EquipItem(E_EQUIP::HELMET, *info);
-		}
-		if (equipItem.top() > 0)
-		{
-			auto info = ITEM.GetItem(equipItem.top());
-			if (info)
-				player->EquipItem(E_EQUIP::TOP, *info);
-		}
-		if (equipItem.bottom() > 0)
-		{
-			auto info = ITEM.GetItem(equipItem.bottom());
-			if (info)
-				player->EquipItem(E_EQUIP::BOTTOM, *info);
-		}
+		equipmentList.emplace_back(eq.eq_slot(), *item);
 	}
+
+	PlayerRef player = MakeShared<Player>(
+		playerInfo.name(), stat, pos, ST_INGAME,
+		9999, Protocol::PLAYER_TYPE_CLIENT,
+		playerInfo.gold(), inventoryList, equipmentList);
+
+	player->SetId(gamesession->GetId());
+	player->SetOwnerSession(gamesession);
+	gamesession->SetCurrentPlayer(player);
 
 	ROOMMANAGER.EnterRoom(gamesession);
 

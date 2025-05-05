@@ -9,11 +9,12 @@ class Player
 {
 public:
 	using InventoryMap = unordered_map<int32, INVEN>;		// slot_index -> item
-	using EquipmentMap = unordered_map<E_EQUIP, ITEM_INFO>;		// equip_slot -> item
+	using EquipmentMap = unordered_map<Protocol::EquipmentSlot, ITEM_INFO>;		// equip_slot -> item
 
 	Player();
 	~Player();
-	Player(string _name, STAT _stat, POS _pos, S_STATE _state, uint32 _room, Protocol::PlayerType _pt);
+	Player(const string& _name, const STAT& _stat, const POS& _pos, S_STATE _state, uint32 _room, Protocol::PlayerType _pt);
+	Player(const string& name, const STAT& stat, const POS& pos, S_STATE state, uint32 room, Protocol::PlayerType pt, uint64 gold, const vector<INVEN>& inventory, const vector<pair<Protocol::EquipmentSlot, ITEM_INFO>>& equipment);
 public:
 	void					LevelUp();
 
@@ -65,9 +66,9 @@ public:
 	const InventoryMap& GetInventory() const { return myInven; }
 
 	// 장비 관련
-	void EquipItem(E_EQUIP slot, const ITEM_INFO& item) { myEquip[slot] = item; UpdateStatByEquipment();}
-	bool UnequipItem(E_EQUIP slot) { return myEquip.erase(slot) > 0; }
-	const ITEM_INFO* GetEquippedItem(E_EQUIP slot) const {
+	void EquipItem(Protocol::EquipmentSlot slot, const ITEM_INFO& item) { myEquip[slot] = item;}
+	bool UnequipItem(Protocol::EquipmentSlot slot) { return myEquip.erase(slot) > 0; }
+	const ITEM_INFO* GetEquippedItem(Protocol::EquipmentSlot slot) const {
 		auto it = myEquip.find(slot);
 		if (it != myEquip.end())
 			return &it->second;

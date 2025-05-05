@@ -78,50 +78,7 @@ vector<RoomRef> RoomManager::GetAdjacentRooms(uint32 _roomNumber)
 
 unordered_set<uint64> RoomManager::ViewList(GameSessionRef& _session, bool _npc)
 {
-	{
-		//READ_LOCK;
-
-		//unordered_set<uint64> viewPlayer;
-		//PlayerRef player = _session->GetCurrentPlayer();
-
-		//// 전체 방을 검사
-		//for (int row = 0; row < ROOM; ++row)
-		//{
-		//	for (int col = 0; col < ROOM; ++col)
-		//	{
-		//		RoomRef room = rooms[row][col];
-		//		if (!room) continue; // 방이 없으면 건너뛰기
-
-		//		for (const auto& other : room->GetPlayers())
-		//		{
-		//			if (other.second->GetState() == ST_INGAME)
-		//			{
-		//				if (other.second->GetPT() == Protocol::PLAYER_TYPE_CLIENT) // CLIENT
-		//				{
-		//					if (CanSee(player, other.second))
-		//						viewPlayer.insert(other.second->GetId());
-		//				}
-		//				else if (other.second->GetPT() == Protocol::PLAYER_TYPE_DUMMY && player->GetPT() == Protocol::PLAYER_TYPE_CLIENT)
-		//				{
-		//					if (CanSee(player, other.second))
-		//						viewPlayer.insert(other.second->GetId());
-		//				}
-		//				else // NPC
-		//				{
-		//					if (CanSee(player, other.second) && !_npc && player->GetPT() == Protocol::PLAYER_TYPE_CLIENT)
-		//					{
-		//						viewPlayer.insert(other.second->GetId());
-		//						GAMESESSIONMANAGER->WakeNpc(other.second);
-		//					}
-		//				}
-		//			}
-		//		}
-		//	}
-		//}
-
-		//return viewPlayer;
-	}
-	//READ_LOCK;
+	READ_LOCK;
 
 	unordered_set<uint64> viewPlayer;
 	PlayerRef player = _session->GetCurrentPlayer();

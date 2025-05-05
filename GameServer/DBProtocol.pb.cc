@@ -65,9 +65,10 @@ constexpr SD_EQUIP_ITEM::SD_EQUIP_ITEM(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
   : name_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
   , item_id_(uint64_t{0u})
-  , tab_type_(uint64_t{0u})
-  , slot_index_(uint64_t{0u})
-  , user_id_(uint64_t{0u}){}
+  , inv_slot_index_(uint64_t{0u})
+  , user_id_(uint64_t{0u})
+  , tab_type_(0)
+{}
 struct SD_EQUIP_ITEMDefaultTypeInternal {
   constexpr SD_EQUIP_ITEMDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -82,9 +83,10 @@ constexpr SD_FARMING_ITEM::SD_FARMING_ITEM(
   : name_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
   , item_id_(uint64_t{0u})
   , quantity_(uint64_t{0u})
-  , tab_type_(uint64_t{0u})
-  , slot_index_(uint64_t{0u})
-  , user_id_(uint64_t{0u}){}
+  , inv_slot_index_(uint64_t{0u})
+  , user_id_(uint64_t{0u})
+  , tab_type_(0)
+{}
 struct SD_FARMING_ITEMDefaultTypeInternal {
   constexpr SD_FARMING_ITEMDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -98,9 +100,10 @@ constexpr SD_UNEQUIP_ITEM::SD_UNEQUIP_ITEM(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
   : name_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
   , item_id_(uint64_t{0u})
-  , tab_type_(uint64_t{0u})
-  , slot_index_(uint64_t{0u})
-  , user_id_(uint64_t{0u}){}
+  , inv_slot_index_(uint64_t{0u})
+  , user_id_(uint64_t{0u})
+  , tab_type_(0)
+{}
 struct SD_UNEQUIP_ITEMDefaultTypeInternal {
   constexpr SD_UNEQUIP_ITEMDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -116,7 +119,10 @@ constexpr SD_CONSUME_ITEM::SD_CONSUME_ITEM(
   , itemid_(uint64_t{0u})
   , quantity_(uint64_t{0u})
   , beforequantity_(uint64_t{0u})
-  , user_id_(uint64_t{0u}){}
+  , inv_slot_index_(uint64_t{0u})
+  , user_id_(uint64_t{0u})
+  , tab_type_(0)
+{}
 struct SD_CONSUME_ITEMDefaultTypeInternal {
   constexpr SD_CONSUME_ITEMDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -129,10 +135,12 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT SD_CONSUME_ITEMDefaultTypeInter
 constexpr SD_MOVE_ITEM::SD_MOVE_ITEM(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
   : name_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
-  , fromtab_(uint64_t{0u})
-  , fromindex_(uint64_t{0u})
-  , totab_(uint64_t{0u})
-  , toindex_(uint64_t{0u})
+  , inv_from_index_(uint64_t{0u})
+  , fromtab_(0)
+
+  , totab_(0)
+
+  , inv_to_index_(uint64_t{0u})
   , user_id_(uint64_t{0u}){}
 struct SD_MOVE_ITEMDefaultTypeInternal {
   constexpr SD_MOVE_ITEMDefaultTypeInternal()
@@ -400,7 +408,7 @@ const uint32_t TableStruct_DBProtocol_2eproto::offsets[] PROTOBUF_SECTION_VARIAB
   PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_EQUIP_ITEM, name_),
   PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_EQUIP_ITEM, item_id_),
   PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_EQUIP_ITEM, tab_type_),
-  PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_EQUIP_ITEM, slot_index_),
+  PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_EQUIP_ITEM, inv_slot_index_),
   PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_EQUIP_ITEM, user_id_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_FARMING_ITEM, _internal_metadata_),
@@ -412,7 +420,7 @@ const uint32_t TableStruct_DBProtocol_2eproto::offsets[] PROTOBUF_SECTION_VARIAB
   PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_FARMING_ITEM, item_id_),
   PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_FARMING_ITEM, quantity_),
   PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_FARMING_ITEM, tab_type_),
-  PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_FARMING_ITEM, slot_index_),
+  PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_FARMING_ITEM, inv_slot_index_),
   PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_FARMING_ITEM, user_id_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_UNEQUIP_ITEM, _internal_metadata_),
@@ -423,7 +431,7 @@ const uint32_t TableStruct_DBProtocol_2eproto::offsets[] PROTOBUF_SECTION_VARIAB
   PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_UNEQUIP_ITEM, name_),
   PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_UNEQUIP_ITEM, item_id_),
   PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_UNEQUIP_ITEM, tab_type_),
-  PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_UNEQUIP_ITEM, slot_index_),
+  PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_UNEQUIP_ITEM, inv_slot_index_),
   PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_UNEQUIP_ITEM, user_id_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_CONSUME_ITEM, _internal_metadata_),
@@ -435,6 +443,8 @@ const uint32_t TableStruct_DBProtocol_2eproto::offsets[] PROTOBUF_SECTION_VARIAB
   PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_CONSUME_ITEM, itemid_),
   PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_CONSUME_ITEM, quantity_),
   PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_CONSUME_ITEM, beforequantity_),
+  PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_CONSUME_ITEM, tab_type_),
+  PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_CONSUME_ITEM, inv_slot_index_),
   PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_CONSUME_ITEM, user_id_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_MOVE_ITEM, _internal_metadata_),
@@ -444,9 +454,9 @@ const uint32_t TableStruct_DBProtocol_2eproto::offsets[] PROTOBUF_SECTION_VARIAB
   ~0u,  // no _inlined_string_donated_
   PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_MOVE_ITEM, name_),
   PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_MOVE_ITEM, fromtab_),
-  PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_MOVE_ITEM, fromindex_),
+  PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_MOVE_ITEM, inv_from_index_),
   PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_MOVE_ITEM, totab_),
-  PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_MOVE_ITEM, toindex_),
+  PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_MOVE_ITEM, inv_to_index_),
   PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_MOVE_ITEM, user_id_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::DBProtocol::SD_REGISTER, _internal_metadata_),
@@ -596,22 +606,22 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOB
   { 39, -1, -1, sizeof(::DBProtocol::SD_FARMING_ITEM)},
   { 51, -1, -1, sizeof(::DBProtocol::SD_UNEQUIP_ITEM)},
   { 62, -1, -1, sizeof(::DBProtocol::SD_CONSUME_ITEM)},
-  { 73, -1, -1, sizeof(::DBProtocol::SD_MOVE_ITEM)},
-  { 85, -1, -1, sizeof(::DBProtocol::SD_REGISTER)},
-  { 93, -1, -1, sizeof(::DBProtocol::SD_SAVE_INVENTORY)},
-  { 102, -1, -1, sizeof(::DBProtocol::SD_SAVE_EQUIPMENT)},
-  { 111, -1, -1, sizeof(::DBProtocol::SD_UPDATE_GOLD)},
-  { 120, -1, -1, sizeof(::DBProtocol::DS_LOGIN)},
-  { 131, -1, -1, sizeof(::DBProtocol::DS_REGISTER)},
-  { 140, -1, -1, sizeof(::DBProtocol::DS_SAVE_RESULT)},
-  { 149, -1, -1, sizeof(::DBProtocol::DS_USER_INFORMATION)},
-  { 158, -1, -1, sizeof(::DBProtocol::DS_INVENTORY_INFORMATION)},
-  { 167, -1, -1, sizeof(::DBProtocol::DS_EQUIP_INFORMATION)},
-  { 176, -1, -1, sizeof(::DBProtocol::DS_EQUIP_ITEM)},
-  { 185, -1, -1, sizeof(::DBProtocol::DS_FARMING_RESULT)},
-  { 194, -1, -1, sizeof(::DBProtocol::DS_CONSUME_ITEM)},
-  { 205, -1, -1, sizeof(::DBProtocol::DS_MOVE_RESULT)},
-  { 215, -1, -1, sizeof(::DBProtocol::DS_UPDATE_GOLD)},
+  { 75, -1, -1, sizeof(::DBProtocol::SD_MOVE_ITEM)},
+  { 87, -1, -1, sizeof(::DBProtocol::SD_REGISTER)},
+  { 95, -1, -1, sizeof(::DBProtocol::SD_SAVE_INVENTORY)},
+  { 104, -1, -1, sizeof(::DBProtocol::SD_SAVE_EQUIPMENT)},
+  { 113, -1, -1, sizeof(::DBProtocol::SD_UPDATE_GOLD)},
+  { 122, -1, -1, sizeof(::DBProtocol::DS_LOGIN)},
+  { 133, -1, -1, sizeof(::DBProtocol::DS_REGISTER)},
+  { 142, -1, -1, sizeof(::DBProtocol::DS_SAVE_RESULT)},
+  { 151, -1, -1, sizeof(::DBProtocol::DS_USER_INFORMATION)},
+  { 160, -1, -1, sizeof(::DBProtocol::DS_INVENTORY_INFORMATION)},
+  { 169, -1, -1, sizeof(::DBProtocol::DS_EQUIP_INFORMATION)},
+  { 178, -1, -1, sizeof(::DBProtocol::DS_EQUIP_ITEM)},
+  { 187, -1, -1, sizeof(::DBProtocol::DS_FARMING_RESULT)},
+  { 196, -1, -1, sizeof(::DBProtocol::DS_CONSUME_ITEM)},
+  { 207, -1, -1, sizeof(::DBProtocol::DS_MOVE_RESULT)},
+  { 217, -1, -1, sizeof(::DBProtocol::DS_UPDATE_GOLD)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -649,58 +659,63 @@ const char descriptor_table_protodef_DBProtocol_2eproto[] PROTOBUF_SECTION_VARIA
   "entorySlot\022*\n\tequipment\030\004 \003(\0132\027.Protocol"
   ".EquipmentItem\022\017\n\007user_id\030\005 \001(\004\"R\n\021SD_GE"
   "T_INFOMATION\022\014\n\004name\030\001 \001(\t\022\036\n\003get\030\002 \003(\0162"
-  "\021.Protocol.GetType\022\017\n\007user_id\030\003 \001(\004\"e\n\rS"
-  "D_EQUIP_ITEM\022\014\n\004name\030\001 \001(\t\022\017\n\007item_id\030\002 "
-  "\001(\004\022\020\n\010tab_type\030\003 \001(\004\022\022\n\nslot_index\030\004 \001("
-  "\004\022\017\n\007user_id\030\005 \001(\004\"y\n\017SD_FARMING_ITEM\022\014\n"
-  "\004name\030\001 \001(\t\022\017\n\007item_id\030\002 \001(\004\022\020\n\010quantity"
-  "\030\003 \001(\004\022\020\n\010tab_type\030\004 \001(\004\022\022\n\nslot_index\030\005"
-  " \001(\004\022\017\n\007user_id\030\006 \001(\004\"g\n\017SD_UNEQUIP_ITEM"
-  "\022\014\n\004name\030\001 \001(\t\022\017\n\007item_id\030\002 \001(\004\022\020\n\010tab_t"
-  "ype\030\003 \001(\004\022\022\n\nslot_index\030\004 \001(\004\022\017\n\007user_id"
-  "\030\005 \001(\004\"j\n\017SD_CONSUME_ITEM\022\014\n\004name\030\001 \001(\t\022"
-  "\016\n\006itemId\030\002 \001(\004\022\020\n\010quantity\030\003 \001(\004\022\026\n\016bef"
-  "oreQuantity\030\004 \001(\004\022\017\n\007user_id\030\005 \001(\004\"q\n\014SD"
-  "_MOVE_ITEM\022\014\n\004name\030\001 \001(\t\022\017\n\007fromTab\030\002 \001("
-  "\004\022\021\n\tfromIndex\030\003 \001(\004\022\r\n\005toTab\030\004 \001(\004\022\017\n\007t"
-  "oIndex\030\005 \001(\004\022\017\n\007user_id\030\006 \001(\004\",\n\013SD_REGI"
-  "STER\022\014\n\004name\030\001 \001(\t\022\017\n\007user_id\030\002 \001(\004\"^\n\021S"
-  "D_SAVE_INVENTORY\022\014\n\004name\030\001 \001(\t\022*\n\tinvent"
-  "ory\030\002 \003(\0132\027.Protocol.InventorySlot\022\017\n\007us"
-  "er_id\030\003 \001(\004\"^\n\021SD_SAVE_EQUIPMENT\022\014\n\004name"
-  "\030\001 \001(\t\022*\n\tequipment\030\002 \003(\0132\027.Protocol.Equ"
-  "ipmentItem\022\017\n\007user_id\030\003 \001(\004\"=\n\016SD_UPDATE"
-  "_GOLD\022\014\n\004name\030\001 \001(\t\022\014\n\004gold\030\002 \001(\004\022\017\n\007use"
-  "r_id\030\003 \001(\004\"\246\001\n\010DS_LOGIN\022\017\n\007success\030\001 \001(\010"
-  "\022 \n\006player\030\002 \003(\0132\020.Protocol.Player\022*\n\tin"
-  "ventory\030\003 \003(\0132\027.Protocol.InventorySlot\022*"
-  "\n\tequipment\030\004 \003(\0132\027.Protocol.EquipmentIt"
-  "em\022\017\n\007user_id\030\005 \001(\004\"Q\n\013DS_REGISTER\022\017\n\007su"
-  "ccess\030\001 \001(\010\022 \n\006player\030\002 \003(\0132\020.Protocol.P"
-  "layer\022\017\n\007user_id\030\003 \001(\004\"C\n\016DS_SAVE_RESULT"
-  "\022\017\n\007success\030\001 \001(\010\022\017\n\007message\030\002 \001(\t\022\017\n\007us"
-  "er_id\030\003 \001(\004\"Y\n\023DS_USER_INFORMATION\022\017\n\007su"
-  "ccess\030\001 \001(\010\022 \n\006player\030\002 \003(\0132\020.Protocol.P"
-  "layer\022\017\n\007user_id\030\003 \001(\004\"h\n\030DS_INVENTORY_I"
-  "NFORMATION\022\017\n\007success\030\001 \001(\010\022*\n\tinventory"
-  "\030\002 \003(\0132\027.Protocol.InventorySlot\022\017\n\007user_"
-  "id\030\003 \001(\004\"d\n\024DS_EQUIP_INFORMATION\022\017\n\007succ"
-  "ess\030\001 \001(\010\022*\n\tequipment\030\002 \003(\0132\027.Protocol."
-  "EquipmentItem\022\017\n\007user_id\030\003 \001(\004\"e\n\rDS_EQU"
-  "IP_ITEM\022\017\n\007success\030\001 \001(\010\0222\n\021updated_equi"
-  "pment\030\002 \003(\0132\027.Protocol.EquipmentItem\022\017\n\007"
-  "user_id\030\003 \001(\004\"i\n\021DS_FARMING_RESULT\022\017\n\007su"
-  "ccess\030\001 \001(\010\0222\n\021updated_inventory\030\002 \003(\0132\027"
-  ".Protocol.InventorySlot\022\017\n\007user_id\030\003 \001(\004"
-  "\"z\n\017DS_CONSUME_ITEM\022\017\n\007success\030\001 \001(\010\022-\n\014"
-  "updated_slot\030\002 \003(\0132\027.Protocol.InventoryS"
-  "lot\022\n\n\002hp\030\003 \001(\004\022\n\n\002mp\030\004 \001(\004\022\017\n\007user_id\030\005"
-  " \001(\004\"~\n\016DS_MOVE_RESULT\022\017\n\007success\030\001 \001(\010\022"
-  "%\n\004from\030\002 \003(\0132\027.Protocol.InventorySlot\022#"
-  "\n\002to\030\003 \003(\0132\027.Protocol.InventorySlot\022\017\n\007u"
-  "ser_id\030\004 \001(\004\"@\n\016DS_UPDATE_GOLD\022\017\n\007succes"
-  "s\030\001 \001(\010\022\014\n\004gold\030\002 \001(\004\022\017\n\007user_id\030\003 \001(\004b\006"
-  "proto3"
+  "\021.Protocol.GetType\022\017\n\007user_id\030\003 \001(\004\"\201\001\n\r"
+  "SD_EQUIP_ITEM\022\014\n\004name\030\001 \001(\t\022\017\n\007item_id\030\002"
+  " \001(\004\022(\n\010tab_type\030\003 \001(\0162\026.Protocol.Invent"
+  "oryTab\022\026\n\016inv_slot_index\030\004 \001(\004\022\017\n\007user_i"
+  "d\030\005 \001(\004\"\225\001\n\017SD_FARMING_ITEM\022\014\n\004name\030\001 \001("
+  "\t\022\017\n\007item_id\030\002 \001(\004\022\020\n\010quantity\030\003 \001(\004\022(\n\010"
+  "tab_type\030\004 \001(\0162\026.Protocol.InventoryTab\022\026"
+  "\n\016inv_slot_index\030\005 \001(\004\022\017\n\007user_id\030\006 \001(\004\""
+  "\204\001\n\017SD_UNEQUIP_ITEM\022\014\n\004name\030\001 \001(\t\022\017\n\007ite"
+  "m_id\030\002 \001(\004\022)\n\010tab_type\030\003 \001(\0162\027.Protocol."
+  "EquipmentSlot\022\026\n\016inv_slot_index\030\004 \001(\004\022\017\n"
+  "\007user_id\030\005 \001(\004\"\254\001\n\017SD_CONSUME_ITEM\022\014\n\004na"
+  "me\030\001 \001(\t\022\016\n\006itemId\030\002 \001(\004\022\020\n\010quantity\030\003 \001"
+  "(\004\022\026\n\016beforeQuantity\030\004 \001(\004\022(\n\010tab_type\030\005"
+  " \001(\0162\026.Protocol.InventoryTab\022\026\n\016inv_slot"
+  "_index\030\006 \001(\004\022\017\n\007user_id\030\007 \001(\004\"\253\001\n\014SD_MOV"
+  "E_ITEM\022\014\n\004name\030\001 \001(\t\022\'\n\007fromTab\030\002 \001(\0162\026."
+  "Protocol.InventoryTab\022\026\n\016inv_from_Index\030"
+  "\003 \001(\004\022%\n\005toTab\030\004 \001(\0162\026.Protocol.Inventor"
+  "yTab\022\024\n\014inv_to_Index\030\005 \001(\004\022\017\n\007user_id\030\006 "
+  "\001(\004\",\n\013SD_REGISTER\022\014\n\004name\030\001 \001(\t\022\017\n\007user"
+  "_id\030\002 \001(\004\"^\n\021SD_SAVE_INVENTORY\022\014\n\004name\030\001"
+  " \001(\t\022*\n\tinventory\030\002 \003(\0132\027.Protocol.Inven"
+  "torySlot\022\017\n\007user_id\030\003 \001(\004\"^\n\021SD_SAVE_EQU"
+  "IPMENT\022\014\n\004name\030\001 \001(\t\022*\n\tequipment\030\002 \003(\0132"
+  "\027.Protocol.EquipmentItem\022\017\n\007user_id\030\003 \001("
+  "\004\"=\n\016SD_UPDATE_GOLD\022\014\n\004name\030\001 \001(\t\022\014\n\004gol"
+  "d\030\002 \001(\004\022\017\n\007user_id\030\003 \001(\004\"\246\001\n\010DS_LOGIN\022\017\n"
+  "\007success\030\001 \001(\010\022 \n\006player\030\002 \003(\0132\020.Protoco"
+  "l.Player\022*\n\tinventory\030\003 \003(\0132\027.Protocol.I"
+  "nventorySlot\022*\n\tequipment\030\004 \003(\0132\027.Protoc"
+  "ol.EquipmentItem\022\017\n\007user_id\030\005 \001(\004\"Q\n\013DS_"
+  "REGISTER\022\017\n\007success\030\001 \001(\010\022 \n\006player\030\002 \003("
+  "\0132\020.Protocol.Player\022\017\n\007user_id\030\003 \001(\004\"C\n\016"
+  "DS_SAVE_RESULT\022\017\n\007success\030\001 \001(\010\022\017\n\007messa"
+  "ge\030\002 \001(\t\022\017\n\007user_id\030\003 \001(\004\"Y\n\023DS_USER_INF"
+  "ORMATION\022\017\n\007success\030\001 \001(\010\022 \n\006player\030\002 \003("
+  "\0132\020.Protocol.Player\022\017\n\007user_id\030\003 \001(\004\"h\n\030"
+  "DS_INVENTORY_INFORMATION\022\017\n\007success\030\001 \001("
+  "\010\022*\n\tinventory\030\002 \003(\0132\027.Protocol.Inventor"
+  "ySlot\022\017\n\007user_id\030\003 \001(\004\"d\n\024DS_EQUIP_INFOR"
+  "MATION\022\017\n\007success\030\001 \001(\010\022*\n\tequipment\030\002 \003"
+  "(\0132\027.Protocol.EquipmentItem\022\017\n\007user_id\030\003"
+  " \001(\004\"e\n\rDS_EQUIP_ITEM\022\017\n\007success\030\001 \001(\010\0222"
+  "\n\021updated_equipment\030\002 \003(\0132\027.Protocol.Equ"
+  "ipmentItem\022\017\n\007user_id\030\003 \001(\004\"i\n\021DS_FARMIN"
+  "G_RESULT\022\017\n\007success\030\001 \001(\010\0222\n\021updated_inv"
+  "entory\030\002 \003(\0132\027.Protocol.InventorySlot\022\017\n"
+  "\007user_id\030\003 \001(\004\"z\n\017DS_CONSUME_ITEM\022\017\n\007suc"
+  "cess\030\001 \001(\010\022-\n\014updated_slot\030\002 \003(\0132\027.Proto"
+  "col.InventorySlot\022\n\n\002hp\030\003 \001(\004\022\n\n\002mp\030\004 \001("
+  "\004\022\017\n\007user_id\030\005 \001(\004\"~\n\016DS_MOVE_RESULT\022\017\n\007"
+  "success\030\001 \001(\010\022%\n\004from\030\002 \003(\0132\027.Protocol.I"
+  "nventorySlot\022#\n\002to\030\003 \003(\0132\027.Protocol.Inve"
+  "ntorySlot\022\017\n\007user_id\030\004 \001(\004\"@\n\016DS_UPDATE_"
+  "GOLD\022\017\n\007success\030\001 \001(\010\022\014\n\004gold\030\002 \001(\004\022\017\n\007u"
+  "ser_id\030\003 \001(\004b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_DBProtocol_2eproto_deps[2] = {
   &::descriptor_table_Enum_2eproto,
@@ -708,7 +723,7 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_DBProtocol_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_DBProtocol_2eproto = {
-  false, false, 2366, descriptor_table_protodef_DBProtocol_2eproto, "DBProtocol.proto", 
+  false, false, 2580, descriptor_table_protodef_DBProtocol_2eproto, "DBProtocol.proto", 
   &descriptor_table_DBProtocol_2eproto_once, descriptor_table_DBProtocol_2eproto_deps, 2, 23,
   schemas, file_default_instances, TableStruct_DBProtocol_2eproto::offsets,
   file_level_metadata_DBProtocol_2eproto, file_level_enum_descriptors_DBProtocol_2eproto, file_level_service_descriptors_DBProtocol_2eproto,
@@ -1587,8 +1602,8 @@ SD_EQUIP_ITEM::SD_EQUIP_ITEM(const SD_EQUIP_ITEM& from)
       GetArenaForAllocation());
   }
   ::memcpy(&item_id_, &from.item_id_,
-    static_cast<size_t>(reinterpret_cast<char*>(&user_id_) -
-    reinterpret_cast<char*>(&item_id_)) + sizeof(user_id_));
+    static_cast<size_t>(reinterpret_cast<char*>(&tab_type_) -
+    reinterpret_cast<char*>(&item_id_)) + sizeof(tab_type_));
   // @@protoc_insertion_point(copy_constructor:DBProtocol.SD_EQUIP_ITEM)
 }
 
@@ -1599,8 +1614,8 @@ name_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlready
 #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&item_id_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&user_id_) -
-    reinterpret_cast<char*>(&item_id_)) + sizeof(user_id_));
+    0, static_cast<size_t>(reinterpret_cast<char*>(&tab_type_) -
+    reinterpret_cast<char*>(&item_id_)) + sizeof(tab_type_));
 }
 
 SD_EQUIP_ITEM::~SD_EQUIP_ITEM() {
@@ -1633,8 +1648,8 @@ void SD_EQUIP_ITEM::Clear() {
 
   name_.ClearToEmpty();
   ::memset(&item_id_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&user_id_) -
-      reinterpret_cast<char*>(&item_id_)) + sizeof(user_id_));
+      reinterpret_cast<char*>(&tab_type_) -
+      reinterpret_cast<char*>(&item_id_)) + sizeof(tab_type_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -1662,18 +1677,19 @@ const char* SD_EQUIP_ITEM::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_
         } else
           goto handle_unusual;
         continue;
-      // uint64 tab_type = 3;
+      // .Protocol.InventoryTab tab_type = 3;
       case 3:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
-          tab_type_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
+          _internal_set_tab_type(static_cast<::Protocol::InventoryTab>(val));
         } else
           goto handle_unusual;
         continue;
-      // uint64 slot_index = 4;
+      // uint64 inv_slot_index = 4;
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
-          slot_index_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          inv_slot_index_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1731,16 +1747,17 @@ uint8_t* SD_EQUIP_ITEM::_InternalSerialize(
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt64ToArray(2, this->_internal_item_id(), target);
   }
 
-  // uint64 tab_type = 3;
+  // .Protocol.InventoryTab tab_type = 3;
   if (this->_internal_tab_type() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt64ToArray(3, this->_internal_tab_type(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
+      3, this->_internal_tab_type(), target);
   }
 
-  // uint64 slot_index = 4;
-  if (this->_internal_slot_index() != 0) {
+  // uint64 inv_slot_index = 4;
+  if (this->_internal_inv_slot_index() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt64ToArray(4, this->_internal_slot_index(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt64ToArray(4, this->_internal_inv_slot_index(), target);
   }
 
   // uint64 user_id = 5;
@@ -1777,19 +1794,20 @@ size_t SD_EQUIP_ITEM::ByteSizeLong() const {
     total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt64SizePlusOne(this->_internal_item_id());
   }
 
-  // uint64 tab_type = 3;
-  if (this->_internal_tab_type() != 0) {
-    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt64SizePlusOne(this->_internal_tab_type());
-  }
-
-  // uint64 slot_index = 4;
-  if (this->_internal_slot_index() != 0) {
-    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt64SizePlusOne(this->_internal_slot_index());
+  // uint64 inv_slot_index = 4;
+  if (this->_internal_inv_slot_index() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt64SizePlusOne(this->_internal_inv_slot_index());
   }
 
   // uint64 user_id = 5;
   if (this->_internal_user_id() != 0) {
     total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt64SizePlusOne(this->_internal_user_id());
+  }
+
+  // .Protocol.InventoryTab tab_type = 3;
+  if (this->_internal_tab_type() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_tab_type());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
@@ -1820,14 +1838,14 @@ void SD_EQUIP_ITEM::MergeFrom(const SD_EQUIP_ITEM& from) {
   if (from._internal_item_id() != 0) {
     _internal_set_item_id(from._internal_item_id());
   }
-  if (from._internal_tab_type() != 0) {
-    _internal_set_tab_type(from._internal_tab_type());
-  }
-  if (from._internal_slot_index() != 0) {
-    _internal_set_slot_index(from._internal_slot_index());
+  if (from._internal_inv_slot_index() != 0) {
+    _internal_set_inv_slot_index(from._internal_inv_slot_index());
   }
   if (from._internal_user_id() != 0) {
     _internal_set_user_id(from._internal_user_id());
+  }
+  if (from._internal_tab_type() != 0) {
+    _internal_set_tab_type(from._internal_tab_type());
   }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -1854,8 +1872,8 @@ void SD_EQUIP_ITEM::InternalSwap(SD_EQUIP_ITEM* other) {
       &other->name_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(SD_EQUIP_ITEM, user_id_)
-      + sizeof(SD_EQUIP_ITEM::user_id_)
+      PROTOBUF_FIELD_OFFSET(SD_EQUIP_ITEM, tab_type_)
+      + sizeof(SD_EQUIP_ITEM::tab_type_)
       - PROTOBUF_FIELD_OFFSET(SD_EQUIP_ITEM, item_id_)>(
           reinterpret_cast<char*>(&item_id_),
           reinterpret_cast<char*>(&other->item_id_));
@@ -1894,8 +1912,8 @@ SD_FARMING_ITEM::SD_FARMING_ITEM(const SD_FARMING_ITEM& from)
       GetArenaForAllocation());
   }
   ::memcpy(&item_id_, &from.item_id_,
-    static_cast<size_t>(reinterpret_cast<char*>(&user_id_) -
-    reinterpret_cast<char*>(&item_id_)) + sizeof(user_id_));
+    static_cast<size_t>(reinterpret_cast<char*>(&tab_type_) -
+    reinterpret_cast<char*>(&item_id_)) + sizeof(tab_type_));
   // @@protoc_insertion_point(copy_constructor:DBProtocol.SD_FARMING_ITEM)
 }
 
@@ -1906,8 +1924,8 @@ name_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlready
 #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&item_id_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&user_id_) -
-    reinterpret_cast<char*>(&item_id_)) + sizeof(user_id_));
+    0, static_cast<size_t>(reinterpret_cast<char*>(&tab_type_) -
+    reinterpret_cast<char*>(&item_id_)) + sizeof(tab_type_));
 }
 
 SD_FARMING_ITEM::~SD_FARMING_ITEM() {
@@ -1940,8 +1958,8 @@ void SD_FARMING_ITEM::Clear() {
 
   name_.ClearToEmpty();
   ::memset(&item_id_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&user_id_) -
-      reinterpret_cast<char*>(&item_id_)) + sizeof(user_id_));
+      reinterpret_cast<char*>(&tab_type_) -
+      reinterpret_cast<char*>(&item_id_)) + sizeof(tab_type_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -1977,18 +1995,19 @@ const char* SD_FARMING_ITEM::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPAC
         } else
           goto handle_unusual;
         continue;
-      // uint64 tab_type = 4;
+      // .Protocol.InventoryTab tab_type = 4;
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
-          tab_type_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
+          _internal_set_tab_type(static_cast<::Protocol::InventoryTab>(val));
         } else
           goto handle_unusual;
         continue;
-      // uint64 slot_index = 5;
+      // uint64 inv_slot_index = 5;
       case 5:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 40)) {
-          slot_index_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          inv_slot_index_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -2052,16 +2071,17 @@ uint8_t* SD_FARMING_ITEM::_InternalSerialize(
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt64ToArray(3, this->_internal_quantity(), target);
   }
 
-  // uint64 tab_type = 4;
+  // .Protocol.InventoryTab tab_type = 4;
   if (this->_internal_tab_type() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt64ToArray(4, this->_internal_tab_type(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
+      4, this->_internal_tab_type(), target);
   }
 
-  // uint64 slot_index = 5;
-  if (this->_internal_slot_index() != 0) {
+  // uint64 inv_slot_index = 5;
+  if (this->_internal_inv_slot_index() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt64ToArray(5, this->_internal_slot_index(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt64ToArray(5, this->_internal_inv_slot_index(), target);
   }
 
   // uint64 user_id = 6;
@@ -2103,19 +2123,20 @@ size_t SD_FARMING_ITEM::ByteSizeLong() const {
     total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt64SizePlusOne(this->_internal_quantity());
   }
 
-  // uint64 tab_type = 4;
-  if (this->_internal_tab_type() != 0) {
-    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt64SizePlusOne(this->_internal_tab_type());
-  }
-
-  // uint64 slot_index = 5;
-  if (this->_internal_slot_index() != 0) {
-    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt64SizePlusOne(this->_internal_slot_index());
+  // uint64 inv_slot_index = 5;
+  if (this->_internal_inv_slot_index() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt64SizePlusOne(this->_internal_inv_slot_index());
   }
 
   // uint64 user_id = 6;
   if (this->_internal_user_id() != 0) {
     total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt64SizePlusOne(this->_internal_user_id());
+  }
+
+  // .Protocol.InventoryTab tab_type = 4;
+  if (this->_internal_tab_type() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_tab_type());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
@@ -2149,14 +2170,14 @@ void SD_FARMING_ITEM::MergeFrom(const SD_FARMING_ITEM& from) {
   if (from._internal_quantity() != 0) {
     _internal_set_quantity(from._internal_quantity());
   }
-  if (from._internal_tab_type() != 0) {
-    _internal_set_tab_type(from._internal_tab_type());
-  }
-  if (from._internal_slot_index() != 0) {
-    _internal_set_slot_index(from._internal_slot_index());
+  if (from._internal_inv_slot_index() != 0) {
+    _internal_set_inv_slot_index(from._internal_inv_slot_index());
   }
   if (from._internal_user_id() != 0) {
     _internal_set_user_id(from._internal_user_id());
+  }
+  if (from._internal_tab_type() != 0) {
+    _internal_set_tab_type(from._internal_tab_type());
   }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -2183,8 +2204,8 @@ void SD_FARMING_ITEM::InternalSwap(SD_FARMING_ITEM* other) {
       &other->name_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(SD_FARMING_ITEM, user_id_)
-      + sizeof(SD_FARMING_ITEM::user_id_)
+      PROTOBUF_FIELD_OFFSET(SD_FARMING_ITEM, tab_type_)
+      + sizeof(SD_FARMING_ITEM::tab_type_)
       - PROTOBUF_FIELD_OFFSET(SD_FARMING_ITEM, item_id_)>(
           reinterpret_cast<char*>(&item_id_),
           reinterpret_cast<char*>(&other->item_id_));
@@ -2223,8 +2244,8 @@ SD_UNEQUIP_ITEM::SD_UNEQUIP_ITEM(const SD_UNEQUIP_ITEM& from)
       GetArenaForAllocation());
   }
   ::memcpy(&item_id_, &from.item_id_,
-    static_cast<size_t>(reinterpret_cast<char*>(&user_id_) -
-    reinterpret_cast<char*>(&item_id_)) + sizeof(user_id_));
+    static_cast<size_t>(reinterpret_cast<char*>(&tab_type_) -
+    reinterpret_cast<char*>(&item_id_)) + sizeof(tab_type_));
   // @@protoc_insertion_point(copy_constructor:DBProtocol.SD_UNEQUIP_ITEM)
 }
 
@@ -2235,8 +2256,8 @@ name_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlready
 #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&item_id_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&user_id_) -
-    reinterpret_cast<char*>(&item_id_)) + sizeof(user_id_));
+    0, static_cast<size_t>(reinterpret_cast<char*>(&tab_type_) -
+    reinterpret_cast<char*>(&item_id_)) + sizeof(tab_type_));
 }
 
 SD_UNEQUIP_ITEM::~SD_UNEQUIP_ITEM() {
@@ -2269,8 +2290,8 @@ void SD_UNEQUIP_ITEM::Clear() {
 
   name_.ClearToEmpty();
   ::memset(&item_id_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&user_id_) -
-      reinterpret_cast<char*>(&item_id_)) + sizeof(user_id_));
+      reinterpret_cast<char*>(&tab_type_) -
+      reinterpret_cast<char*>(&item_id_)) + sizeof(tab_type_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -2298,18 +2319,19 @@ const char* SD_UNEQUIP_ITEM::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPAC
         } else
           goto handle_unusual;
         continue;
-      // uint64 tab_type = 3;
+      // .Protocol.EquipmentSlot tab_type = 3;
       case 3:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
-          tab_type_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
+          _internal_set_tab_type(static_cast<::Protocol::EquipmentSlot>(val));
         } else
           goto handle_unusual;
         continue;
-      // uint64 slot_index = 4;
+      // uint64 inv_slot_index = 4;
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
-          slot_index_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          inv_slot_index_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -2367,16 +2389,17 @@ uint8_t* SD_UNEQUIP_ITEM::_InternalSerialize(
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt64ToArray(2, this->_internal_item_id(), target);
   }
 
-  // uint64 tab_type = 3;
+  // .Protocol.EquipmentSlot tab_type = 3;
   if (this->_internal_tab_type() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt64ToArray(3, this->_internal_tab_type(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
+      3, this->_internal_tab_type(), target);
   }
 
-  // uint64 slot_index = 4;
-  if (this->_internal_slot_index() != 0) {
+  // uint64 inv_slot_index = 4;
+  if (this->_internal_inv_slot_index() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt64ToArray(4, this->_internal_slot_index(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt64ToArray(4, this->_internal_inv_slot_index(), target);
   }
 
   // uint64 user_id = 5;
@@ -2413,19 +2436,20 @@ size_t SD_UNEQUIP_ITEM::ByteSizeLong() const {
     total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt64SizePlusOne(this->_internal_item_id());
   }
 
-  // uint64 tab_type = 3;
-  if (this->_internal_tab_type() != 0) {
-    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt64SizePlusOne(this->_internal_tab_type());
-  }
-
-  // uint64 slot_index = 4;
-  if (this->_internal_slot_index() != 0) {
-    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt64SizePlusOne(this->_internal_slot_index());
+  // uint64 inv_slot_index = 4;
+  if (this->_internal_inv_slot_index() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt64SizePlusOne(this->_internal_inv_slot_index());
   }
 
   // uint64 user_id = 5;
   if (this->_internal_user_id() != 0) {
     total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt64SizePlusOne(this->_internal_user_id());
+  }
+
+  // .Protocol.EquipmentSlot tab_type = 3;
+  if (this->_internal_tab_type() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_tab_type());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
@@ -2456,14 +2480,14 @@ void SD_UNEQUIP_ITEM::MergeFrom(const SD_UNEQUIP_ITEM& from) {
   if (from._internal_item_id() != 0) {
     _internal_set_item_id(from._internal_item_id());
   }
-  if (from._internal_tab_type() != 0) {
-    _internal_set_tab_type(from._internal_tab_type());
-  }
-  if (from._internal_slot_index() != 0) {
-    _internal_set_slot_index(from._internal_slot_index());
+  if (from._internal_inv_slot_index() != 0) {
+    _internal_set_inv_slot_index(from._internal_inv_slot_index());
   }
   if (from._internal_user_id() != 0) {
     _internal_set_user_id(from._internal_user_id());
+  }
+  if (from._internal_tab_type() != 0) {
+    _internal_set_tab_type(from._internal_tab_type());
   }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -2490,8 +2514,8 @@ void SD_UNEQUIP_ITEM::InternalSwap(SD_UNEQUIP_ITEM* other) {
       &other->name_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(SD_UNEQUIP_ITEM, user_id_)
-      + sizeof(SD_UNEQUIP_ITEM::user_id_)
+      PROTOBUF_FIELD_OFFSET(SD_UNEQUIP_ITEM, tab_type_)
+      + sizeof(SD_UNEQUIP_ITEM::tab_type_)
       - PROTOBUF_FIELD_OFFSET(SD_UNEQUIP_ITEM, item_id_)>(
           reinterpret_cast<char*>(&item_id_),
           reinterpret_cast<char*>(&other->item_id_));
@@ -2530,8 +2554,8 @@ SD_CONSUME_ITEM::SD_CONSUME_ITEM(const SD_CONSUME_ITEM& from)
       GetArenaForAllocation());
   }
   ::memcpy(&itemid_, &from.itemid_,
-    static_cast<size_t>(reinterpret_cast<char*>(&user_id_) -
-    reinterpret_cast<char*>(&itemid_)) + sizeof(user_id_));
+    static_cast<size_t>(reinterpret_cast<char*>(&tab_type_) -
+    reinterpret_cast<char*>(&itemid_)) + sizeof(tab_type_));
   // @@protoc_insertion_point(copy_constructor:DBProtocol.SD_CONSUME_ITEM)
 }
 
@@ -2542,8 +2566,8 @@ name_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlready
 #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&itemid_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&user_id_) -
-    reinterpret_cast<char*>(&itemid_)) + sizeof(user_id_));
+    0, static_cast<size_t>(reinterpret_cast<char*>(&tab_type_) -
+    reinterpret_cast<char*>(&itemid_)) + sizeof(tab_type_));
 }
 
 SD_CONSUME_ITEM::~SD_CONSUME_ITEM() {
@@ -2576,8 +2600,8 @@ void SD_CONSUME_ITEM::Clear() {
 
   name_.ClearToEmpty();
   ::memset(&itemid_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&user_id_) -
-      reinterpret_cast<char*>(&itemid_)) + sizeof(user_id_));
+      reinterpret_cast<char*>(&tab_type_) -
+      reinterpret_cast<char*>(&itemid_)) + sizeof(tab_type_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -2621,9 +2645,26 @@ const char* SD_CONSUME_ITEM::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPAC
         } else
           goto handle_unusual;
         continue;
-      // uint64 user_id = 5;
+      // .Protocol.InventoryTab tab_type = 5;
       case 5:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 40)) {
+          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+          _internal_set_tab_type(static_cast<::Protocol::InventoryTab>(val));
+        } else
+          goto handle_unusual;
+        continue;
+      // uint64 inv_slot_index = 6;
+      case 6:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 48)) {
+          inv_slot_index_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // uint64 user_id = 7;
+      case 7:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 56)) {
           user_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
@@ -2686,10 +2727,23 @@ uint8_t* SD_CONSUME_ITEM::_InternalSerialize(
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt64ToArray(4, this->_internal_beforequantity(), target);
   }
 
-  // uint64 user_id = 5;
+  // .Protocol.InventoryTab tab_type = 5;
+  if (this->_internal_tab_type() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
+      5, this->_internal_tab_type(), target);
+  }
+
+  // uint64 inv_slot_index = 6;
+  if (this->_internal_inv_slot_index() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt64ToArray(6, this->_internal_inv_slot_index(), target);
+  }
+
+  // uint64 user_id = 7;
   if (this->_internal_user_id() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt64ToArray(5, this->_internal_user_id(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt64ToArray(7, this->_internal_user_id(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -2730,9 +2784,20 @@ size_t SD_CONSUME_ITEM::ByteSizeLong() const {
     total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt64SizePlusOne(this->_internal_beforequantity());
   }
 
-  // uint64 user_id = 5;
+  // uint64 inv_slot_index = 6;
+  if (this->_internal_inv_slot_index() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt64SizePlusOne(this->_internal_inv_slot_index());
+  }
+
+  // uint64 user_id = 7;
   if (this->_internal_user_id() != 0) {
     total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt64SizePlusOne(this->_internal_user_id());
+  }
+
+  // .Protocol.InventoryTab tab_type = 5;
+  if (this->_internal_tab_type() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_tab_type());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
@@ -2769,8 +2834,14 @@ void SD_CONSUME_ITEM::MergeFrom(const SD_CONSUME_ITEM& from) {
   if (from._internal_beforequantity() != 0) {
     _internal_set_beforequantity(from._internal_beforequantity());
   }
+  if (from._internal_inv_slot_index() != 0) {
+    _internal_set_inv_slot_index(from._internal_inv_slot_index());
+  }
   if (from._internal_user_id() != 0) {
     _internal_set_user_id(from._internal_user_id());
+  }
+  if (from._internal_tab_type() != 0) {
+    _internal_set_tab_type(from._internal_tab_type());
   }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -2797,8 +2868,8 @@ void SD_CONSUME_ITEM::InternalSwap(SD_CONSUME_ITEM* other) {
       &other->name_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(SD_CONSUME_ITEM, user_id_)
-      + sizeof(SD_CONSUME_ITEM::user_id_)
+      PROTOBUF_FIELD_OFFSET(SD_CONSUME_ITEM, tab_type_)
+      + sizeof(SD_CONSUME_ITEM::tab_type_)
       - PROTOBUF_FIELD_OFFSET(SD_CONSUME_ITEM, itemid_)>(
           reinterpret_cast<char*>(&itemid_),
           reinterpret_cast<char*>(&other->itemid_));
@@ -2836,9 +2907,9 @@ SD_MOVE_ITEM::SD_MOVE_ITEM(const SD_MOVE_ITEM& from)
     name_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_name(), 
       GetArenaForAllocation());
   }
-  ::memcpy(&fromtab_, &from.fromtab_,
+  ::memcpy(&inv_from_index_, &from.inv_from_index_,
     static_cast<size_t>(reinterpret_cast<char*>(&user_id_) -
-    reinterpret_cast<char*>(&fromtab_)) + sizeof(user_id_));
+    reinterpret_cast<char*>(&inv_from_index_)) + sizeof(user_id_));
   // @@protoc_insertion_point(copy_constructor:DBProtocol.SD_MOVE_ITEM)
 }
 
@@ -2848,9 +2919,9 @@ name_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlready
   name_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
 #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&fromtab_) - reinterpret_cast<char*>(this)),
+    reinterpret_cast<char*>(&inv_from_index_) - reinterpret_cast<char*>(this)),
     0, static_cast<size_t>(reinterpret_cast<char*>(&user_id_) -
-    reinterpret_cast<char*>(&fromtab_)) + sizeof(user_id_));
+    reinterpret_cast<char*>(&inv_from_index_)) + sizeof(user_id_));
 }
 
 SD_MOVE_ITEM::~SD_MOVE_ITEM() {
@@ -2882,9 +2953,9 @@ void SD_MOVE_ITEM::Clear() {
   (void) cached_has_bits;
 
   name_.ClearToEmpty();
-  ::memset(&fromtab_, 0, static_cast<size_t>(
+  ::memset(&inv_from_index_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&user_id_) -
-      reinterpret_cast<char*>(&fromtab_)) + sizeof(user_id_));
+      reinterpret_cast<char*>(&inv_from_index_)) + sizeof(user_id_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -2904,34 +2975,36 @@ const char* SD_MOVE_ITEM::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_I
         } else
           goto handle_unusual;
         continue;
-      // uint64 fromTab = 2;
+      // .Protocol.InventoryTab fromTab = 2;
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          fromtab_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
+          _internal_set_fromtab(static_cast<::Protocol::InventoryTab>(val));
         } else
           goto handle_unusual;
         continue;
-      // uint64 fromIndex = 3;
+      // uint64 inv_from_Index = 3;
       case 3:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
-          fromindex_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          inv_from_index_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
-      // uint64 toTab = 4;
+      // .Protocol.InventoryTab toTab = 4;
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
-          totab_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
+          _internal_set_totab(static_cast<::Protocol::InventoryTab>(val));
         } else
           goto handle_unusual;
         continue;
-      // uint64 toIndex = 5;
+      // uint64 inv_to_Index = 5;
       case 5:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 40)) {
-          toindex_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          inv_to_index_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -2983,28 +3056,30 @@ uint8_t* SD_MOVE_ITEM::_InternalSerialize(
         1, this->_internal_name(), target);
   }
 
-  // uint64 fromTab = 2;
+  // .Protocol.InventoryTab fromTab = 2;
   if (this->_internal_fromtab() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt64ToArray(2, this->_internal_fromtab(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
+      2, this->_internal_fromtab(), target);
   }
 
-  // uint64 fromIndex = 3;
-  if (this->_internal_fromindex() != 0) {
+  // uint64 inv_from_Index = 3;
+  if (this->_internal_inv_from_index() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt64ToArray(3, this->_internal_fromindex(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt64ToArray(3, this->_internal_inv_from_index(), target);
   }
 
-  // uint64 toTab = 4;
+  // .Protocol.InventoryTab toTab = 4;
   if (this->_internal_totab() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt64ToArray(4, this->_internal_totab(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
+      4, this->_internal_totab(), target);
   }
 
-  // uint64 toIndex = 5;
-  if (this->_internal_toindex() != 0) {
+  // uint64 inv_to_Index = 5;
+  if (this->_internal_inv_to_index() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt64ToArray(5, this->_internal_toindex(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt64ToArray(5, this->_internal_inv_to_index(), target);
   }
 
   // uint64 user_id = 6;
@@ -3036,24 +3111,26 @@ size_t SD_MOVE_ITEM::ByteSizeLong() const {
         this->_internal_name());
   }
 
-  // uint64 fromTab = 2;
+  // uint64 inv_from_Index = 3;
+  if (this->_internal_inv_from_index() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt64SizePlusOne(this->_internal_inv_from_index());
+  }
+
+  // .Protocol.InventoryTab fromTab = 2;
   if (this->_internal_fromtab() != 0) {
-    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt64SizePlusOne(this->_internal_fromtab());
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_fromtab());
   }
 
-  // uint64 fromIndex = 3;
-  if (this->_internal_fromindex() != 0) {
-    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt64SizePlusOne(this->_internal_fromindex());
-  }
-
-  // uint64 toTab = 4;
+  // .Protocol.InventoryTab toTab = 4;
   if (this->_internal_totab() != 0) {
-    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt64SizePlusOne(this->_internal_totab());
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_totab());
   }
 
-  // uint64 toIndex = 5;
-  if (this->_internal_toindex() != 0) {
-    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt64SizePlusOne(this->_internal_toindex());
+  // uint64 inv_to_Index = 5;
+  if (this->_internal_inv_to_index() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt64SizePlusOne(this->_internal_inv_to_index());
   }
 
   // uint64 user_id = 6;
@@ -3086,17 +3163,17 @@ void SD_MOVE_ITEM::MergeFrom(const SD_MOVE_ITEM& from) {
   if (!from._internal_name().empty()) {
     _internal_set_name(from._internal_name());
   }
+  if (from._internal_inv_from_index() != 0) {
+    _internal_set_inv_from_index(from._internal_inv_from_index());
+  }
   if (from._internal_fromtab() != 0) {
     _internal_set_fromtab(from._internal_fromtab());
-  }
-  if (from._internal_fromindex() != 0) {
-    _internal_set_fromindex(from._internal_fromindex());
   }
   if (from._internal_totab() != 0) {
     _internal_set_totab(from._internal_totab());
   }
-  if (from._internal_toindex() != 0) {
-    _internal_set_toindex(from._internal_toindex());
+  if (from._internal_inv_to_index() != 0) {
+    _internal_set_inv_to_index(from._internal_inv_to_index());
   }
   if (from._internal_user_id() != 0) {
     _internal_set_user_id(from._internal_user_id());
@@ -3128,9 +3205,9 @@ void SD_MOVE_ITEM::InternalSwap(SD_MOVE_ITEM* other) {
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
       PROTOBUF_FIELD_OFFSET(SD_MOVE_ITEM, user_id_)
       + sizeof(SD_MOVE_ITEM::user_id_)
-      - PROTOBUF_FIELD_OFFSET(SD_MOVE_ITEM, fromtab_)>(
-          reinterpret_cast<char*>(&fromtab_),
-          reinterpret_cast<char*>(&other->fromtab_));
+      - PROTOBUF_FIELD_OFFSET(SD_MOVE_ITEM, inv_from_index_)>(
+          reinterpret_cast<char*>(&inv_from_index_),
+          reinterpret_cast<char*>(&other->inv_from_index_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata SD_MOVE_ITEM::GetMetadata() const {

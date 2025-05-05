@@ -28,7 +28,11 @@ void ServerSession::OnSend(int32 len)
 
 void ServerSession::OnDisconnected()
 {
-	cout << "Disconnected" << endl;
+	Protocol::C_LOGOUT pkt;
+	pkt.set_id(player->GetId());
+
+	auto sendBuffer = ServerPacketHandler::MakeSendBuffer(pkt);
+	Send(sendBuffer);
 }
 
 void ServerSession::AttackPkt(uint64 _id, uint64 _skill)
@@ -51,9 +55,103 @@ void ServerSession::MovePkt(uint64 _direction, int64 _movetime)
 	Send(sendBuffer);
 }
 
+void ServerSession::EquipPkt(uint64 _itemId, Protocol::InventoryTab _tabType, uint64 _invSlotIndex, Protocol::EquipmentSlot _slotIndex)
+{
+	Protocol::C_EQUIP pkt;
+	pkt.set_item_id(_itemId);
+	pkt.set_tab_type(_tabType);
+	pkt.set_slot_type(_slotIndex);
+	pkt.set_inv_slot_index(_invSlotIndex);
+	auto sendBuffer = ServerPacketHandler::MakeSendBuffer(pkt);
+	Send(sendBuffer);
+}
+
+void ServerSession::UnEquipPkt(uint64 _itemId, uint64 _invSlotIndex, Protocol::InventoryTab _tabType, Protocol::EquipmentSlot _slotIndex)
+{
+	Protocol::C_UNEQUIP pkt;
+	pkt.set_item_id(_itemId);
+	pkt.set_slot_type(_slotIndex);
+	pkt.set_inv_slot_index(_invSlotIndex);
+	pkt.set_tab_type(_tabType);
+	auto sendBuffer = ServerPacketHandler::MakeSendBuffer(pkt);
+	Send(sendBuffer);
+}
+
+void ServerSession::MoveInventoryItemPkt(Protocol::InventoryTab _fromTab, uint64 _fromIndex, Protocol::InventoryTab _toTab, uint64 _toIndex)
+{
+	Protocol::C_MOVE_INVENTORY_ITEM pkt;
+	pkt.set_inv_from_index(_fromIndex);
+	pkt.set_from_tab(_fromTab);
+	pkt.set_to_tab(_toTab);
+	pkt.set_inv_to_index(_toIndex);
+
+	auto sendBuffer = ServerPacketHandler::MakeSendBuffer(pkt);
+	Send(sendBuffer);
+}
+
+void ServerSession::ConsumeItemPkt(uint64 _itemId, Protocol::InventoryTab _tabType, uint64 _slotIndex)
+{
+	Protocol::C_CONSUME_ITEM pkt;
+	pkt.set_item_id(_itemId);
+	pkt.set_tab_type(_tabType);
+	pkt.set_inv_slot_index(_slotIndex);
+
+	auto sendBuffer = ServerPacketHandler::MakeSendBuffer(pkt);
+	Send(sendBuffer);
+}
+
+void ServerSession::RemoveItemPkt(uint64 _itemId, Protocol::InventoryTab _tabType, uint64 _slotIndex)
+{
+	Protocol::C_REMOVE_ITEM pkt;
+	pkt.set_item_id(_itemId);
+	pkt.set_tab_type(_tabType);
+	pkt.set_inv_slot_index(_slotIndex);
+
+	auto sendBuffer = ServerPacketHandler::MakeSendBuffer(pkt);
+	Send(sendBuffer);
+}
+
+void ServerSession::AddItemPkt(const INVEN& _inv)
+{
+	Protocol::C_ADD_ITEM pkt;
+	pkt.set_item_id(_inv.itemId);
+	pkt.set_tab_type(_inv.tab_type);
+	pkt.set_inv_slot_index(_inv.slot_index);
+	pkt.set_quantity(_inv.quantity);
+
+	auto sendBuffer = ServerPacketHandler::MakeSendBuffer(pkt);
+	Send(sendBuffer);
+}
+
+void ServerSession::SwapItemPkt(uint64 _fromItemId, Protocol::InventoryTab _fromTab, uint64 _fromIndex, uint64 _toItemId, Protocol::InventoryTab _toTab, uint64 _toIndex)
+{
+	Protocol::C_INVEN_SWAP_ITEM pkt;
+	pkt.set_from_item_id(_fromItemId);
+	pkt.set_from_tab(_fromTab);
+	pkt.set_inv_from_index(_fromIndex);
+	pkt.set_to_item_id(_toItemId);
+	pkt.set_to_tab(_toTab);
+	pkt.set_inv_to_index(_toIndex);
+
+	auto sendBuffer = ServerPacketHandler::MakeSendBuffer(pkt);
+	Send(sendBuffer);
+}
+
+void ServerSession::UpdateItemPkt(Protocol::InventoryTab _tabType, uint64 _itemId, uint64 _slotIndex, uint64 _quantity)
+{
+	Protocol::C_UPDATE_ITEM pkt;
+	pkt.set_tab_type(_tabType);
+	pkt.set_item_id(_itemId);
+	pkt.set_inv_slot_index(_slotIndex);
+	pkt.set_quantity(_quantity);
+
+	auto sendBuffer = ServerPacketHandler::MakeSendBuffer(pkt);
+	Send(sendBuffer);
+}
+
 string ServerSession::Login()
 {
-	std::cout << "ID를 입력하시오 : " << std::endl;
+	std::cout << "ID : " << std::endl;
 
 	std::string input;
 	std::cin >> input;

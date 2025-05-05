@@ -235,18 +235,33 @@ void GameSession::LoginPkt(bool _success, PlayerRef _player)
 		slotData->set_item_id(item.itemId);
 		slotData->set_quantity(item.quantity);
 		slotData->set_tab_type(item.tab_type);
-		slotData->set_slot_index(item.slot_index);
+		slotData->set_inv_slot_index(item.slot_index);
 	}
 
 	auto equip = pkt.mutable_equipment()->add_equipment();
 	for (const auto& [slot, itemInfo] : _player->GetEquipments())
 	{
+		if (itemInfo.itemId == 0)
+			continue;
+
 		switch (slot)
 		{
-			case E_EQUIP::WEAPON:  equip->set_weapon(itemInfo.itemId); break;
-			case E_EQUIP::HELMET:  equip->set_helmet(itemInfo.itemId); break;
-			case E_EQUIP::TOP:     equip->set_top(itemInfo.itemId); break;
-			case E_EQUIP::BOTTOM:  equip->set_bottom(itemInfo.itemId); break;
+		case Protocol::WEAPON:  
+			equip->set_eq_slot(Protocol::WEAPON); 
+			equip->set_item_id(itemInfo.itemId);
+			break;
+		case Protocol::HELMET:
+			equip->set_eq_slot(Protocol::HELMET);
+			equip->set_item_id(itemInfo.itemId);
+			break;
+		case Protocol::TOP:
+			equip->set_eq_slot(Protocol::TOP);
+			equip->set_item_id(itemInfo.itemId);
+			break;
+		case Protocol::BOTTOM:
+			equip->set_eq_slot(Protocol::BOTTOM);
+			equip->set_item_id(itemInfo.itemId);
+			break;
 		}
 	}
 

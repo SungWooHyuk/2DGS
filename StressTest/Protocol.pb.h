@@ -48,7 +48,7 @@ struct TableStruct_Protocol_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[28]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[33]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -56,6 +56,9 @@ struct TableStruct_Protocol_2eproto {
 };
 extern const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Protocol_2eproto;
 namespace Protocol {
+class C_ADD_ITEM;
+struct C_ADD_ITEMDefaultTypeInternal;
+extern C_ADD_ITEMDefaultTypeInternal _C_ADD_ITEM_default_instance_;
 class C_ATTACK;
 struct C_ATTACKDefaultTypeInternal;
 extern C_ATTACKDefaultTypeInternal _C_ATTACK_default_instance_;
@@ -71,6 +74,9 @@ extern C_DROP_ITEMDefaultTypeInternal _C_DROP_ITEM_default_instance_;
 class C_EQUIP;
 struct C_EQUIPDefaultTypeInternal;
 extern C_EQUIPDefaultTypeInternal _C_EQUIP_default_instance_;
+class C_INVEN_SWAP_ITEM;
+struct C_INVEN_SWAP_ITEMDefaultTypeInternal;
+extern C_INVEN_SWAP_ITEMDefaultTypeInternal _C_INVEN_SWAP_ITEM_default_instance_;
 class C_LOGIN;
 struct C_LOGINDefaultTypeInternal;
 extern C_LOGINDefaultTypeInternal _C_LOGIN_default_instance_;
@@ -83,6 +89,9 @@ extern C_MOVEDefaultTypeInternal _C_MOVE_default_instance_;
 class C_MOVE_INVENTORY_ITEM;
 struct C_MOVE_INVENTORY_ITEMDefaultTypeInternal;
 extern C_MOVE_INVENTORY_ITEMDefaultTypeInternal _C_MOVE_INVENTORY_ITEM_default_instance_;
+class C_REMOVE_ITEM;
+struct C_REMOVE_ITEMDefaultTypeInternal;
+extern C_REMOVE_ITEMDefaultTypeInternal _C_REMOVE_ITEM_default_instance_;
 class C_SORT_INVENTORY;
 struct C_SORT_INVENTORYDefaultTypeInternal;
 extern C_SORT_INVENTORYDefaultTypeInternal _C_SORT_INVENTORY_default_instance_;
@@ -92,6 +101,9 @@ extern C_TELEPORTDefaultTypeInternal _C_TELEPORT_default_instance_;
 class C_UNEQUIP;
 struct C_UNEQUIPDefaultTypeInternal;
 extern C_UNEQUIPDefaultTypeInternal _C_UNEQUIP_default_instance_;
+class C_UPDATE_ITEM;
+struct C_UPDATE_ITEMDefaultTypeInternal;
+extern C_UPDATE_ITEMDefaultTypeInternal _C_UPDATE_ITEM_default_instance_;
 class S_ADD_OBJECT;
 struct S_ADD_OBJECTDefaultTypeInternal;
 extern S_ADD_OBJECTDefaultTypeInternal _S_ADD_OBJECT_default_instance_;
@@ -128,6 +140,9 @@ extern S_MOVE_INVENTORY_RESULTDefaultTypeInternal _S_MOVE_INVENTORY_RESULT_defau
 class S_MOVE_OBJECT;
 struct S_MOVE_OBJECTDefaultTypeInternal;
 extern S_MOVE_OBJECTDefaultTypeInternal _S_MOVE_OBJECT_default_instance_;
+class S_RANKING;
+struct S_RANKINGDefaultTypeInternal;
+extern S_RANKINGDefaultTypeInternal _S_RANKING_default_instance_;
 class S_REMOVE_OBJECT;
 struct S_REMOVE_OBJECTDefaultTypeInternal;
 extern S_REMOVE_OBJECTDefaultTypeInternal _S_REMOVE_OBJECT_default_instance_;
@@ -142,18 +157,22 @@ struct S_UNEQUIP_RESULTDefaultTypeInternal;
 extern S_UNEQUIP_RESULTDefaultTypeInternal _S_UNEQUIP_RESULT_default_instance_;
 }  // namespace Protocol
 PROTOBUF_NAMESPACE_OPEN
+template<> ::Protocol::C_ADD_ITEM* Arena::CreateMaybeMessage<::Protocol::C_ADD_ITEM>(Arena*);
 template<> ::Protocol::C_ATTACK* Arena::CreateMaybeMessage<::Protocol::C_ATTACK>(Arena*);
 template<> ::Protocol::C_CHAT* Arena::CreateMaybeMessage<::Protocol::C_CHAT>(Arena*);
 template<> ::Protocol::C_CONSUME_ITEM* Arena::CreateMaybeMessage<::Protocol::C_CONSUME_ITEM>(Arena*);
 template<> ::Protocol::C_DROP_ITEM* Arena::CreateMaybeMessage<::Protocol::C_DROP_ITEM>(Arena*);
 template<> ::Protocol::C_EQUIP* Arena::CreateMaybeMessage<::Protocol::C_EQUIP>(Arena*);
+template<> ::Protocol::C_INVEN_SWAP_ITEM* Arena::CreateMaybeMessage<::Protocol::C_INVEN_SWAP_ITEM>(Arena*);
 template<> ::Protocol::C_LOGIN* Arena::CreateMaybeMessage<::Protocol::C_LOGIN>(Arena*);
 template<> ::Protocol::C_LOGOUT* Arena::CreateMaybeMessage<::Protocol::C_LOGOUT>(Arena*);
 template<> ::Protocol::C_MOVE* Arena::CreateMaybeMessage<::Protocol::C_MOVE>(Arena*);
 template<> ::Protocol::C_MOVE_INVENTORY_ITEM* Arena::CreateMaybeMessage<::Protocol::C_MOVE_INVENTORY_ITEM>(Arena*);
+template<> ::Protocol::C_REMOVE_ITEM* Arena::CreateMaybeMessage<::Protocol::C_REMOVE_ITEM>(Arena*);
 template<> ::Protocol::C_SORT_INVENTORY* Arena::CreateMaybeMessage<::Protocol::C_SORT_INVENTORY>(Arena*);
 template<> ::Protocol::C_TELEPORT* Arena::CreateMaybeMessage<::Protocol::C_TELEPORT>(Arena*);
 template<> ::Protocol::C_UNEQUIP* Arena::CreateMaybeMessage<::Protocol::C_UNEQUIP>(Arena*);
+template<> ::Protocol::C_UPDATE_ITEM* Arena::CreateMaybeMessage<::Protocol::C_UPDATE_ITEM>(Arena*);
 template<> ::Protocol::S_ADD_OBJECT* Arena::CreateMaybeMessage<::Protocol::S_ADD_OBJECT>(Arena*);
 template<> ::Protocol::S_CHAT* Arena::CreateMaybeMessage<::Protocol::S_CHAT>(Arena*);
 template<> ::Protocol::S_CONSUME_RESULT* Arena::CreateMaybeMessage<::Protocol::S_CONSUME_RESULT>(Arena*);
@@ -166,6 +185,7 @@ template<> ::Protocol::S_LOAD_INVENTORY* Arena::CreateMaybeMessage<::Protocol::S
 template<> ::Protocol::S_LOGIN* Arena::CreateMaybeMessage<::Protocol::S_LOGIN>(Arena*);
 template<> ::Protocol::S_MOVE_INVENTORY_RESULT* Arena::CreateMaybeMessage<::Protocol::S_MOVE_INVENTORY_RESULT>(Arena*);
 template<> ::Protocol::S_MOVE_OBJECT* Arena::CreateMaybeMessage<::Protocol::S_MOVE_OBJECT>(Arena*);
+template<> ::Protocol::S_RANKING* Arena::CreateMaybeMessage<::Protocol::S_RANKING>(Arena*);
 template<> ::Protocol::S_REMOVE_OBJECT* Arena::CreateMaybeMessage<::Protocol::S_REMOVE_OBJECT>(Arena*);
 template<> ::Protocol::S_RESPAWN* Arena::CreateMaybeMessage<::Protocol::S_RESPAWN>(Arena*);
 template<> ::Protocol::S_STAT_CHANGE* Arena::CreateMaybeMessage<::Protocol::S_STAT_CHANGE>(Arena*);
@@ -449,8 +469,8 @@ class C_CONSUME_ITEM final :
 
   enum : int {
     kItemIdFieldNumber = 1,
+    kInvSlotIndexFieldNumber = 3,
     kTabTypeFieldNumber = 2,
-    kSlotIndexFieldNumber = 3,
   };
   // uint64 item_id = 1;
   void clear_item_id();
@@ -461,22 +481,22 @@ class C_CONSUME_ITEM final :
   void _internal_set_item_id(uint64_t value);
   public:
 
-  // uint64 tab_type = 2;
-  void clear_tab_type();
-  uint64_t tab_type() const;
-  void set_tab_type(uint64_t value);
+  // uint64 inv_slot_index = 3;
+  void clear_inv_slot_index();
+  uint64_t inv_slot_index() const;
+  void set_inv_slot_index(uint64_t value);
   private:
-  uint64_t _internal_tab_type() const;
-  void _internal_set_tab_type(uint64_t value);
+  uint64_t _internal_inv_slot_index() const;
+  void _internal_set_inv_slot_index(uint64_t value);
   public:
 
-  // uint64 slot_index = 3;
-  void clear_slot_index();
-  uint64_t slot_index() const;
-  void set_slot_index(uint64_t value);
+  // .Protocol.InventoryTab tab_type = 2;
+  void clear_tab_type();
+  ::Protocol::InventoryTab tab_type() const;
+  void set_tab_type(::Protocol::InventoryTab value);
   private:
-  uint64_t _internal_slot_index() const;
-  void _internal_set_slot_index(uint64_t value);
+  ::Protocol::InventoryTab _internal_tab_type() const;
+  void _internal_set_tab_type(::Protocol::InventoryTab value);
   public:
 
   // @@protoc_insertion_point(class_scope:Protocol.C_CONSUME_ITEM)
@@ -487,8 +507,8 @@ class C_CONSUME_ITEM final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   uint64_t item_id_;
-  uint64_t tab_type_;
-  uint64_t slot_index_;
+  uint64_t inv_slot_index_;
+  int tab_type_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Protocol_2eproto;
 };
@@ -617,9 +637,9 @@ class C_DROP_ITEM final :
 
   enum : int {
     kItemIdFieldNumber = 1,
-    kTabTypeFieldNumber = 2,
-    kSlotIndexFieldNumber = 3,
+    kInvSlotIndexFieldNumber = 3,
     kQuantityFieldNumber = 4,
+    kTabTypeFieldNumber = 2,
   };
   // uint64 item_id = 1;
   void clear_item_id();
@@ -630,22 +650,13 @@ class C_DROP_ITEM final :
   void _internal_set_item_id(uint64_t value);
   public:
 
-  // uint64 tab_type = 2;
-  void clear_tab_type();
-  uint64_t tab_type() const;
-  void set_tab_type(uint64_t value);
+  // uint64 inv_slot_index = 3;
+  void clear_inv_slot_index();
+  uint64_t inv_slot_index() const;
+  void set_inv_slot_index(uint64_t value);
   private:
-  uint64_t _internal_tab_type() const;
-  void _internal_set_tab_type(uint64_t value);
-  public:
-
-  // uint64 slot_index = 3;
-  void clear_slot_index();
-  uint64_t slot_index() const;
-  void set_slot_index(uint64_t value);
-  private:
-  uint64_t _internal_slot_index() const;
-  void _internal_set_slot_index(uint64_t value);
+  uint64_t _internal_inv_slot_index() const;
+  void _internal_set_inv_slot_index(uint64_t value);
   public:
 
   // uint64 quantity = 4;
@@ -657,6 +668,15 @@ class C_DROP_ITEM final :
   void _internal_set_quantity(uint64_t value);
   public:
 
+  // .Protocol.InventoryTab tab_type = 2;
+  void clear_tab_type();
+  ::Protocol::InventoryTab tab_type() const;
+  void set_tab_type(::Protocol::InventoryTab value);
+  private:
+  ::Protocol::InventoryTab _internal_tab_type() const;
+  void _internal_set_tab_type(::Protocol::InventoryTab value);
+  public:
+
   // @@protoc_insertion_point(class_scope:Protocol.C_DROP_ITEM)
  private:
   class _Internal;
@@ -665,9 +685,9 @@ class C_DROP_ITEM final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   uint64_t item_id_;
-  uint64_t tab_type_;
-  uint64_t slot_index_;
+  uint64_t inv_slot_index_;
   uint64_t quantity_;
+  int tab_type_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Protocol_2eproto;
 };
@@ -795,45 +815,45 @@ class C_MOVE_INVENTORY_ITEM final :
   // accessors -------------------------------------------------------
 
   enum : int {
+    kInvFromIndexFieldNumber = 2,
     kFromTabFieldNumber = 1,
-    kFromIndexFieldNumber = 2,
     kToTabFieldNumber = 3,
-    kToIndexFieldNumber = 4,
+    kInvToIndexFieldNumber = 4,
   };
-  // uint64 from_tab = 1;
+  // uint64 inv_from_index = 2;
+  void clear_inv_from_index();
+  uint64_t inv_from_index() const;
+  void set_inv_from_index(uint64_t value);
+  private:
+  uint64_t _internal_inv_from_index() const;
+  void _internal_set_inv_from_index(uint64_t value);
+  public:
+
+  // .Protocol.InventoryTab from_tab = 1;
   void clear_from_tab();
-  uint64_t from_tab() const;
-  void set_from_tab(uint64_t value);
+  ::Protocol::InventoryTab from_tab() const;
+  void set_from_tab(::Protocol::InventoryTab value);
   private:
-  uint64_t _internal_from_tab() const;
-  void _internal_set_from_tab(uint64_t value);
+  ::Protocol::InventoryTab _internal_from_tab() const;
+  void _internal_set_from_tab(::Protocol::InventoryTab value);
   public:
 
-  // uint64 from_index = 2;
-  void clear_from_index();
-  uint64_t from_index() const;
-  void set_from_index(uint64_t value);
-  private:
-  uint64_t _internal_from_index() const;
-  void _internal_set_from_index(uint64_t value);
-  public:
-
-  // uint64 to_tab = 3;
+  // .Protocol.InventoryTab to_tab = 3;
   void clear_to_tab();
-  uint64_t to_tab() const;
-  void set_to_tab(uint64_t value);
+  ::Protocol::InventoryTab to_tab() const;
+  void set_to_tab(::Protocol::InventoryTab value);
   private:
-  uint64_t _internal_to_tab() const;
-  void _internal_set_to_tab(uint64_t value);
+  ::Protocol::InventoryTab _internal_to_tab() const;
+  void _internal_set_to_tab(::Protocol::InventoryTab value);
   public:
 
-  // uint64 to_index = 4;
-  void clear_to_index();
-  uint64_t to_index() const;
-  void set_to_index(uint64_t value);
+  // uint64 inv_to_index = 4;
+  void clear_inv_to_index();
+  uint64_t inv_to_index() const;
+  void set_inv_to_index(uint64_t value);
   private:
-  uint64_t _internal_to_index() const;
-  void _internal_set_to_index(uint64_t value);
+  uint64_t _internal_inv_to_index() const;
+  void _internal_set_inv_to_index(uint64_t value);
   public:
 
   // @@protoc_insertion_point(class_scope:Protocol.C_MOVE_INVENTORY_ITEM)
@@ -843,10 +863,558 @@ class C_MOVE_INVENTORY_ITEM final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  uint64_t from_tab_;
-  uint64_t from_index_;
-  uint64_t to_tab_;
-  uint64_t to_index_;
+  uint64_t inv_from_index_;
+  int from_tab_;
+  int to_tab_;
+  uint64_t inv_to_index_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Protocol_2eproto;
+};
+// -------------------------------------------------------------------
+
+class C_INVEN_SWAP_ITEM final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.C_INVEN_SWAP_ITEM) */ {
+ public:
+  inline C_INVEN_SWAP_ITEM() : C_INVEN_SWAP_ITEM(nullptr) {}
+  ~C_INVEN_SWAP_ITEM() override;
+  explicit constexpr C_INVEN_SWAP_ITEM(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  C_INVEN_SWAP_ITEM(const C_INVEN_SWAP_ITEM& from);
+  C_INVEN_SWAP_ITEM(C_INVEN_SWAP_ITEM&& from) noexcept
+    : C_INVEN_SWAP_ITEM() {
+    *this = ::std::move(from);
+  }
+
+  inline C_INVEN_SWAP_ITEM& operator=(const C_INVEN_SWAP_ITEM& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline C_INVEN_SWAP_ITEM& operator=(C_INVEN_SWAP_ITEM&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const C_INVEN_SWAP_ITEM& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const C_INVEN_SWAP_ITEM* internal_default_instance() {
+    return reinterpret_cast<const C_INVEN_SWAP_ITEM*>(
+               &_C_INVEN_SWAP_ITEM_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    4;
+
+  friend void swap(C_INVEN_SWAP_ITEM& a, C_INVEN_SWAP_ITEM& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(C_INVEN_SWAP_ITEM* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(C_INVEN_SWAP_ITEM* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  C_INVEN_SWAP_ITEM* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<C_INVEN_SWAP_ITEM>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const C_INVEN_SWAP_ITEM& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const C_INVEN_SWAP_ITEM& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(C_INVEN_SWAP_ITEM* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.C_INVEN_SWAP_ITEM";
+  }
+  protected:
+  explicit C_INVEN_SWAP_ITEM(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kFromItemIdFieldNumber = 1,
+    kInvFromIndexFieldNumber = 3,
+    kFromTabFieldNumber = 2,
+    kToTabFieldNumber = 5,
+    kToItemIdFieldNumber = 4,
+    kInvToIndexFieldNumber = 6,
+  };
+  // uint64 from_item_id = 1;
+  void clear_from_item_id();
+  uint64_t from_item_id() const;
+  void set_from_item_id(uint64_t value);
+  private:
+  uint64_t _internal_from_item_id() const;
+  void _internal_set_from_item_id(uint64_t value);
+  public:
+
+  // uint64 inv_from_index = 3;
+  void clear_inv_from_index();
+  uint64_t inv_from_index() const;
+  void set_inv_from_index(uint64_t value);
+  private:
+  uint64_t _internal_inv_from_index() const;
+  void _internal_set_inv_from_index(uint64_t value);
+  public:
+
+  // .Protocol.InventoryTab from_tab = 2;
+  void clear_from_tab();
+  ::Protocol::InventoryTab from_tab() const;
+  void set_from_tab(::Protocol::InventoryTab value);
+  private:
+  ::Protocol::InventoryTab _internal_from_tab() const;
+  void _internal_set_from_tab(::Protocol::InventoryTab value);
+  public:
+
+  // .Protocol.InventoryTab to_tab = 5;
+  void clear_to_tab();
+  ::Protocol::InventoryTab to_tab() const;
+  void set_to_tab(::Protocol::InventoryTab value);
+  private:
+  ::Protocol::InventoryTab _internal_to_tab() const;
+  void _internal_set_to_tab(::Protocol::InventoryTab value);
+  public:
+
+  // uint64 to_item_id = 4;
+  void clear_to_item_id();
+  uint64_t to_item_id() const;
+  void set_to_item_id(uint64_t value);
+  private:
+  uint64_t _internal_to_item_id() const;
+  void _internal_set_to_item_id(uint64_t value);
+  public:
+
+  // uint64 inv_to_index = 6;
+  void clear_inv_to_index();
+  uint64_t inv_to_index() const;
+  void set_inv_to_index(uint64_t value);
+  private:
+  uint64_t _internal_inv_to_index() const;
+  void _internal_set_inv_to_index(uint64_t value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:Protocol.C_INVEN_SWAP_ITEM)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  uint64_t from_item_id_;
+  uint64_t inv_from_index_;
+  int from_tab_;
+  int to_tab_;
+  uint64_t to_item_id_;
+  uint64_t inv_to_index_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Protocol_2eproto;
+};
+// -------------------------------------------------------------------
+
+class C_ADD_ITEM final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.C_ADD_ITEM) */ {
+ public:
+  inline C_ADD_ITEM() : C_ADD_ITEM(nullptr) {}
+  ~C_ADD_ITEM() override;
+  explicit constexpr C_ADD_ITEM(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  C_ADD_ITEM(const C_ADD_ITEM& from);
+  C_ADD_ITEM(C_ADD_ITEM&& from) noexcept
+    : C_ADD_ITEM() {
+    *this = ::std::move(from);
+  }
+
+  inline C_ADD_ITEM& operator=(const C_ADD_ITEM& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline C_ADD_ITEM& operator=(C_ADD_ITEM&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const C_ADD_ITEM& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const C_ADD_ITEM* internal_default_instance() {
+    return reinterpret_cast<const C_ADD_ITEM*>(
+               &_C_ADD_ITEM_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    5;
+
+  friend void swap(C_ADD_ITEM& a, C_ADD_ITEM& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(C_ADD_ITEM* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(C_ADD_ITEM* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  C_ADD_ITEM* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<C_ADD_ITEM>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const C_ADD_ITEM& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const C_ADD_ITEM& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(C_ADD_ITEM* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.C_ADD_ITEM";
+  }
+  protected:
+  explicit C_ADD_ITEM(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kItemIdFieldNumber = 1,
+    kInvSlotIndexFieldNumber = 3,
+    kQuantityFieldNumber = 4,
+    kTabTypeFieldNumber = 2,
+  };
+  // uint64 item_id = 1;
+  void clear_item_id();
+  uint64_t item_id() const;
+  void set_item_id(uint64_t value);
+  private:
+  uint64_t _internal_item_id() const;
+  void _internal_set_item_id(uint64_t value);
+  public:
+
+  // uint64 inv_slot_index = 3;
+  void clear_inv_slot_index();
+  uint64_t inv_slot_index() const;
+  void set_inv_slot_index(uint64_t value);
+  private:
+  uint64_t _internal_inv_slot_index() const;
+  void _internal_set_inv_slot_index(uint64_t value);
+  public:
+
+  // uint64 quantity = 4;
+  void clear_quantity();
+  uint64_t quantity() const;
+  void set_quantity(uint64_t value);
+  private:
+  uint64_t _internal_quantity() const;
+  void _internal_set_quantity(uint64_t value);
+  public:
+
+  // .Protocol.InventoryTab tab_type = 2;
+  void clear_tab_type();
+  ::Protocol::InventoryTab tab_type() const;
+  void set_tab_type(::Protocol::InventoryTab value);
+  private:
+  ::Protocol::InventoryTab _internal_tab_type() const;
+  void _internal_set_tab_type(::Protocol::InventoryTab value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:Protocol.C_ADD_ITEM)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  uint64_t item_id_;
+  uint64_t inv_slot_index_;
+  uint64_t quantity_;
+  int tab_type_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Protocol_2eproto;
+};
+// -------------------------------------------------------------------
+
+class C_REMOVE_ITEM final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.C_REMOVE_ITEM) */ {
+ public:
+  inline C_REMOVE_ITEM() : C_REMOVE_ITEM(nullptr) {}
+  ~C_REMOVE_ITEM() override;
+  explicit constexpr C_REMOVE_ITEM(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  C_REMOVE_ITEM(const C_REMOVE_ITEM& from);
+  C_REMOVE_ITEM(C_REMOVE_ITEM&& from) noexcept
+    : C_REMOVE_ITEM() {
+    *this = ::std::move(from);
+  }
+
+  inline C_REMOVE_ITEM& operator=(const C_REMOVE_ITEM& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline C_REMOVE_ITEM& operator=(C_REMOVE_ITEM&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const C_REMOVE_ITEM& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const C_REMOVE_ITEM* internal_default_instance() {
+    return reinterpret_cast<const C_REMOVE_ITEM*>(
+               &_C_REMOVE_ITEM_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    6;
+
+  friend void swap(C_REMOVE_ITEM& a, C_REMOVE_ITEM& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(C_REMOVE_ITEM* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(C_REMOVE_ITEM* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  C_REMOVE_ITEM* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<C_REMOVE_ITEM>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const C_REMOVE_ITEM& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const C_REMOVE_ITEM& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(C_REMOVE_ITEM* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.C_REMOVE_ITEM";
+  }
+  protected:
+  explicit C_REMOVE_ITEM(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kItemIdFieldNumber = 1,
+    kInvSlotIndexFieldNumber = 3,
+    kTabTypeFieldNumber = 2,
+  };
+  // uint64 item_id = 1;
+  void clear_item_id();
+  uint64_t item_id() const;
+  void set_item_id(uint64_t value);
+  private:
+  uint64_t _internal_item_id() const;
+  void _internal_set_item_id(uint64_t value);
+  public:
+
+  // uint64 inv_slot_index = 3;
+  void clear_inv_slot_index();
+  uint64_t inv_slot_index() const;
+  void set_inv_slot_index(uint64_t value);
+  private:
+  uint64_t _internal_inv_slot_index() const;
+  void _internal_set_inv_slot_index(uint64_t value);
+  public:
+
+  // .Protocol.InventoryTab tab_type = 2;
+  void clear_tab_type();
+  ::Protocol::InventoryTab tab_type() const;
+  void set_tab_type(::Protocol::InventoryTab value);
+  private:
+  ::Protocol::InventoryTab _internal_tab_type() const;
+  void _internal_set_tab_type(::Protocol::InventoryTab value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:Protocol.C_REMOVE_ITEM)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  uint64_t item_id_;
+  uint64_t inv_slot_index_;
+  int tab_type_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Protocol_2eproto;
 };
@@ -900,7 +1468,7 @@ class C_EQUIP final :
                &_C_EQUIP_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    4;
+    7;
 
   friend void swap(C_EQUIP& a, C_EQUIP& b) {
     a.Swap(&b);
@@ -975,8 +1543,9 @@ class C_EQUIP final :
 
   enum : int {
     kItemIdFieldNumber = 1,
+    kInvSlotIndexFieldNumber = 3,
     kTabTypeFieldNumber = 2,
-    kSlotIndexFieldNumber = 3,
+    kSlotTypeFieldNumber = 4,
   };
   // uint64 item_id = 1;
   void clear_item_id();
@@ -987,22 +1556,31 @@ class C_EQUIP final :
   void _internal_set_item_id(uint64_t value);
   public:
 
-  // uint64 tab_type = 2;
-  void clear_tab_type();
-  uint64_t tab_type() const;
-  void set_tab_type(uint64_t value);
+  // uint64 inv_slot_index = 3;
+  void clear_inv_slot_index();
+  uint64_t inv_slot_index() const;
+  void set_inv_slot_index(uint64_t value);
   private:
-  uint64_t _internal_tab_type() const;
-  void _internal_set_tab_type(uint64_t value);
+  uint64_t _internal_inv_slot_index() const;
+  void _internal_set_inv_slot_index(uint64_t value);
   public:
 
-  // uint64 slot_index = 3;
-  void clear_slot_index();
-  uint64_t slot_index() const;
-  void set_slot_index(uint64_t value);
+  // .Protocol.InventoryTab tab_type = 2;
+  void clear_tab_type();
+  ::Protocol::InventoryTab tab_type() const;
+  void set_tab_type(::Protocol::InventoryTab value);
   private:
-  uint64_t _internal_slot_index() const;
-  void _internal_set_slot_index(uint64_t value);
+  ::Protocol::InventoryTab _internal_tab_type() const;
+  void _internal_set_tab_type(::Protocol::InventoryTab value);
+  public:
+
+  // .Protocol.EquipmentSlot slot_type = 4;
+  void clear_slot_type();
+  ::Protocol::EquipmentSlot slot_type() const;
+  void set_slot_type(::Protocol::EquipmentSlot value);
+  private:
+  ::Protocol::EquipmentSlot _internal_slot_type() const;
+  void _internal_set_slot_type(::Protocol::EquipmentSlot value);
   public:
 
   // @@protoc_insertion_point(class_scope:Protocol.C_EQUIP)
@@ -1013,8 +1591,9 @@ class C_EQUIP final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   uint64_t item_id_;
-  uint64_t tab_type_;
-  uint64_t slot_index_;
+  uint64_t inv_slot_index_;
+  int tab_type_;
+  int slot_type_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Protocol_2eproto;
 };
@@ -1068,7 +1647,7 @@ class C_UNEQUIP final :
                &_C_UNEQUIP_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    8;
 
   friend void swap(C_UNEQUIP& a, C_UNEQUIP& b) {
     a.Swap(&b);
@@ -1143,7 +1722,9 @@ class C_UNEQUIP final :
 
   enum : int {
     kItemIdFieldNumber = 1,
-    kSlotTypeFieldNumber = 2,
+    kInvSlotIndexFieldNumber = 2,
+    kSlotTypeFieldNumber = 3,
+    kTabTypeFieldNumber = 4,
   };
   // uint64 item_id = 1;
   void clear_item_id();
@@ -1154,13 +1735,31 @@ class C_UNEQUIP final :
   void _internal_set_item_id(uint64_t value);
   public:
 
-  // uint64 slot_type = 2;
-  void clear_slot_type();
-  uint64_t slot_type() const;
-  void set_slot_type(uint64_t value);
+  // uint64 inv_slot_index = 2;
+  void clear_inv_slot_index();
+  uint64_t inv_slot_index() const;
+  void set_inv_slot_index(uint64_t value);
   private:
-  uint64_t _internal_slot_type() const;
-  void _internal_set_slot_type(uint64_t value);
+  uint64_t _internal_inv_slot_index() const;
+  void _internal_set_inv_slot_index(uint64_t value);
+  public:
+
+  // .Protocol.EquipmentSlot slot_type = 3;
+  void clear_slot_type();
+  ::Protocol::EquipmentSlot slot_type() const;
+  void set_slot_type(::Protocol::EquipmentSlot value);
+  private:
+  ::Protocol::EquipmentSlot _internal_slot_type() const;
+  void _internal_set_slot_type(::Protocol::EquipmentSlot value);
+  public:
+
+  // .Protocol.InventoryTab tab_type = 4;
+  void clear_tab_type();
+  ::Protocol::InventoryTab tab_type() const;
+  void set_tab_type(::Protocol::InventoryTab value);
+  private:
+  ::Protocol::InventoryTab _internal_tab_type() const;
+  void _internal_set_tab_type(::Protocol::InventoryTab value);
   public:
 
   // @@protoc_insertion_point(class_scope:Protocol.C_UNEQUIP)
@@ -1171,7 +1770,9 @@ class C_UNEQUIP final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   uint64_t item_id_;
-  uint64_t slot_type_;
+  uint64_t inv_slot_index_;
+  int slot_type_;
+  int tab_type_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Protocol_2eproto;
 };
@@ -1225,7 +1826,7 @@ class C_SORT_INVENTORY final :
                &_C_SORT_INVENTORY_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    9;
 
   friend void swap(C_SORT_INVENTORY& a, C_SORT_INVENTORY& b) {
     a.Swap(&b);
@@ -1301,13 +1902,13 @@ class C_SORT_INVENTORY final :
   enum : int {
     kTabTypeFieldNumber = 1,
   };
-  // uint64 tab_type = 1;
+  // .Protocol.InventoryTab tab_type = 1;
   void clear_tab_type();
-  uint64_t tab_type() const;
-  void set_tab_type(uint64_t value);
+  ::Protocol::InventoryTab tab_type() const;
+  void set_tab_type(::Protocol::InventoryTab value);
   private:
-  uint64_t _internal_tab_type() const;
-  void _internal_set_tab_type(uint64_t value);
+  ::Protocol::InventoryTab _internal_tab_type() const;
+  void _internal_set_tab_type(::Protocol::InventoryTab value);
   public:
 
   // @@protoc_insertion_point(class_scope:Protocol.C_SORT_INVENTORY)
@@ -1317,7 +1918,186 @@ class C_SORT_INVENTORY final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  uint64_t tab_type_;
+  int tab_type_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Protocol_2eproto;
+};
+// -------------------------------------------------------------------
+
+class C_UPDATE_ITEM final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.C_UPDATE_ITEM) */ {
+ public:
+  inline C_UPDATE_ITEM() : C_UPDATE_ITEM(nullptr) {}
+  ~C_UPDATE_ITEM() override;
+  explicit constexpr C_UPDATE_ITEM(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  C_UPDATE_ITEM(const C_UPDATE_ITEM& from);
+  C_UPDATE_ITEM(C_UPDATE_ITEM&& from) noexcept
+    : C_UPDATE_ITEM() {
+    *this = ::std::move(from);
+  }
+
+  inline C_UPDATE_ITEM& operator=(const C_UPDATE_ITEM& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline C_UPDATE_ITEM& operator=(C_UPDATE_ITEM&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const C_UPDATE_ITEM& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const C_UPDATE_ITEM* internal_default_instance() {
+    return reinterpret_cast<const C_UPDATE_ITEM*>(
+               &_C_UPDATE_ITEM_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    10;
+
+  friend void swap(C_UPDATE_ITEM& a, C_UPDATE_ITEM& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(C_UPDATE_ITEM* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(C_UPDATE_ITEM* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  C_UPDATE_ITEM* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<C_UPDATE_ITEM>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const C_UPDATE_ITEM& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const C_UPDATE_ITEM& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(C_UPDATE_ITEM* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.C_UPDATE_ITEM";
+  }
+  protected:
+  explicit C_UPDATE_ITEM(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kItemIdFieldNumber = 2,
+    kInvSlotIndexFieldNumber = 3,
+    kQuantityFieldNumber = 4,
+    kTabTypeFieldNumber = 1,
+  };
+  // uint64 item_id = 2;
+  void clear_item_id();
+  uint64_t item_id() const;
+  void set_item_id(uint64_t value);
+  private:
+  uint64_t _internal_item_id() const;
+  void _internal_set_item_id(uint64_t value);
+  public:
+
+  // uint64 inv_slot_index = 3;
+  void clear_inv_slot_index();
+  uint64_t inv_slot_index() const;
+  void set_inv_slot_index(uint64_t value);
+  private:
+  uint64_t _internal_inv_slot_index() const;
+  void _internal_set_inv_slot_index(uint64_t value);
+  public:
+
+  // uint64 quantity = 4;
+  void clear_quantity();
+  uint64_t quantity() const;
+  void set_quantity(uint64_t value);
+  private:
+  uint64_t _internal_quantity() const;
+  void _internal_set_quantity(uint64_t value);
+  public:
+
+  // .Protocol.InventoryTab tab_type = 1;
+  void clear_tab_type();
+  ::Protocol::InventoryTab tab_type() const;
+  void set_tab_type(::Protocol::InventoryTab value);
+  private:
+  ::Protocol::InventoryTab _internal_tab_type() const;
+  void _internal_set_tab_type(::Protocol::InventoryTab value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:Protocol.C_UPDATE_ITEM)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  uint64_t item_id_;
+  uint64_t inv_slot_index_;
+  uint64_t quantity_;
+  int tab_type_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Protocol_2eproto;
 };
@@ -1371,7 +2151,7 @@ class C_MOVE final :
                &_C_MOVE_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    7;
+    11;
 
   friend void swap(C_MOVE& a, C_MOVE& b) {
     a.Swap(&b);
@@ -1528,7 +2308,7 @@ class C_CHAT final :
                &_C_CHAT_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    8;
+    12;
 
   friend void swap(C_CHAT& a, C_CHAT& b) {
     a.Swap(&b);
@@ -1679,7 +2459,7 @@ class C_TELEPORT final :
                &_C_TELEPORT_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    9;
+    13;
 
   friend void swap(C_TELEPORT& a, C_TELEPORT& b) {
     a.Swap(&b);
@@ -1825,7 +2605,7 @@ class C_ATTACK final :
                &_C_ATTACK_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    10;
+    14;
 
   friend void swap(C_ATTACK& a, C_ATTACK& b) {
     a.Swap(&b);
@@ -1982,7 +2762,7 @@ class C_LOGOUT final :
                &_C_LOGOUT_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    11;
+    15;
 
   friend void swap(C_LOGOUT& a, C_LOGOUT& b) {
     a.Swap(&b);
@@ -2128,7 +2908,7 @@ class S_LOGIN final :
                &_S_LOGIN_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    12;
+    16;
 
   friend void swap(S_LOGIN& a, S_LOGIN& b) {
     a.Swap(&b);
@@ -2354,7 +3134,7 @@ class S_LOAD_INVENTORY final :
                &_S_LOAD_INVENTORY_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    13;
+    17;
 
   friend void swap(S_LOAD_INVENTORY& a, S_LOAD_INVENTORY& b) {
     a.Swap(&b);
@@ -2509,7 +3289,7 @@ class S_LOAD_EQUIPMENT final :
                &_S_LOAD_EQUIPMENT_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    14;
+    18;
 
   friend void swap(S_LOAD_EQUIPMENT& a, S_LOAD_EQUIPMENT& b) {
     a.Swap(&b);
@@ -2664,7 +3444,7 @@ class S_CONSUME_RESULT final :
                &_S_CONSUME_RESULT_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    15;
+    19;
 
   friend void swap(S_CONSUME_RESULT& a, S_CONSUME_RESULT& b) {
     a.Swap(&b);
@@ -2739,10 +3519,10 @@ class S_CONSUME_RESULT final :
 
   enum : int {
     kItemIdFieldNumber = 2,
+    kSuccessFieldNumber = 1,
     kTabTypeFieldNumber = 3,
     kSlotIndexFieldNumber = 4,
     kNewQuantityFieldNumber = 5,
-    kSuccessFieldNumber = 1,
   };
   // uint64 item_id = 2;
   void clear_item_id();
@@ -2753,13 +3533,22 @@ class S_CONSUME_RESULT final :
   void _internal_set_item_id(uint64_t value);
   public:
 
-  // uint64 tab_type = 3;
-  void clear_tab_type();
-  uint64_t tab_type() const;
-  void set_tab_type(uint64_t value);
+  // bool success = 1;
+  void clear_success();
+  bool success() const;
+  void set_success(bool value);
   private:
-  uint64_t _internal_tab_type() const;
-  void _internal_set_tab_type(uint64_t value);
+  bool _internal_success() const;
+  void _internal_set_success(bool value);
+  public:
+
+  // .Protocol.InventoryTab tab_type = 3;
+  void clear_tab_type();
+  ::Protocol::InventoryTab tab_type() const;
+  void set_tab_type(::Protocol::InventoryTab value);
+  private:
+  ::Protocol::InventoryTab _internal_tab_type() const;
+  void _internal_set_tab_type(::Protocol::InventoryTab value);
   public:
 
   // uint64 slot_index = 4;
@@ -2780,15 +3569,6 @@ class S_CONSUME_RESULT final :
   void _internal_set_new_quantity(uint64_t value);
   public:
 
-  // bool success = 1;
-  void clear_success();
-  bool success() const;
-  void set_success(bool value);
-  private:
-  bool _internal_success() const;
-  void _internal_set_success(bool value);
-  public:
-
   // @@protoc_insertion_point(class_scope:Protocol.S_CONSUME_RESULT)
  private:
   class _Internal;
@@ -2797,10 +3577,10 @@ class S_CONSUME_RESULT final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   uint64_t item_id_;
-  uint64_t tab_type_;
+  bool success_;
+  int tab_type_;
   uint64_t slot_index_;
   uint64_t new_quantity_;
-  bool success_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Protocol_2eproto;
 };
@@ -2854,7 +3634,7 @@ class S_DROP_RESULT final :
                &_S_DROP_RESULT_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    16;
+    20;
 
   friend void swap(S_DROP_RESULT& a, S_DROP_RESULT& b) {
     a.Swap(&b);
@@ -2929,9 +3709,9 @@ class S_DROP_RESULT final :
 
   enum : int {
     kItemIdFieldNumber = 2,
-    kTabTypeFieldNumber = 3,
-    kSlotIndexFieldNumber = 4,
     kSuccessFieldNumber = 1,
+    kTabTypeFieldNumber = 3,
+    kInvSlotIndexFieldNumber = 4,
   };
   // uint64 item_id = 2;
   void clear_item_id();
@@ -2940,24 +3720,6 @@ class S_DROP_RESULT final :
   private:
   uint64_t _internal_item_id() const;
   void _internal_set_item_id(uint64_t value);
-  public:
-
-  // uint64 tab_type = 3;
-  void clear_tab_type();
-  uint64_t tab_type() const;
-  void set_tab_type(uint64_t value);
-  private:
-  uint64_t _internal_tab_type() const;
-  void _internal_set_tab_type(uint64_t value);
-  public:
-
-  // uint64 slot_index = 4;
-  void clear_slot_index();
-  uint64_t slot_index() const;
-  void set_slot_index(uint64_t value);
-  private:
-  uint64_t _internal_slot_index() const;
-  void _internal_set_slot_index(uint64_t value);
   public:
 
   // bool success = 1;
@@ -2969,6 +3731,24 @@ class S_DROP_RESULT final :
   void _internal_set_success(bool value);
   public:
 
+  // .Protocol.InventoryTab tab_type = 3;
+  void clear_tab_type();
+  ::Protocol::InventoryTab tab_type() const;
+  void set_tab_type(::Protocol::InventoryTab value);
+  private:
+  ::Protocol::InventoryTab _internal_tab_type() const;
+  void _internal_set_tab_type(::Protocol::InventoryTab value);
+  public:
+
+  // uint64 inv_slot_index = 4;
+  void clear_inv_slot_index();
+  uint64_t inv_slot_index() const;
+  void set_inv_slot_index(uint64_t value);
+  private:
+  uint64_t _internal_inv_slot_index() const;
+  void _internal_set_inv_slot_index(uint64_t value);
+  public:
+
   // @@protoc_insertion_point(class_scope:Protocol.S_DROP_RESULT)
  private:
   class _Internal;
@@ -2977,9 +3757,9 @@ class S_DROP_RESULT final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   uint64_t item_id_;
-  uint64_t tab_type_;
-  uint64_t slot_index_;
   bool success_;
+  int tab_type_;
+  uint64_t inv_slot_index_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Protocol_2eproto;
 };
@@ -3033,7 +3813,7 @@ class S_MOVE_INVENTORY_RESULT final :
                &_S_MOVE_INVENTORY_RESULT_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    17;
+    21;
 
   friend void swap(S_MOVE_INVENTORY_RESULT& a, S_MOVE_INVENTORY_RESULT& b) {
     a.Swap(&b);
@@ -3107,48 +3887,48 @@ class S_MOVE_INVENTORY_RESULT final :
   // accessors -------------------------------------------------------
 
   enum : int {
+    kSuccessFieldNumber = 1,
     kFromTabFieldNumber = 2,
-    kFromIndexFieldNumber = 3,
-    kToTabFieldNumber = 4,
-    kToIndexFieldNumber = 5,
+    kInvFromIndexFieldNumber = 3,
+    kInvToIndexFieldNumber = 5,
     kMovedItemIdFieldNumber = 6,
     kQuantityFieldNumber = 7,
-    kSuccessFieldNumber = 1,
+    kToTabFieldNumber = 4,
   };
-  // uint64 from_tab = 2;
+  // bool success = 1;
+  void clear_success();
+  bool success() const;
+  void set_success(bool value);
+  private:
+  bool _internal_success() const;
+  void _internal_set_success(bool value);
+  public:
+
+  // .Protocol.InventoryTab from_tab = 2;
   void clear_from_tab();
-  uint64_t from_tab() const;
-  void set_from_tab(uint64_t value);
+  ::Protocol::InventoryTab from_tab() const;
+  void set_from_tab(::Protocol::InventoryTab value);
   private:
-  uint64_t _internal_from_tab() const;
-  void _internal_set_from_tab(uint64_t value);
+  ::Protocol::InventoryTab _internal_from_tab() const;
+  void _internal_set_from_tab(::Protocol::InventoryTab value);
   public:
 
-  // uint64 from_index = 3;
-  void clear_from_index();
-  uint64_t from_index() const;
-  void set_from_index(uint64_t value);
+  // uint64 inv_from_index = 3;
+  void clear_inv_from_index();
+  uint64_t inv_from_index() const;
+  void set_inv_from_index(uint64_t value);
   private:
-  uint64_t _internal_from_index() const;
-  void _internal_set_from_index(uint64_t value);
+  uint64_t _internal_inv_from_index() const;
+  void _internal_set_inv_from_index(uint64_t value);
   public:
 
-  // uint64 to_tab = 4;
-  void clear_to_tab();
-  uint64_t to_tab() const;
-  void set_to_tab(uint64_t value);
+  // uint64 inv_to_index = 5;
+  void clear_inv_to_index();
+  uint64_t inv_to_index() const;
+  void set_inv_to_index(uint64_t value);
   private:
-  uint64_t _internal_to_tab() const;
-  void _internal_set_to_tab(uint64_t value);
-  public:
-
-  // uint64 to_index = 5;
-  void clear_to_index();
-  uint64_t to_index() const;
-  void set_to_index(uint64_t value);
-  private:
-  uint64_t _internal_to_index() const;
-  void _internal_set_to_index(uint64_t value);
+  uint64_t _internal_inv_to_index() const;
+  void _internal_set_inv_to_index(uint64_t value);
   public:
 
   // uint64 moved_item_id = 6;
@@ -3169,13 +3949,13 @@ class S_MOVE_INVENTORY_RESULT final :
   void _internal_set_quantity(uint64_t value);
   public:
 
-  // bool success = 1;
-  void clear_success();
-  bool success() const;
-  void set_success(bool value);
+  // .Protocol.InventoryTab to_tab = 4;
+  void clear_to_tab();
+  ::Protocol::InventoryTab to_tab() const;
+  void set_to_tab(::Protocol::InventoryTab value);
   private:
-  bool _internal_success() const;
-  void _internal_set_success(bool value);
+  ::Protocol::InventoryTab _internal_to_tab() const;
+  void _internal_set_to_tab(::Protocol::InventoryTab value);
   public:
 
   // @@protoc_insertion_point(class_scope:Protocol.S_MOVE_INVENTORY_RESULT)
@@ -3185,13 +3965,13 @@ class S_MOVE_INVENTORY_RESULT final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  uint64_t from_tab_;
-  uint64_t from_index_;
-  uint64_t to_tab_;
-  uint64_t to_index_;
+  bool success_;
+  int from_tab_;
+  uint64_t inv_from_index_;
+  uint64_t inv_to_index_;
   uint64_t moved_item_id_;
   uint64_t quantity_;
-  bool success_;
+  int to_tab_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Protocol_2eproto;
 };
@@ -3245,7 +4025,7 @@ class S_EQUIP_RESULT final :
                &_S_EQUIP_RESULT_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    18;
+    22;
 
   friend void swap(S_EQUIP_RESULT& a, S_EQUIP_RESULT& b) {
     a.Swap(&b);
@@ -3320,8 +4100,8 @@ class S_EQUIP_RESULT final :
 
   enum : int {
     kItemIdFieldNumber = 2,
-    kSlotTypeFieldNumber = 3,
     kSuccessFieldNumber = 1,
+    kSlotTypeFieldNumber = 3,
   };
   // uint64 item_id = 2;
   void clear_item_id();
@@ -3330,15 +4110,6 @@ class S_EQUIP_RESULT final :
   private:
   uint64_t _internal_item_id() const;
   void _internal_set_item_id(uint64_t value);
-  public:
-
-  // uint64 slot_type = 3;
-  void clear_slot_type();
-  uint64_t slot_type() const;
-  void set_slot_type(uint64_t value);
-  private:
-  uint64_t _internal_slot_type() const;
-  void _internal_set_slot_type(uint64_t value);
   public:
 
   // bool success = 1;
@@ -3350,6 +4121,15 @@ class S_EQUIP_RESULT final :
   void _internal_set_success(bool value);
   public:
 
+  // .Protocol.EquipmentSlot slot_type = 3;
+  void clear_slot_type();
+  ::Protocol::EquipmentSlot slot_type() const;
+  void set_slot_type(::Protocol::EquipmentSlot value);
+  private:
+  ::Protocol::EquipmentSlot _internal_slot_type() const;
+  void _internal_set_slot_type(::Protocol::EquipmentSlot value);
+  public:
+
   // @@protoc_insertion_point(class_scope:Protocol.S_EQUIP_RESULT)
  private:
   class _Internal;
@@ -3358,8 +4138,8 @@ class S_EQUIP_RESULT final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   uint64_t item_id_;
-  uint64_t slot_type_;
   bool success_;
+  int slot_type_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Protocol_2eproto;
 };
@@ -3413,7 +4193,7 @@ class S_UNEQUIP_RESULT final :
                &_S_UNEQUIP_RESULT_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    19;
+    23;
 
   friend void swap(S_UNEQUIP_RESULT& a, S_UNEQUIP_RESULT& b) {
     a.Swap(&b);
@@ -3488,10 +4268,10 @@ class S_UNEQUIP_RESULT final :
 
   enum : int {
     kItemIdFieldNumber = 2,
-    kSlotTypeFieldNumber = 3,
-    kToTabTypeFieldNumber = 4,
-    kToSlotIndexFieldNumber = 5,
     kSuccessFieldNumber = 1,
+    kSlotTypeFieldNumber = 3,
+    kInvToSlotIndexFieldNumber = 5,
+    kToTabTypeFieldNumber = 4,
   };
   // uint64 item_id = 2;
   void clear_item_id();
@@ -3500,33 +4280,6 @@ class S_UNEQUIP_RESULT final :
   private:
   uint64_t _internal_item_id() const;
   void _internal_set_item_id(uint64_t value);
-  public:
-
-  // uint64 slot_type = 3;
-  void clear_slot_type();
-  uint64_t slot_type() const;
-  void set_slot_type(uint64_t value);
-  private:
-  uint64_t _internal_slot_type() const;
-  void _internal_set_slot_type(uint64_t value);
-  public:
-
-  // uint64 to_tab_type = 4;
-  void clear_to_tab_type();
-  uint64_t to_tab_type() const;
-  void set_to_tab_type(uint64_t value);
-  private:
-  uint64_t _internal_to_tab_type() const;
-  void _internal_set_to_tab_type(uint64_t value);
-  public:
-
-  // uint64 to_slot_index = 5;
-  void clear_to_slot_index();
-  uint64_t to_slot_index() const;
-  void set_to_slot_index(uint64_t value);
-  private:
-  uint64_t _internal_to_slot_index() const;
-  void _internal_set_to_slot_index(uint64_t value);
   public:
 
   // bool success = 1;
@@ -3538,6 +4291,33 @@ class S_UNEQUIP_RESULT final :
   void _internal_set_success(bool value);
   public:
 
+  // .Protocol.EquipmentSlot slot_type = 3;
+  void clear_slot_type();
+  ::Protocol::EquipmentSlot slot_type() const;
+  void set_slot_type(::Protocol::EquipmentSlot value);
+  private:
+  ::Protocol::EquipmentSlot _internal_slot_type() const;
+  void _internal_set_slot_type(::Protocol::EquipmentSlot value);
+  public:
+
+  // uint64 inv_to_slot_index = 5;
+  void clear_inv_to_slot_index();
+  uint64_t inv_to_slot_index() const;
+  void set_inv_to_slot_index(uint64_t value);
+  private:
+  uint64_t _internal_inv_to_slot_index() const;
+  void _internal_set_inv_to_slot_index(uint64_t value);
+  public:
+
+  // .Protocol.InventoryTab to_tab_type = 4;
+  void clear_to_tab_type();
+  ::Protocol::InventoryTab to_tab_type() const;
+  void set_to_tab_type(::Protocol::InventoryTab value);
+  private:
+  ::Protocol::InventoryTab _internal_to_tab_type() const;
+  void _internal_set_to_tab_type(::Protocol::InventoryTab value);
+  public:
+
   // @@protoc_insertion_point(class_scope:Protocol.S_UNEQUIP_RESULT)
  private:
   class _Internal;
@@ -3546,10 +4326,10 @@ class S_UNEQUIP_RESULT final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   uint64_t item_id_;
-  uint64_t slot_type_;
-  uint64_t to_tab_type_;
-  uint64_t to_slot_index_;
   bool success_;
+  int slot_type_;
+  uint64_t inv_to_slot_index_;
+  int to_tab_type_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Protocol_2eproto;
 };
@@ -3603,7 +4383,7 @@ class S_GOLD_CHANGE final :
                &_S_GOLD_CHANGE_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    20;
+    24;
 
   friend void swap(S_GOLD_CHANGE& a, S_GOLD_CHANGE& b) {
     a.Swap(&b);
@@ -3760,7 +4540,7 @@ class S_ADD_OBJECT final :
                &_S_ADD_OBJECT_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    21;
+    25;
 
   friend void swap(S_ADD_OBJECT& a, S_ADD_OBJECT& b) {
     a.Swap(&b);
@@ -3915,7 +4695,7 @@ class S_REMOVE_OBJECT final :
                &_S_REMOVE_OBJECT_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    22;
+    26;
 
   friend void swap(S_REMOVE_OBJECT& a, S_REMOVE_OBJECT& b) {
     a.Swap(&b);
@@ -4061,7 +4841,7 @@ class S_MOVE_OBJECT final :
                &_S_MOVE_OBJECT_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    23;
+    27;
 
   friend void swap(S_MOVE_OBJECT& a, S_MOVE_OBJECT& b) {
     a.Swap(&b);
@@ -4216,7 +4996,7 @@ class S_CHAT final :
                &_S_CHAT_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    24;
+    28;
 
   friend void swap(S_CHAT& a, S_CHAT& b) {
     a.Swap(&b);
@@ -4371,7 +5151,7 @@ class S_STAT_CHANGE final :
                &_S_STAT_CHANGE_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    25;
+    29;
 
   friend void swap(S_STAT_CHANGE& a, S_STAT_CHANGE& b) {
     a.Swap(&b);
@@ -4526,7 +5306,7 @@ class S_DAMAGE final :
                &_S_DAMAGE_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    26;
+    30;
 
   friend void swap(S_DAMAGE& a, S_DAMAGE& b) {
     a.Swap(&b);
@@ -4672,7 +5452,7 @@ class S_RESPAWN final :
                &_S_RESPAWN_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    27;
+    31;
 
   friend void swap(S_RESPAWN& a, S_RESPAWN& b) {
     a.Swap(&b);
@@ -4801,6 +5581,161 @@ class S_RESPAWN final :
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Protocol_2eproto;
 };
+// -------------------------------------------------------------------
+
+class S_RANKING final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.S_RANKING) */ {
+ public:
+  inline S_RANKING() : S_RANKING(nullptr) {}
+  ~S_RANKING() override;
+  explicit constexpr S_RANKING(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  S_RANKING(const S_RANKING& from);
+  S_RANKING(S_RANKING&& from) noexcept
+    : S_RANKING() {
+    *this = ::std::move(from);
+  }
+
+  inline S_RANKING& operator=(const S_RANKING& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline S_RANKING& operator=(S_RANKING&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const S_RANKING& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const S_RANKING* internal_default_instance() {
+    return reinterpret_cast<const S_RANKING*>(
+               &_S_RANKING_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    32;
+
+  friend void swap(S_RANKING& a, S_RANKING& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(S_RANKING* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(S_RANKING* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  S_RANKING* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<S_RANKING>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const S_RANKING& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const S_RANKING& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(S_RANKING* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.S_RANKING";
+  }
+  protected:
+  explicit S_RANKING(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kRankingFieldNumber = 1,
+  };
+  // repeated .Protocol.GoldRanking ranking = 1;
+  int ranking_size() const;
+  private:
+  int _internal_ranking_size() const;
+  public:
+  void clear_ranking();
+  ::Protocol::GoldRanking* mutable_ranking(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::GoldRanking >*
+      mutable_ranking();
+  private:
+  const ::Protocol::GoldRanking& _internal_ranking(int index) const;
+  ::Protocol::GoldRanking* _internal_add_ranking();
+  public:
+  const ::Protocol::GoldRanking& ranking(int index) const;
+  ::Protocol::GoldRanking* add_ranking();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::GoldRanking >&
+      ranking() const;
+
+  // @@protoc_insertion_point(class_scope:Protocol.S_RANKING)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::GoldRanking > ranking_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Protocol_2eproto;
+};
 // ===================================================================
 
 
@@ -4887,44 +5822,44 @@ inline void C_CONSUME_ITEM::set_item_id(uint64_t value) {
   // @@protoc_insertion_point(field_set:Protocol.C_CONSUME_ITEM.item_id)
 }
 
-// uint64 tab_type = 2;
+// .Protocol.InventoryTab tab_type = 2;
 inline void C_CONSUME_ITEM::clear_tab_type() {
-  tab_type_ = uint64_t{0u};
+  tab_type_ = 0;
 }
-inline uint64_t C_CONSUME_ITEM::_internal_tab_type() const {
-  return tab_type_;
+inline ::Protocol::InventoryTab C_CONSUME_ITEM::_internal_tab_type() const {
+  return static_cast< ::Protocol::InventoryTab >(tab_type_);
 }
-inline uint64_t C_CONSUME_ITEM::tab_type() const {
+inline ::Protocol::InventoryTab C_CONSUME_ITEM::tab_type() const {
   // @@protoc_insertion_point(field_get:Protocol.C_CONSUME_ITEM.tab_type)
   return _internal_tab_type();
 }
-inline void C_CONSUME_ITEM::_internal_set_tab_type(uint64_t value) {
+inline void C_CONSUME_ITEM::_internal_set_tab_type(::Protocol::InventoryTab value) {
   
   tab_type_ = value;
 }
-inline void C_CONSUME_ITEM::set_tab_type(uint64_t value) {
+inline void C_CONSUME_ITEM::set_tab_type(::Protocol::InventoryTab value) {
   _internal_set_tab_type(value);
   // @@protoc_insertion_point(field_set:Protocol.C_CONSUME_ITEM.tab_type)
 }
 
-// uint64 slot_index = 3;
-inline void C_CONSUME_ITEM::clear_slot_index() {
-  slot_index_ = uint64_t{0u};
+// uint64 inv_slot_index = 3;
+inline void C_CONSUME_ITEM::clear_inv_slot_index() {
+  inv_slot_index_ = uint64_t{0u};
 }
-inline uint64_t C_CONSUME_ITEM::_internal_slot_index() const {
-  return slot_index_;
+inline uint64_t C_CONSUME_ITEM::_internal_inv_slot_index() const {
+  return inv_slot_index_;
 }
-inline uint64_t C_CONSUME_ITEM::slot_index() const {
-  // @@protoc_insertion_point(field_get:Protocol.C_CONSUME_ITEM.slot_index)
-  return _internal_slot_index();
+inline uint64_t C_CONSUME_ITEM::inv_slot_index() const {
+  // @@protoc_insertion_point(field_get:Protocol.C_CONSUME_ITEM.inv_slot_index)
+  return _internal_inv_slot_index();
 }
-inline void C_CONSUME_ITEM::_internal_set_slot_index(uint64_t value) {
+inline void C_CONSUME_ITEM::_internal_set_inv_slot_index(uint64_t value) {
   
-  slot_index_ = value;
+  inv_slot_index_ = value;
 }
-inline void C_CONSUME_ITEM::set_slot_index(uint64_t value) {
-  _internal_set_slot_index(value);
-  // @@protoc_insertion_point(field_set:Protocol.C_CONSUME_ITEM.slot_index)
+inline void C_CONSUME_ITEM::set_inv_slot_index(uint64_t value) {
+  _internal_set_inv_slot_index(value);
+  // @@protoc_insertion_point(field_set:Protocol.C_CONSUME_ITEM.inv_slot_index)
 }
 
 // -------------------------------------------------------------------
@@ -4951,44 +5886,44 @@ inline void C_DROP_ITEM::set_item_id(uint64_t value) {
   // @@protoc_insertion_point(field_set:Protocol.C_DROP_ITEM.item_id)
 }
 
-// uint64 tab_type = 2;
+// .Protocol.InventoryTab tab_type = 2;
 inline void C_DROP_ITEM::clear_tab_type() {
-  tab_type_ = uint64_t{0u};
+  tab_type_ = 0;
 }
-inline uint64_t C_DROP_ITEM::_internal_tab_type() const {
-  return tab_type_;
+inline ::Protocol::InventoryTab C_DROP_ITEM::_internal_tab_type() const {
+  return static_cast< ::Protocol::InventoryTab >(tab_type_);
 }
-inline uint64_t C_DROP_ITEM::tab_type() const {
+inline ::Protocol::InventoryTab C_DROP_ITEM::tab_type() const {
   // @@protoc_insertion_point(field_get:Protocol.C_DROP_ITEM.tab_type)
   return _internal_tab_type();
 }
-inline void C_DROP_ITEM::_internal_set_tab_type(uint64_t value) {
+inline void C_DROP_ITEM::_internal_set_tab_type(::Protocol::InventoryTab value) {
   
   tab_type_ = value;
 }
-inline void C_DROP_ITEM::set_tab_type(uint64_t value) {
+inline void C_DROP_ITEM::set_tab_type(::Protocol::InventoryTab value) {
   _internal_set_tab_type(value);
   // @@protoc_insertion_point(field_set:Protocol.C_DROP_ITEM.tab_type)
 }
 
-// uint64 slot_index = 3;
-inline void C_DROP_ITEM::clear_slot_index() {
-  slot_index_ = uint64_t{0u};
+// uint64 inv_slot_index = 3;
+inline void C_DROP_ITEM::clear_inv_slot_index() {
+  inv_slot_index_ = uint64_t{0u};
 }
-inline uint64_t C_DROP_ITEM::_internal_slot_index() const {
-  return slot_index_;
+inline uint64_t C_DROP_ITEM::_internal_inv_slot_index() const {
+  return inv_slot_index_;
 }
-inline uint64_t C_DROP_ITEM::slot_index() const {
-  // @@protoc_insertion_point(field_get:Protocol.C_DROP_ITEM.slot_index)
-  return _internal_slot_index();
+inline uint64_t C_DROP_ITEM::inv_slot_index() const {
+  // @@protoc_insertion_point(field_get:Protocol.C_DROP_ITEM.inv_slot_index)
+  return _internal_inv_slot_index();
 }
-inline void C_DROP_ITEM::_internal_set_slot_index(uint64_t value) {
+inline void C_DROP_ITEM::_internal_set_inv_slot_index(uint64_t value) {
   
-  slot_index_ = value;
+  inv_slot_index_ = value;
 }
-inline void C_DROP_ITEM::set_slot_index(uint64_t value) {
-  _internal_set_slot_index(value);
-  // @@protoc_insertion_point(field_set:Protocol.C_DROP_ITEM.slot_index)
+inline void C_DROP_ITEM::set_inv_slot_index(uint64_t value) {
+  _internal_set_inv_slot_index(value);
+  // @@protoc_insertion_point(field_set:Protocol.C_DROP_ITEM.inv_slot_index)
 }
 
 // uint64 quantity = 4;
@@ -5015,84 +5950,356 @@ inline void C_DROP_ITEM::set_quantity(uint64_t value) {
 
 // C_MOVE_INVENTORY_ITEM
 
-// uint64 from_tab = 1;
+// .Protocol.InventoryTab from_tab = 1;
 inline void C_MOVE_INVENTORY_ITEM::clear_from_tab() {
-  from_tab_ = uint64_t{0u};
+  from_tab_ = 0;
 }
-inline uint64_t C_MOVE_INVENTORY_ITEM::_internal_from_tab() const {
-  return from_tab_;
+inline ::Protocol::InventoryTab C_MOVE_INVENTORY_ITEM::_internal_from_tab() const {
+  return static_cast< ::Protocol::InventoryTab >(from_tab_);
 }
-inline uint64_t C_MOVE_INVENTORY_ITEM::from_tab() const {
+inline ::Protocol::InventoryTab C_MOVE_INVENTORY_ITEM::from_tab() const {
   // @@protoc_insertion_point(field_get:Protocol.C_MOVE_INVENTORY_ITEM.from_tab)
   return _internal_from_tab();
 }
-inline void C_MOVE_INVENTORY_ITEM::_internal_set_from_tab(uint64_t value) {
+inline void C_MOVE_INVENTORY_ITEM::_internal_set_from_tab(::Protocol::InventoryTab value) {
   
   from_tab_ = value;
 }
-inline void C_MOVE_INVENTORY_ITEM::set_from_tab(uint64_t value) {
+inline void C_MOVE_INVENTORY_ITEM::set_from_tab(::Protocol::InventoryTab value) {
   _internal_set_from_tab(value);
   // @@protoc_insertion_point(field_set:Protocol.C_MOVE_INVENTORY_ITEM.from_tab)
 }
 
-// uint64 from_index = 2;
-inline void C_MOVE_INVENTORY_ITEM::clear_from_index() {
-  from_index_ = uint64_t{0u};
+// uint64 inv_from_index = 2;
+inline void C_MOVE_INVENTORY_ITEM::clear_inv_from_index() {
+  inv_from_index_ = uint64_t{0u};
 }
-inline uint64_t C_MOVE_INVENTORY_ITEM::_internal_from_index() const {
-  return from_index_;
+inline uint64_t C_MOVE_INVENTORY_ITEM::_internal_inv_from_index() const {
+  return inv_from_index_;
 }
-inline uint64_t C_MOVE_INVENTORY_ITEM::from_index() const {
-  // @@protoc_insertion_point(field_get:Protocol.C_MOVE_INVENTORY_ITEM.from_index)
-  return _internal_from_index();
+inline uint64_t C_MOVE_INVENTORY_ITEM::inv_from_index() const {
+  // @@protoc_insertion_point(field_get:Protocol.C_MOVE_INVENTORY_ITEM.inv_from_index)
+  return _internal_inv_from_index();
 }
-inline void C_MOVE_INVENTORY_ITEM::_internal_set_from_index(uint64_t value) {
+inline void C_MOVE_INVENTORY_ITEM::_internal_set_inv_from_index(uint64_t value) {
   
-  from_index_ = value;
+  inv_from_index_ = value;
 }
-inline void C_MOVE_INVENTORY_ITEM::set_from_index(uint64_t value) {
-  _internal_set_from_index(value);
-  // @@protoc_insertion_point(field_set:Protocol.C_MOVE_INVENTORY_ITEM.from_index)
+inline void C_MOVE_INVENTORY_ITEM::set_inv_from_index(uint64_t value) {
+  _internal_set_inv_from_index(value);
+  // @@protoc_insertion_point(field_set:Protocol.C_MOVE_INVENTORY_ITEM.inv_from_index)
 }
 
-// uint64 to_tab = 3;
+// .Protocol.InventoryTab to_tab = 3;
 inline void C_MOVE_INVENTORY_ITEM::clear_to_tab() {
-  to_tab_ = uint64_t{0u};
+  to_tab_ = 0;
 }
-inline uint64_t C_MOVE_INVENTORY_ITEM::_internal_to_tab() const {
-  return to_tab_;
+inline ::Protocol::InventoryTab C_MOVE_INVENTORY_ITEM::_internal_to_tab() const {
+  return static_cast< ::Protocol::InventoryTab >(to_tab_);
 }
-inline uint64_t C_MOVE_INVENTORY_ITEM::to_tab() const {
+inline ::Protocol::InventoryTab C_MOVE_INVENTORY_ITEM::to_tab() const {
   // @@protoc_insertion_point(field_get:Protocol.C_MOVE_INVENTORY_ITEM.to_tab)
   return _internal_to_tab();
 }
-inline void C_MOVE_INVENTORY_ITEM::_internal_set_to_tab(uint64_t value) {
+inline void C_MOVE_INVENTORY_ITEM::_internal_set_to_tab(::Protocol::InventoryTab value) {
   
   to_tab_ = value;
 }
-inline void C_MOVE_INVENTORY_ITEM::set_to_tab(uint64_t value) {
+inline void C_MOVE_INVENTORY_ITEM::set_to_tab(::Protocol::InventoryTab value) {
   _internal_set_to_tab(value);
   // @@protoc_insertion_point(field_set:Protocol.C_MOVE_INVENTORY_ITEM.to_tab)
 }
 
-// uint64 to_index = 4;
-inline void C_MOVE_INVENTORY_ITEM::clear_to_index() {
-  to_index_ = uint64_t{0u};
+// uint64 inv_to_index = 4;
+inline void C_MOVE_INVENTORY_ITEM::clear_inv_to_index() {
+  inv_to_index_ = uint64_t{0u};
 }
-inline uint64_t C_MOVE_INVENTORY_ITEM::_internal_to_index() const {
-  return to_index_;
+inline uint64_t C_MOVE_INVENTORY_ITEM::_internal_inv_to_index() const {
+  return inv_to_index_;
 }
-inline uint64_t C_MOVE_INVENTORY_ITEM::to_index() const {
-  // @@protoc_insertion_point(field_get:Protocol.C_MOVE_INVENTORY_ITEM.to_index)
-  return _internal_to_index();
+inline uint64_t C_MOVE_INVENTORY_ITEM::inv_to_index() const {
+  // @@protoc_insertion_point(field_get:Protocol.C_MOVE_INVENTORY_ITEM.inv_to_index)
+  return _internal_inv_to_index();
 }
-inline void C_MOVE_INVENTORY_ITEM::_internal_set_to_index(uint64_t value) {
+inline void C_MOVE_INVENTORY_ITEM::_internal_set_inv_to_index(uint64_t value) {
   
-  to_index_ = value;
+  inv_to_index_ = value;
 }
-inline void C_MOVE_INVENTORY_ITEM::set_to_index(uint64_t value) {
-  _internal_set_to_index(value);
-  // @@protoc_insertion_point(field_set:Protocol.C_MOVE_INVENTORY_ITEM.to_index)
+inline void C_MOVE_INVENTORY_ITEM::set_inv_to_index(uint64_t value) {
+  _internal_set_inv_to_index(value);
+  // @@protoc_insertion_point(field_set:Protocol.C_MOVE_INVENTORY_ITEM.inv_to_index)
+}
+
+// -------------------------------------------------------------------
+
+// C_INVEN_SWAP_ITEM
+
+// uint64 from_item_id = 1;
+inline void C_INVEN_SWAP_ITEM::clear_from_item_id() {
+  from_item_id_ = uint64_t{0u};
+}
+inline uint64_t C_INVEN_SWAP_ITEM::_internal_from_item_id() const {
+  return from_item_id_;
+}
+inline uint64_t C_INVEN_SWAP_ITEM::from_item_id() const {
+  // @@protoc_insertion_point(field_get:Protocol.C_INVEN_SWAP_ITEM.from_item_id)
+  return _internal_from_item_id();
+}
+inline void C_INVEN_SWAP_ITEM::_internal_set_from_item_id(uint64_t value) {
+  
+  from_item_id_ = value;
+}
+inline void C_INVEN_SWAP_ITEM::set_from_item_id(uint64_t value) {
+  _internal_set_from_item_id(value);
+  // @@protoc_insertion_point(field_set:Protocol.C_INVEN_SWAP_ITEM.from_item_id)
+}
+
+// .Protocol.InventoryTab from_tab = 2;
+inline void C_INVEN_SWAP_ITEM::clear_from_tab() {
+  from_tab_ = 0;
+}
+inline ::Protocol::InventoryTab C_INVEN_SWAP_ITEM::_internal_from_tab() const {
+  return static_cast< ::Protocol::InventoryTab >(from_tab_);
+}
+inline ::Protocol::InventoryTab C_INVEN_SWAP_ITEM::from_tab() const {
+  // @@protoc_insertion_point(field_get:Protocol.C_INVEN_SWAP_ITEM.from_tab)
+  return _internal_from_tab();
+}
+inline void C_INVEN_SWAP_ITEM::_internal_set_from_tab(::Protocol::InventoryTab value) {
+  
+  from_tab_ = value;
+}
+inline void C_INVEN_SWAP_ITEM::set_from_tab(::Protocol::InventoryTab value) {
+  _internal_set_from_tab(value);
+  // @@protoc_insertion_point(field_set:Protocol.C_INVEN_SWAP_ITEM.from_tab)
+}
+
+// uint64 inv_from_index = 3;
+inline void C_INVEN_SWAP_ITEM::clear_inv_from_index() {
+  inv_from_index_ = uint64_t{0u};
+}
+inline uint64_t C_INVEN_SWAP_ITEM::_internal_inv_from_index() const {
+  return inv_from_index_;
+}
+inline uint64_t C_INVEN_SWAP_ITEM::inv_from_index() const {
+  // @@protoc_insertion_point(field_get:Protocol.C_INVEN_SWAP_ITEM.inv_from_index)
+  return _internal_inv_from_index();
+}
+inline void C_INVEN_SWAP_ITEM::_internal_set_inv_from_index(uint64_t value) {
+  
+  inv_from_index_ = value;
+}
+inline void C_INVEN_SWAP_ITEM::set_inv_from_index(uint64_t value) {
+  _internal_set_inv_from_index(value);
+  // @@protoc_insertion_point(field_set:Protocol.C_INVEN_SWAP_ITEM.inv_from_index)
+}
+
+// uint64 to_item_id = 4;
+inline void C_INVEN_SWAP_ITEM::clear_to_item_id() {
+  to_item_id_ = uint64_t{0u};
+}
+inline uint64_t C_INVEN_SWAP_ITEM::_internal_to_item_id() const {
+  return to_item_id_;
+}
+inline uint64_t C_INVEN_SWAP_ITEM::to_item_id() const {
+  // @@protoc_insertion_point(field_get:Protocol.C_INVEN_SWAP_ITEM.to_item_id)
+  return _internal_to_item_id();
+}
+inline void C_INVEN_SWAP_ITEM::_internal_set_to_item_id(uint64_t value) {
+  
+  to_item_id_ = value;
+}
+inline void C_INVEN_SWAP_ITEM::set_to_item_id(uint64_t value) {
+  _internal_set_to_item_id(value);
+  // @@protoc_insertion_point(field_set:Protocol.C_INVEN_SWAP_ITEM.to_item_id)
+}
+
+// .Protocol.InventoryTab to_tab = 5;
+inline void C_INVEN_SWAP_ITEM::clear_to_tab() {
+  to_tab_ = 0;
+}
+inline ::Protocol::InventoryTab C_INVEN_SWAP_ITEM::_internal_to_tab() const {
+  return static_cast< ::Protocol::InventoryTab >(to_tab_);
+}
+inline ::Protocol::InventoryTab C_INVEN_SWAP_ITEM::to_tab() const {
+  // @@protoc_insertion_point(field_get:Protocol.C_INVEN_SWAP_ITEM.to_tab)
+  return _internal_to_tab();
+}
+inline void C_INVEN_SWAP_ITEM::_internal_set_to_tab(::Protocol::InventoryTab value) {
+  
+  to_tab_ = value;
+}
+inline void C_INVEN_SWAP_ITEM::set_to_tab(::Protocol::InventoryTab value) {
+  _internal_set_to_tab(value);
+  // @@protoc_insertion_point(field_set:Protocol.C_INVEN_SWAP_ITEM.to_tab)
+}
+
+// uint64 inv_to_index = 6;
+inline void C_INVEN_SWAP_ITEM::clear_inv_to_index() {
+  inv_to_index_ = uint64_t{0u};
+}
+inline uint64_t C_INVEN_SWAP_ITEM::_internal_inv_to_index() const {
+  return inv_to_index_;
+}
+inline uint64_t C_INVEN_SWAP_ITEM::inv_to_index() const {
+  // @@protoc_insertion_point(field_get:Protocol.C_INVEN_SWAP_ITEM.inv_to_index)
+  return _internal_inv_to_index();
+}
+inline void C_INVEN_SWAP_ITEM::_internal_set_inv_to_index(uint64_t value) {
+  
+  inv_to_index_ = value;
+}
+inline void C_INVEN_SWAP_ITEM::set_inv_to_index(uint64_t value) {
+  _internal_set_inv_to_index(value);
+  // @@protoc_insertion_point(field_set:Protocol.C_INVEN_SWAP_ITEM.inv_to_index)
+}
+
+// -------------------------------------------------------------------
+
+// C_ADD_ITEM
+
+// uint64 item_id = 1;
+inline void C_ADD_ITEM::clear_item_id() {
+  item_id_ = uint64_t{0u};
+}
+inline uint64_t C_ADD_ITEM::_internal_item_id() const {
+  return item_id_;
+}
+inline uint64_t C_ADD_ITEM::item_id() const {
+  // @@protoc_insertion_point(field_get:Protocol.C_ADD_ITEM.item_id)
+  return _internal_item_id();
+}
+inline void C_ADD_ITEM::_internal_set_item_id(uint64_t value) {
+  
+  item_id_ = value;
+}
+inline void C_ADD_ITEM::set_item_id(uint64_t value) {
+  _internal_set_item_id(value);
+  // @@protoc_insertion_point(field_set:Protocol.C_ADD_ITEM.item_id)
+}
+
+// .Protocol.InventoryTab tab_type = 2;
+inline void C_ADD_ITEM::clear_tab_type() {
+  tab_type_ = 0;
+}
+inline ::Protocol::InventoryTab C_ADD_ITEM::_internal_tab_type() const {
+  return static_cast< ::Protocol::InventoryTab >(tab_type_);
+}
+inline ::Protocol::InventoryTab C_ADD_ITEM::tab_type() const {
+  // @@protoc_insertion_point(field_get:Protocol.C_ADD_ITEM.tab_type)
+  return _internal_tab_type();
+}
+inline void C_ADD_ITEM::_internal_set_tab_type(::Protocol::InventoryTab value) {
+  
+  tab_type_ = value;
+}
+inline void C_ADD_ITEM::set_tab_type(::Protocol::InventoryTab value) {
+  _internal_set_tab_type(value);
+  // @@protoc_insertion_point(field_set:Protocol.C_ADD_ITEM.tab_type)
+}
+
+// uint64 inv_slot_index = 3;
+inline void C_ADD_ITEM::clear_inv_slot_index() {
+  inv_slot_index_ = uint64_t{0u};
+}
+inline uint64_t C_ADD_ITEM::_internal_inv_slot_index() const {
+  return inv_slot_index_;
+}
+inline uint64_t C_ADD_ITEM::inv_slot_index() const {
+  // @@protoc_insertion_point(field_get:Protocol.C_ADD_ITEM.inv_slot_index)
+  return _internal_inv_slot_index();
+}
+inline void C_ADD_ITEM::_internal_set_inv_slot_index(uint64_t value) {
+  
+  inv_slot_index_ = value;
+}
+inline void C_ADD_ITEM::set_inv_slot_index(uint64_t value) {
+  _internal_set_inv_slot_index(value);
+  // @@protoc_insertion_point(field_set:Protocol.C_ADD_ITEM.inv_slot_index)
+}
+
+// uint64 quantity = 4;
+inline void C_ADD_ITEM::clear_quantity() {
+  quantity_ = uint64_t{0u};
+}
+inline uint64_t C_ADD_ITEM::_internal_quantity() const {
+  return quantity_;
+}
+inline uint64_t C_ADD_ITEM::quantity() const {
+  // @@protoc_insertion_point(field_get:Protocol.C_ADD_ITEM.quantity)
+  return _internal_quantity();
+}
+inline void C_ADD_ITEM::_internal_set_quantity(uint64_t value) {
+  
+  quantity_ = value;
+}
+inline void C_ADD_ITEM::set_quantity(uint64_t value) {
+  _internal_set_quantity(value);
+  // @@protoc_insertion_point(field_set:Protocol.C_ADD_ITEM.quantity)
+}
+
+// -------------------------------------------------------------------
+
+// C_REMOVE_ITEM
+
+// uint64 item_id = 1;
+inline void C_REMOVE_ITEM::clear_item_id() {
+  item_id_ = uint64_t{0u};
+}
+inline uint64_t C_REMOVE_ITEM::_internal_item_id() const {
+  return item_id_;
+}
+inline uint64_t C_REMOVE_ITEM::item_id() const {
+  // @@protoc_insertion_point(field_get:Protocol.C_REMOVE_ITEM.item_id)
+  return _internal_item_id();
+}
+inline void C_REMOVE_ITEM::_internal_set_item_id(uint64_t value) {
+  
+  item_id_ = value;
+}
+inline void C_REMOVE_ITEM::set_item_id(uint64_t value) {
+  _internal_set_item_id(value);
+  // @@protoc_insertion_point(field_set:Protocol.C_REMOVE_ITEM.item_id)
+}
+
+// .Protocol.InventoryTab tab_type = 2;
+inline void C_REMOVE_ITEM::clear_tab_type() {
+  tab_type_ = 0;
+}
+inline ::Protocol::InventoryTab C_REMOVE_ITEM::_internal_tab_type() const {
+  return static_cast< ::Protocol::InventoryTab >(tab_type_);
+}
+inline ::Protocol::InventoryTab C_REMOVE_ITEM::tab_type() const {
+  // @@protoc_insertion_point(field_get:Protocol.C_REMOVE_ITEM.tab_type)
+  return _internal_tab_type();
+}
+inline void C_REMOVE_ITEM::_internal_set_tab_type(::Protocol::InventoryTab value) {
+  
+  tab_type_ = value;
+}
+inline void C_REMOVE_ITEM::set_tab_type(::Protocol::InventoryTab value) {
+  _internal_set_tab_type(value);
+  // @@protoc_insertion_point(field_set:Protocol.C_REMOVE_ITEM.tab_type)
+}
+
+// uint64 inv_slot_index = 3;
+inline void C_REMOVE_ITEM::clear_inv_slot_index() {
+  inv_slot_index_ = uint64_t{0u};
+}
+inline uint64_t C_REMOVE_ITEM::_internal_inv_slot_index() const {
+  return inv_slot_index_;
+}
+inline uint64_t C_REMOVE_ITEM::inv_slot_index() const {
+  // @@protoc_insertion_point(field_get:Protocol.C_REMOVE_ITEM.inv_slot_index)
+  return _internal_inv_slot_index();
+}
+inline void C_REMOVE_ITEM::_internal_set_inv_slot_index(uint64_t value) {
+  
+  inv_slot_index_ = value;
+}
+inline void C_REMOVE_ITEM::set_inv_slot_index(uint64_t value) {
+  _internal_set_inv_slot_index(value);
+  // @@protoc_insertion_point(field_set:Protocol.C_REMOVE_ITEM.inv_slot_index)
 }
 
 // -------------------------------------------------------------------
@@ -5119,44 +6326,64 @@ inline void C_EQUIP::set_item_id(uint64_t value) {
   // @@protoc_insertion_point(field_set:Protocol.C_EQUIP.item_id)
 }
 
-// uint64 tab_type = 2;
+// .Protocol.InventoryTab tab_type = 2;
 inline void C_EQUIP::clear_tab_type() {
-  tab_type_ = uint64_t{0u};
+  tab_type_ = 0;
 }
-inline uint64_t C_EQUIP::_internal_tab_type() const {
-  return tab_type_;
+inline ::Protocol::InventoryTab C_EQUIP::_internal_tab_type() const {
+  return static_cast< ::Protocol::InventoryTab >(tab_type_);
 }
-inline uint64_t C_EQUIP::tab_type() const {
+inline ::Protocol::InventoryTab C_EQUIP::tab_type() const {
   // @@protoc_insertion_point(field_get:Protocol.C_EQUIP.tab_type)
   return _internal_tab_type();
 }
-inline void C_EQUIP::_internal_set_tab_type(uint64_t value) {
+inline void C_EQUIP::_internal_set_tab_type(::Protocol::InventoryTab value) {
   
   tab_type_ = value;
 }
-inline void C_EQUIP::set_tab_type(uint64_t value) {
+inline void C_EQUIP::set_tab_type(::Protocol::InventoryTab value) {
   _internal_set_tab_type(value);
   // @@protoc_insertion_point(field_set:Protocol.C_EQUIP.tab_type)
 }
 
-// uint64 slot_index = 3;
-inline void C_EQUIP::clear_slot_index() {
-  slot_index_ = uint64_t{0u};
+// uint64 inv_slot_index = 3;
+inline void C_EQUIP::clear_inv_slot_index() {
+  inv_slot_index_ = uint64_t{0u};
 }
-inline uint64_t C_EQUIP::_internal_slot_index() const {
-  return slot_index_;
+inline uint64_t C_EQUIP::_internal_inv_slot_index() const {
+  return inv_slot_index_;
 }
-inline uint64_t C_EQUIP::slot_index() const {
-  // @@protoc_insertion_point(field_get:Protocol.C_EQUIP.slot_index)
-  return _internal_slot_index();
+inline uint64_t C_EQUIP::inv_slot_index() const {
+  // @@protoc_insertion_point(field_get:Protocol.C_EQUIP.inv_slot_index)
+  return _internal_inv_slot_index();
 }
-inline void C_EQUIP::_internal_set_slot_index(uint64_t value) {
+inline void C_EQUIP::_internal_set_inv_slot_index(uint64_t value) {
   
-  slot_index_ = value;
+  inv_slot_index_ = value;
 }
-inline void C_EQUIP::set_slot_index(uint64_t value) {
-  _internal_set_slot_index(value);
-  // @@protoc_insertion_point(field_set:Protocol.C_EQUIP.slot_index)
+inline void C_EQUIP::set_inv_slot_index(uint64_t value) {
+  _internal_set_inv_slot_index(value);
+  // @@protoc_insertion_point(field_set:Protocol.C_EQUIP.inv_slot_index)
+}
+
+// .Protocol.EquipmentSlot slot_type = 4;
+inline void C_EQUIP::clear_slot_type() {
+  slot_type_ = 0;
+}
+inline ::Protocol::EquipmentSlot C_EQUIP::_internal_slot_type() const {
+  return static_cast< ::Protocol::EquipmentSlot >(slot_type_);
+}
+inline ::Protocol::EquipmentSlot C_EQUIP::slot_type() const {
+  // @@protoc_insertion_point(field_get:Protocol.C_EQUIP.slot_type)
+  return _internal_slot_type();
+}
+inline void C_EQUIP::_internal_set_slot_type(::Protocol::EquipmentSlot value) {
+  
+  slot_type_ = value;
+}
+inline void C_EQUIP::set_slot_type(::Protocol::EquipmentSlot value) {
+  _internal_set_slot_type(value);
+  // @@protoc_insertion_point(field_set:Protocol.C_EQUIP.slot_type)
 }
 
 // -------------------------------------------------------------------
@@ -5183,48 +6410,172 @@ inline void C_UNEQUIP::set_item_id(uint64_t value) {
   // @@protoc_insertion_point(field_set:Protocol.C_UNEQUIP.item_id)
 }
 
-// uint64 slot_type = 2;
+// uint64 inv_slot_index = 2;
+inline void C_UNEQUIP::clear_inv_slot_index() {
+  inv_slot_index_ = uint64_t{0u};
+}
+inline uint64_t C_UNEQUIP::_internal_inv_slot_index() const {
+  return inv_slot_index_;
+}
+inline uint64_t C_UNEQUIP::inv_slot_index() const {
+  // @@protoc_insertion_point(field_get:Protocol.C_UNEQUIP.inv_slot_index)
+  return _internal_inv_slot_index();
+}
+inline void C_UNEQUIP::_internal_set_inv_slot_index(uint64_t value) {
+  
+  inv_slot_index_ = value;
+}
+inline void C_UNEQUIP::set_inv_slot_index(uint64_t value) {
+  _internal_set_inv_slot_index(value);
+  // @@protoc_insertion_point(field_set:Protocol.C_UNEQUIP.inv_slot_index)
+}
+
+// .Protocol.EquipmentSlot slot_type = 3;
 inline void C_UNEQUIP::clear_slot_type() {
-  slot_type_ = uint64_t{0u};
+  slot_type_ = 0;
 }
-inline uint64_t C_UNEQUIP::_internal_slot_type() const {
-  return slot_type_;
+inline ::Protocol::EquipmentSlot C_UNEQUIP::_internal_slot_type() const {
+  return static_cast< ::Protocol::EquipmentSlot >(slot_type_);
 }
-inline uint64_t C_UNEQUIP::slot_type() const {
+inline ::Protocol::EquipmentSlot C_UNEQUIP::slot_type() const {
   // @@protoc_insertion_point(field_get:Protocol.C_UNEQUIP.slot_type)
   return _internal_slot_type();
 }
-inline void C_UNEQUIP::_internal_set_slot_type(uint64_t value) {
+inline void C_UNEQUIP::_internal_set_slot_type(::Protocol::EquipmentSlot value) {
   
   slot_type_ = value;
 }
-inline void C_UNEQUIP::set_slot_type(uint64_t value) {
+inline void C_UNEQUIP::set_slot_type(::Protocol::EquipmentSlot value) {
   _internal_set_slot_type(value);
   // @@protoc_insertion_point(field_set:Protocol.C_UNEQUIP.slot_type)
+}
+
+// .Protocol.InventoryTab tab_type = 4;
+inline void C_UNEQUIP::clear_tab_type() {
+  tab_type_ = 0;
+}
+inline ::Protocol::InventoryTab C_UNEQUIP::_internal_tab_type() const {
+  return static_cast< ::Protocol::InventoryTab >(tab_type_);
+}
+inline ::Protocol::InventoryTab C_UNEQUIP::tab_type() const {
+  // @@protoc_insertion_point(field_get:Protocol.C_UNEQUIP.tab_type)
+  return _internal_tab_type();
+}
+inline void C_UNEQUIP::_internal_set_tab_type(::Protocol::InventoryTab value) {
+  
+  tab_type_ = value;
+}
+inline void C_UNEQUIP::set_tab_type(::Protocol::InventoryTab value) {
+  _internal_set_tab_type(value);
+  // @@protoc_insertion_point(field_set:Protocol.C_UNEQUIP.tab_type)
 }
 
 // -------------------------------------------------------------------
 
 // C_SORT_INVENTORY
 
-// uint64 tab_type = 1;
+// .Protocol.InventoryTab tab_type = 1;
 inline void C_SORT_INVENTORY::clear_tab_type() {
-  tab_type_ = uint64_t{0u};
+  tab_type_ = 0;
 }
-inline uint64_t C_SORT_INVENTORY::_internal_tab_type() const {
-  return tab_type_;
+inline ::Protocol::InventoryTab C_SORT_INVENTORY::_internal_tab_type() const {
+  return static_cast< ::Protocol::InventoryTab >(tab_type_);
 }
-inline uint64_t C_SORT_INVENTORY::tab_type() const {
+inline ::Protocol::InventoryTab C_SORT_INVENTORY::tab_type() const {
   // @@protoc_insertion_point(field_get:Protocol.C_SORT_INVENTORY.tab_type)
   return _internal_tab_type();
 }
-inline void C_SORT_INVENTORY::_internal_set_tab_type(uint64_t value) {
+inline void C_SORT_INVENTORY::_internal_set_tab_type(::Protocol::InventoryTab value) {
   
   tab_type_ = value;
 }
-inline void C_SORT_INVENTORY::set_tab_type(uint64_t value) {
+inline void C_SORT_INVENTORY::set_tab_type(::Protocol::InventoryTab value) {
   _internal_set_tab_type(value);
   // @@protoc_insertion_point(field_set:Protocol.C_SORT_INVENTORY.tab_type)
+}
+
+// -------------------------------------------------------------------
+
+// C_UPDATE_ITEM
+
+// .Protocol.InventoryTab tab_type = 1;
+inline void C_UPDATE_ITEM::clear_tab_type() {
+  tab_type_ = 0;
+}
+inline ::Protocol::InventoryTab C_UPDATE_ITEM::_internal_tab_type() const {
+  return static_cast< ::Protocol::InventoryTab >(tab_type_);
+}
+inline ::Protocol::InventoryTab C_UPDATE_ITEM::tab_type() const {
+  // @@protoc_insertion_point(field_get:Protocol.C_UPDATE_ITEM.tab_type)
+  return _internal_tab_type();
+}
+inline void C_UPDATE_ITEM::_internal_set_tab_type(::Protocol::InventoryTab value) {
+  
+  tab_type_ = value;
+}
+inline void C_UPDATE_ITEM::set_tab_type(::Protocol::InventoryTab value) {
+  _internal_set_tab_type(value);
+  // @@protoc_insertion_point(field_set:Protocol.C_UPDATE_ITEM.tab_type)
+}
+
+// uint64 item_id = 2;
+inline void C_UPDATE_ITEM::clear_item_id() {
+  item_id_ = uint64_t{0u};
+}
+inline uint64_t C_UPDATE_ITEM::_internal_item_id() const {
+  return item_id_;
+}
+inline uint64_t C_UPDATE_ITEM::item_id() const {
+  // @@protoc_insertion_point(field_get:Protocol.C_UPDATE_ITEM.item_id)
+  return _internal_item_id();
+}
+inline void C_UPDATE_ITEM::_internal_set_item_id(uint64_t value) {
+  
+  item_id_ = value;
+}
+inline void C_UPDATE_ITEM::set_item_id(uint64_t value) {
+  _internal_set_item_id(value);
+  // @@protoc_insertion_point(field_set:Protocol.C_UPDATE_ITEM.item_id)
+}
+
+// uint64 inv_slot_index = 3;
+inline void C_UPDATE_ITEM::clear_inv_slot_index() {
+  inv_slot_index_ = uint64_t{0u};
+}
+inline uint64_t C_UPDATE_ITEM::_internal_inv_slot_index() const {
+  return inv_slot_index_;
+}
+inline uint64_t C_UPDATE_ITEM::inv_slot_index() const {
+  // @@protoc_insertion_point(field_get:Protocol.C_UPDATE_ITEM.inv_slot_index)
+  return _internal_inv_slot_index();
+}
+inline void C_UPDATE_ITEM::_internal_set_inv_slot_index(uint64_t value) {
+  
+  inv_slot_index_ = value;
+}
+inline void C_UPDATE_ITEM::set_inv_slot_index(uint64_t value) {
+  _internal_set_inv_slot_index(value);
+  // @@protoc_insertion_point(field_set:Protocol.C_UPDATE_ITEM.inv_slot_index)
+}
+
+// uint64 quantity = 4;
+inline void C_UPDATE_ITEM::clear_quantity() {
+  quantity_ = uint64_t{0u};
+}
+inline uint64_t C_UPDATE_ITEM::_internal_quantity() const {
+  return quantity_;
+}
+inline uint64_t C_UPDATE_ITEM::quantity() const {
+  // @@protoc_insertion_point(field_get:Protocol.C_UPDATE_ITEM.quantity)
+  return _internal_quantity();
+}
+inline void C_UPDATE_ITEM::_internal_set_quantity(uint64_t value) {
+  
+  quantity_ = value;
+}
+inline void C_UPDATE_ITEM::set_quantity(uint64_t value) {
+  _internal_set_quantity(value);
+  // @@protoc_insertion_point(field_set:Protocol.C_UPDATE_ITEM.quantity)
 }
 
 // -------------------------------------------------------------------
@@ -5822,22 +7173,22 @@ inline void S_CONSUME_RESULT::set_item_id(uint64_t value) {
   // @@protoc_insertion_point(field_set:Protocol.S_CONSUME_RESULT.item_id)
 }
 
-// uint64 tab_type = 3;
+// .Protocol.InventoryTab tab_type = 3;
 inline void S_CONSUME_RESULT::clear_tab_type() {
-  tab_type_ = uint64_t{0u};
+  tab_type_ = 0;
 }
-inline uint64_t S_CONSUME_RESULT::_internal_tab_type() const {
-  return tab_type_;
+inline ::Protocol::InventoryTab S_CONSUME_RESULT::_internal_tab_type() const {
+  return static_cast< ::Protocol::InventoryTab >(tab_type_);
 }
-inline uint64_t S_CONSUME_RESULT::tab_type() const {
+inline ::Protocol::InventoryTab S_CONSUME_RESULT::tab_type() const {
   // @@protoc_insertion_point(field_get:Protocol.S_CONSUME_RESULT.tab_type)
   return _internal_tab_type();
 }
-inline void S_CONSUME_RESULT::_internal_set_tab_type(uint64_t value) {
+inline void S_CONSUME_RESULT::_internal_set_tab_type(::Protocol::InventoryTab value) {
   
   tab_type_ = value;
 }
-inline void S_CONSUME_RESULT::set_tab_type(uint64_t value) {
+inline void S_CONSUME_RESULT::set_tab_type(::Protocol::InventoryTab value) {
   _internal_set_tab_type(value);
   // @@protoc_insertion_point(field_set:Protocol.S_CONSUME_RESULT.tab_type)
 }
@@ -5926,44 +7277,44 @@ inline void S_DROP_RESULT::set_item_id(uint64_t value) {
   // @@protoc_insertion_point(field_set:Protocol.S_DROP_RESULT.item_id)
 }
 
-// uint64 tab_type = 3;
+// .Protocol.InventoryTab tab_type = 3;
 inline void S_DROP_RESULT::clear_tab_type() {
-  tab_type_ = uint64_t{0u};
+  tab_type_ = 0;
 }
-inline uint64_t S_DROP_RESULT::_internal_tab_type() const {
-  return tab_type_;
+inline ::Protocol::InventoryTab S_DROP_RESULT::_internal_tab_type() const {
+  return static_cast< ::Protocol::InventoryTab >(tab_type_);
 }
-inline uint64_t S_DROP_RESULT::tab_type() const {
+inline ::Protocol::InventoryTab S_DROP_RESULT::tab_type() const {
   // @@protoc_insertion_point(field_get:Protocol.S_DROP_RESULT.tab_type)
   return _internal_tab_type();
 }
-inline void S_DROP_RESULT::_internal_set_tab_type(uint64_t value) {
+inline void S_DROP_RESULT::_internal_set_tab_type(::Protocol::InventoryTab value) {
   
   tab_type_ = value;
 }
-inline void S_DROP_RESULT::set_tab_type(uint64_t value) {
+inline void S_DROP_RESULT::set_tab_type(::Protocol::InventoryTab value) {
   _internal_set_tab_type(value);
   // @@protoc_insertion_point(field_set:Protocol.S_DROP_RESULT.tab_type)
 }
 
-// uint64 slot_index = 4;
-inline void S_DROP_RESULT::clear_slot_index() {
-  slot_index_ = uint64_t{0u};
+// uint64 inv_slot_index = 4;
+inline void S_DROP_RESULT::clear_inv_slot_index() {
+  inv_slot_index_ = uint64_t{0u};
 }
-inline uint64_t S_DROP_RESULT::_internal_slot_index() const {
-  return slot_index_;
+inline uint64_t S_DROP_RESULT::_internal_inv_slot_index() const {
+  return inv_slot_index_;
 }
-inline uint64_t S_DROP_RESULT::slot_index() const {
-  // @@protoc_insertion_point(field_get:Protocol.S_DROP_RESULT.slot_index)
-  return _internal_slot_index();
+inline uint64_t S_DROP_RESULT::inv_slot_index() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_DROP_RESULT.inv_slot_index)
+  return _internal_inv_slot_index();
 }
-inline void S_DROP_RESULT::_internal_set_slot_index(uint64_t value) {
+inline void S_DROP_RESULT::_internal_set_inv_slot_index(uint64_t value) {
   
-  slot_index_ = value;
+  inv_slot_index_ = value;
 }
-inline void S_DROP_RESULT::set_slot_index(uint64_t value) {
-  _internal_set_slot_index(value);
-  // @@protoc_insertion_point(field_set:Protocol.S_DROP_RESULT.slot_index)
+inline void S_DROP_RESULT::set_inv_slot_index(uint64_t value) {
+  _internal_set_inv_slot_index(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_DROP_RESULT.inv_slot_index)
 }
 
 // -------------------------------------------------------------------
@@ -5990,84 +7341,84 @@ inline void S_MOVE_INVENTORY_RESULT::set_success(bool value) {
   // @@protoc_insertion_point(field_set:Protocol.S_MOVE_INVENTORY_RESULT.success)
 }
 
-// uint64 from_tab = 2;
+// .Protocol.InventoryTab from_tab = 2;
 inline void S_MOVE_INVENTORY_RESULT::clear_from_tab() {
-  from_tab_ = uint64_t{0u};
+  from_tab_ = 0;
 }
-inline uint64_t S_MOVE_INVENTORY_RESULT::_internal_from_tab() const {
-  return from_tab_;
+inline ::Protocol::InventoryTab S_MOVE_INVENTORY_RESULT::_internal_from_tab() const {
+  return static_cast< ::Protocol::InventoryTab >(from_tab_);
 }
-inline uint64_t S_MOVE_INVENTORY_RESULT::from_tab() const {
+inline ::Protocol::InventoryTab S_MOVE_INVENTORY_RESULT::from_tab() const {
   // @@protoc_insertion_point(field_get:Protocol.S_MOVE_INVENTORY_RESULT.from_tab)
   return _internal_from_tab();
 }
-inline void S_MOVE_INVENTORY_RESULT::_internal_set_from_tab(uint64_t value) {
+inline void S_MOVE_INVENTORY_RESULT::_internal_set_from_tab(::Protocol::InventoryTab value) {
   
   from_tab_ = value;
 }
-inline void S_MOVE_INVENTORY_RESULT::set_from_tab(uint64_t value) {
+inline void S_MOVE_INVENTORY_RESULT::set_from_tab(::Protocol::InventoryTab value) {
   _internal_set_from_tab(value);
   // @@protoc_insertion_point(field_set:Protocol.S_MOVE_INVENTORY_RESULT.from_tab)
 }
 
-// uint64 from_index = 3;
-inline void S_MOVE_INVENTORY_RESULT::clear_from_index() {
-  from_index_ = uint64_t{0u};
+// uint64 inv_from_index = 3;
+inline void S_MOVE_INVENTORY_RESULT::clear_inv_from_index() {
+  inv_from_index_ = uint64_t{0u};
 }
-inline uint64_t S_MOVE_INVENTORY_RESULT::_internal_from_index() const {
-  return from_index_;
+inline uint64_t S_MOVE_INVENTORY_RESULT::_internal_inv_from_index() const {
+  return inv_from_index_;
 }
-inline uint64_t S_MOVE_INVENTORY_RESULT::from_index() const {
-  // @@protoc_insertion_point(field_get:Protocol.S_MOVE_INVENTORY_RESULT.from_index)
-  return _internal_from_index();
+inline uint64_t S_MOVE_INVENTORY_RESULT::inv_from_index() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_MOVE_INVENTORY_RESULT.inv_from_index)
+  return _internal_inv_from_index();
 }
-inline void S_MOVE_INVENTORY_RESULT::_internal_set_from_index(uint64_t value) {
+inline void S_MOVE_INVENTORY_RESULT::_internal_set_inv_from_index(uint64_t value) {
   
-  from_index_ = value;
+  inv_from_index_ = value;
 }
-inline void S_MOVE_INVENTORY_RESULT::set_from_index(uint64_t value) {
-  _internal_set_from_index(value);
-  // @@protoc_insertion_point(field_set:Protocol.S_MOVE_INVENTORY_RESULT.from_index)
+inline void S_MOVE_INVENTORY_RESULT::set_inv_from_index(uint64_t value) {
+  _internal_set_inv_from_index(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_MOVE_INVENTORY_RESULT.inv_from_index)
 }
 
-// uint64 to_tab = 4;
+// .Protocol.InventoryTab to_tab = 4;
 inline void S_MOVE_INVENTORY_RESULT::clear_to_tab() {
-  to_tab_ = uint64_t{0u};
+  to_tab_ = 0;
 }
-inline uint64_t S_MOVE_INVENTORY_RESULT::_internal_to_tab() const {
-  return to_tab_;
+inline ::Protocol::InventoryTab S_MOVE_INVENTORY_RESULT::_internal_to_tab() const {
+  return static_cast< ::Protocol::InventoryTab >(to_tab_);
 }
-inline uint64_t S_MOVE_INVENTORY_RESULT::to_tab() const {
+inline ::Protocol::InventoryTab S_MOVE_INVENTORY_RESULT::to_tab() const {
   // @@protoc_insertion_point(field_get:Protocol.S_MOVE_INVENTORY_RESULT.to_tab)
   return _internal_to_tab();
 }
-inline void S_MOVE_INVENTORY_RESULT::_internal_set_to_tab(uint64_t value) {
+inline void S_MOVE_INVENTORY_RESULT::_internal_set_to_tab(::Protocol::InventoryTab value) {
   
   to_tab_ = value;
 }
-inline void S_MOVE_INVENTORY_RESULT::set_to_tab(uint64_t value) {
+inline void S_MOVE_INVENTORY_RESULT::set_to_tab(::Protocol::InventoryTab value) {
   _internal_set_to_tab(value);
   // @@protoc_insertion_point(field_set:Protocol.S_MOVE_INVENTORY_RESULT.to_tab)
 }
 
-// uint64 to_index = 5;
-inline void S_MOVE_INVENTORY_RESULT::clear_to_index() {
-  to_index_ = uint64_t{0u};
+// uint64 inv_to_index = 5;
+inline void S_MOVE_INVENTORY_RESULT::clear_inv_to_index() {
+  inv_to_index_ = uint64_t{0u};
 }
-inline uint64_t S_MOVE_INVENTORY_RESULT::_internal_to_index() const {
-  return to_index_;
+inline uint64_t S_MOVE_INVENTORY_RESULT::_internal_inv_to_index() const {
+  return inv_to_index_;
 }
-inline uint64_t S_MOVE_INVENTORY_RESULT::to_index() const {
-  // @@protoc_insertion_point(field_get:Protocol.S_MOVE_INVENTORY_RESULT.to_index)
-  return _internal_to_index();
+inline uint64_t S_MOVE_INVENTORY_RESULT::inv_to_index() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_MOVE_INVENTORY_RESULT.inv_to_index)
+  return _internal_inv_to_index();
 }
-inline void S_MOVE_INVENTORY_RESULT::_internal_set_to_index(uint64_t value) {
+inline void S_MOVE_INVENTORY_RESULT::_internal_set_inv_to_index(uint64_t value) {
   
-  to_index_ = value;
+  inv_to_index_ = value;
 }
-inline void S_MOVE_INVENTORY_RESULT::set_to_index(uint64_t value) {
-  _internal_set_to_index(value);
-  // @@protoc_insertion_point(field_set:Protocol.S_MOVE_INVENTORY_RESULT.to_index)
+inline void S_MOVE_INVENTORY_RESULT::set_inv_to_index(uint64_t value) {
+  _internal_set_inv_to_index(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_MOVE_INVENTORY_RESULT.inv_to_index)
 }
 
 // uint64 moved_item_id = 6;
@@ -6154,22 +7505,22 @@ inline void S_EQUIP_RESULT::set_item_id(uint64_t value) {
   // @@protoc_insertion_point(field_set:Protocol.S_EQUIP_RESULT.item_id)
 }
 
-// uint64 slot_type = 3;
+// .Protocol.EquipmentSlot slot_type = 3;
 inline void S_EQUIP_RESULT::clear_slot_type() {
-  slot_type_ = uint64_t{0u};
+  slot_type_ = 0;
 }
-inline uint64_t S_EQUIP_RESULT::_internal_slot_type() const {
-  return slot_type_;
+inline ::Protocol::EquipmentSlot S_EQUIP_RESULT::_internal_slot_type() const {
+  return static_cast< ::Protocol::EquipmentSlot >(slot_type_);
 }
-inline uint64_t S_EQUIP_RESULT::slot_type() const {
+inline ::Protocol::EquipmentSlot S_EQUIP_RESULT::slot_type() const {
   // @@protoc_insertion_point(field_get:Protocol.S_EQUIP_RESULT.slot_type)
   return _internal_slot_type();
 }
-inline void S_EQUIP_RESULT::_internal_set_slot_type(uint64_t value) {
+inline void S_EQUIP_RESULT::_internal_set_slot_type(::Protocol::EquipmentSlot value) {
   
   slot_type_ = value;
 }
-inline void S_EQUIP_RESULT::set_slot_type(uint64_t value) {
+inline void S_EQUIP_RESULT::set_slot_type(::Protocol::EquipmentSlot value) {
   _internal_set_slot_type(value);
   // @@protoc_insertion_point(field_set:Protocol.S_EQUIP_RESULT.slot_type)
 }
@@ -6218,64 +7569,64 @@ inline void S_UNEQUIP_RESULT::set_item_id(uint64_t value) {
   // @@protoc_insertion_point(field_set:Protocol.S_UNEQUIP_RESULT.item_id)
 }
 
-// uint64 slot_type = 3;
+// .Protocol.EquipmentSlot slot_type = 3;
 inline void S_UNEQUIP_RESULT::clear_slot_type() {
-  slot_type_ = uint64_t{0u};
+  slot_type_ = 0;
 }
-inline uint64_t S_UNEQUIP_RESULT::_internal_slot_type() const {
-  return slot_type_;
+inline ::Protocol::EquipmentSlot S_UNEQUIP_RESULT::_internal_slot_type() const {
+  return static_cast< ::Protocol::EquipmentSlot >(slot_type_);
 }
-inline uint64_t S_UNEQUIP_RESULT::slot_type() const {
+inline ::Protocol::EquipmentSlot S_UNEQUIP_RESULT::slot_type() const {
   // @@protoc_insertion_point(field_get:Protocol.S_UNEQUIP_RESULT.slot_type)
   return _internal_slot_type();
 }
-inline void S_UNEQUIP_RESULT::_internal_set_slot_type(uint64_t value) {
+inline void S_UNEQUIP_RESULT::_internal_set_slot_type(::Protocol::EquipmentSlot value) {
   
   slot_type_ = value;
 }
-inline void S_UNEQUIP_RESULT::set_slot_type(uint64_t value) {
+inline void S_UNEQUIP_RESULT::set_slot_type(::Protocol::EquipmentSlot value) {
   _internal_set_slot_type(value);
   // @@protoc_insertion_point(field_set:Protocol.S_UNEQUIP_RESULT.slot_type)
 }
 
-// uint64 to_tab_type = 4;
+// .Protocol.InventoryTab to_tab_type = 4;
 inline void S_UNEQUIP_RESULT::clear_to_tab_type() {
-  to_tab_type_ = uint64_t{0u};
+  to_tab_type_ = 0;
 }
-inline uint64_t S_UNEQUIP_RESULT::_internal_to_tab_type() const {
-  return to_tab_type_;
+inline ::Protocol::InventoryTab S_UNEQUIP_RESULT::_internal_to_tab_type() const {
+  return static_cast< ::Protocol::InventoryTab >(to_tab_type_);
 }
-inline uint64_t S_UNEQUIP_RESULT::to_tab_type() const {
+inline ::Protocol::InventoryTab S_UNEQUIP_RESULT::to_tab_type() const {
   // @@protoc_insertion_point(field_get:Protocol.S_UNEQUIP_RESULT.to_tab_type)
   return _internal_to_tab_type();
 }
-inline void S_UNEQUIP_RESULT::_internal_set_to_tab_type(uint64_t value) {
+inline void S_UNEQUIP_RESULT::_internal_set_to_tab_type(::Protocol::InventoryTab value) {
   
   to_tab_type_ = value;
 }
-inline void S_UNEQUIP_RESULT::set_to_tab_type(uint64_t value) {
+inline void S_UNEQUIP_RESULT::set_to_tab_type(::Protocol::InventoryTab value) {
   _internal_set_to_tab_type(value);
   // @@protoc_insertion_point(field_set:Protocol.S_UNEQUIP_RESULT.to_tab_type)
 }
 
-// uint64 to_slot_index = 5;
-inline void S_UNEQUIP_RESULT::clear_to_slot_index() {
-  to_slot_index_ = uint64_t{0u};
+// uint64 inv_to_slot_index = 5;
+inline void S_UNEQUIP_RESULT::clear_inv_to_slot_index() {
+  inv_to_slot_index_ = uint64_t{0u};
 }
-inline uint64_t S_UNEQUIP_RESULT::_internal_to_slot_index() const {
-  return to_slot_index_;
+inline uint64_t S_UNEQUIP_RESULT::_internal_inv_to_slot_index() const {
+  return inv_to_slot_index_;
 }
-inline uint64_t S_UNEQUIP_RESULT::to_slot_index() const {
-  // @@protoc_insertion_point(field_get:Protocol.S_UNEQUIP_RESULT.to_slot_index)
-  return _internal_to_slot_index();
+inline uint64_t S_UNEQUIP_RESULT::inv_to_slot_index() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_UNEQUIP_RESULT.inv_to_slot_index)
+  return _internal_inv_to_slot_index();
 }
-inline void S_UNEQUIP_RESULT::_internal_set_to_slot_index(uint64_t value) {
+inline void S_UNEQUIP_RESULT::_internal_set_inv_to_slot_index(uint64_t value) {
   
-  to_slot_index_ = value;
+  inv_to_slot_index_ = value;
 }
-inline void S_UNEQUIP_RESULT::set_to_slot_index(uint64_t value) {
-  _internal_set_to_slot_index(value);
-  // @@protoc_insertion_point(field_set:Protocol.S_UNEQUIP_RESULT.to_slot_index)
+inline void S_UNEQUIP_RESULT::set_inv_to_slot_index(uint64_t value) {
+  _internal_set_inv_to_slot_index(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_UNEQUIP_RESULT.inv_to_slot_index)
 }
 
 // -------------------------------------------------------------------
@@ -6618,9 +7969,60 @@ inline void S_RESPAWN::set_exp(uint64_t value) {
   // @@protoc_insertion_point(field_set:Protocol.S_RESPAWN.exp)
 }
 
+// -------------------------------------------------------------------
+
+// S_RANKING
+
+// repeated .Protocol.GoldRanking ranking = 1;
+inline int S_RANKING::_internal_ranking_size() const {
+  return ranking_.size();
+}
+inline int S_RANKING::ranking_size() const {
+  return _internal_ranking_size();
+}
+inline ::Protocol::GoldRanking* S_RANKING::mutable_ranking(int index) {
+  // @@protoc_insertion_point(field_mutable:Protocol.S_RANKING.ranking)
+  return ranking_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::GoldRanking >*
+S_RANKING::mutable_ranking() {
+  // @@protoc_insertion_point(field_mutable_list:Protocol.S_RANKING.ranking)
+  return &ranking_;
+}
+inline const ::Protocol::GoldRanking& S_RANKING::_internal_ranking(int index) const {
+  return ranking_.Get(index);
+}
+inline const ::Protocol::GoldRanking& S_RANKING::ranking(int index) const {
+  // @@protoc_insertion_point(field_get:Protocol.S_RANKING.ranking)
+  return _internal_ranking(index);
+}
+inline ::Protocol::GoldRanking* S_RANKING::_internal_add_ranking() {
+  return ranking_.Add();
+}
+inline ::Protocol::GoldRanking* S_RANKING::add_ranking() {
+  ::Protocol::GoldRanking* _add = _internal_add_ranking();
+  // @@protoc_insertion_point(field_add:Protocol.S_RANKING.ranking)
+  return _add;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::GoldRanking >&
+S_RANKING::ranking() const {
+  // @@protoc_insertion_point(field_list:Protocol.S_RANKING.ranking)
+  return ranking_;
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
