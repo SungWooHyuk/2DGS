@@ -4,22 +4,33 @@
 #include "SFSystem.h"
 #include "Client.h"
 #include "Player.h"
+#include "GLogger.h"
 
 PacketHandlerFunc GPacketHandler[UINT16_MAX];
 
 bool Handle_INVALID(PacketSessionRef& session, BYTE* buffer, int32 len)
 {
+	ServerSessionRef serverSession = static_pointer_cast<ServerSession>(session);
+	string playerName = serverSession->GetPlayer()->GetName();
+
+	//GLogger::LogWithContext(spdlog::level::warn, playerName, "Handle_INVALID", "Received invalid packet");
 	return false;
 }
 bool Handle_S_LOGIN(PacketSessionRef& session, Protocol::S_LOGIN& pkt)
 {
 	ServerSessionRef serverSession = static_pointer_cast<ServerSession>(session);
-
+	
 	if (!pkt.success())
+	{
+		//GLogger::LogWithContext(spdlog::level::warn, playerName, "Handle_S_LOGIN", "Login failed");
 		return false;
+	}
 
 	for (const auto& player : pkt.players())
 	{
+		//GLogger::LogWithContext(spdlog::level::info, playerName, "Handle_S_LOGIN", "PlayerID: {}, Name : {}, Gold : {}",
+		//	player.id(), player.name(), player.gold());
+
 		POS ps;
 		TP tp;
 
@@ -113,9 +124,27 @@ bool Handle_S_LOGIN(PacketSessionRef& session, Protocol::S_LOGIN& pkt)
 	return true;
 }
 
+bool Handle_S_REMOVE_ITEM(PacketSessionRef& session, Protocol::S_REMOVE_ITEM& pkt)
+{
+	ServerSessionRef serverSession = static_pointer_cast<ServerSession>(session);
+	string playerName = serverSession->GetPlayer()->GetName();	
+	//GLogger::LogWithContext(spdlog::level::info, playerName, "Handle_S_REMOVE_ITEM", "ItemID: {}, Tab: {}, Slot: {}",
+	//	pkt.item_id(), static_cast<int>(pkt.tab()), pkt.inv_slot_index());
+
+	
+	uint64 itemId = pkt.item_id();
+	Protocol::InventoryTab tab = pkt.tab();
+	uint64 slotIndex = pkt.inv_slot_index();
+
+	serverSession->GetPlayer()->RemoveItem(tab, slotIndex);
+
+	return true;
+}
 bool Handle_S_LOAD_INVENTORY(PacketSessionRef& session, Protocol::S_LOAD_INVENTORY& pkt)
 {
 	ServerSessionRef serverSession = static_pointer_cast<ServerSession>(session);
+	string playerName = serverSession->GetPlayer()->GetName();
+	//GLogger::LogWithContext(spdlog::level::info, playerName, "Handle_S_LOAD_INVENTORY", "SlotCount: {}", pkt.inventory_size());
 	vector<INVEN> inventoryList;
 
 	for (const auto& slot : pkt.inventory())
@@ -140,11 +169,11 @@ bool Handle_S_LOAD_INVENTORY(PacketSessionRef& session, Protocol::S_LOAD_INVENTO
 bool Handle_S_LOAD_EQUIPMENT(PacketSessionRef& session, Protocol::S_LOAD_EQUIPMENT& pkt)
 {	
 	ServerSessionRef serverSession = static_pointer_cast<ServerSession>(session);
+	string playerName = serverSession->GetPlayer()->GetName();
+	//GLogger::LogWithContext(spdlog::level::info, playerName, "Handle_S_LOAD_EQUIPMENT", "equip count: {}", pkt.equipment_size());
 	if (pkt.equipment_size() > 0)
 	{
 		const Protocol::EquipmentItem& equip = pkt.equipment(0); // 1개
-
-		// 서버로 부터 장비창 불러오기
 		return true;
 	}
 
@@ -154,12 +183,15 @@ bool Handle_S_LOAD_EQUIPMENT(PacketSessionRef& session, Protocol::S_LOAD_EQUIPME
 bool Handle_S_CONSUME_RESULT(PacketSessionRef& session, Protocol::S_CONSUME_RESULT& pkt)
 {
 	ServerSessionRef serverSession = static_pointer_cast<ServerSession>(session);
+	string playerName = serverSession->GetPlayer()->GetName();
+	//GLogger::LogWithContext(spdlog::level::info, playerName, "Handle_S_CONSUME_RESULT", "success: {}",pkt.success());
+
 	if (pkt.success())
 	{
 		serverSession->GetPlayer()->UpdateItemQuantity(pkt.tab_type(), pkt.slot_index(), pkt.new_quantity());
 		return true;
 	}	
-	else // 실패는 수량이 0보다 작을때 실패 줄껀데, 서버에서 처리해서 그냥 다른걸로 넘겨줘도 될듯함. 일단은 이렇게 잡고.
+	else 
 	{
 		if (pkt.new_quantity() <= 0)
 		{
@@ -173,6 +205,9 @@ bool Handle_S_CONSUME_RESULT(PacketSessionRef& session, Protocol::S_CONSUME_RESU
 bool Handle_S_DROP_RESULT(PacketSessionRef& session, Protocol::S_DROP_RESULT& pkt)
 {
 	ServerSessionRef serverSession = static_pointer_cast<ServerSession>(session);
+	string playerName = serverSession->GetPlayer()->GetName();
+	//GLogger::LogWithContext(spdlog::level::info, playerName, "Handle_S_DROP_RESULT", "success: {}",pkt.success());
+
 	if (pkt.success())
 	{
 		serverSession->GetPlayer()->RemoveItem(pkt.tab_type(), pkt.inv_slot_index());
@@ -184,6 +219,8 @@ bool Handle_S_DROP_RESULT(PacketSessionRef& session, Protocol::S_DROP_RESULT& pk
 bool Handle_S_MOVE_INVENTORY_RESULT(PacketSessionRef& session, Protocol::S_MOVE_INVENTORY_RESULT& pkt)
 {
 	ServerSessionRef serverSession = static_pointer_cast<ServerSession>(session);
+	string playerName = serverSession->GetPlayer()->GetName();
+	//GLogger::LogWithContext(spdlog::level::info, playerName, "Handle_S_MOVE_INVENTORY_RESULT", "success: {}",pkt.success());
 	if (pkt.success())
 	{
 		serverSession->GetPlayer()->MoveItem(pkt.from_tab(), pkt.inv_from_index(), pkt.to_tab(), pkt.inv_to_index(), pkt.quantity());
@@ -195,6 +232,8 @@ bool Handle_S_MOVE_INVENTORY_RESULT(PacketSessionRef& session, Protocol::S_MOVE_
 bool Handle_S_EQUIP_RESULT(PacketSessionRef& session, Protocol::S_EQUIP_RESULT& pkt)
 {
 	ServerSessionRef serverSession = static_pointer_cast<ServerSession>(session);
+	string playerName = serverSession->GetPlayer()->GetName();
+	//GLogger::LogWithContext(spdlog::level::info, playerName, "Handle_S_EQUIP_RESULT", "success: {}", pkt.success());
 	if (pkt.success())
 	{
 		serverSession->GetPlayer()->SetEquip(pkt.slot_type(), pkt.item_id());
@@ -206,6 +245,8 @@ bool Handle_S_EQUIP_RESULT(PacketSessionRef& session, Protocol::S_EQUIP_RESULT& 
 bool Handle_S_UNEQUIP_RESULT(PacketSessionRef& session, Protocol::S_UNEQUIP_RESULT& pkt)
 {
 	ServerSessionRef serverSession = static_pointer_cast<ServerSession>(session);
+	string playerName = serverSession->GetPlayer()->GetName();
+	//GLogger::LogWithContext(spdlog::level::info, playerName, "Handle_S_UNEQUIP_RESULT", "success: {}", pkt.success());
 	if (pkt.success())
 	{
 		INVEN inv;
@@ -220,10 +261,28 @@ bool Handle_S_UNEQUIP_RESULT(PacketSessionRef& session, Protocol::S_UNEQUIP_RESU
 	return false;
 }
 
+bool Handle_S_SWAP_ITEM(PacketSessionRef& session, Protocol::S_SWAP_ITEM& pkt)
+{
+	ServerSessionRef serverSession = static_pointer_cast<ServerSession>(session);
+	string playerName = serverSession->GetPlayer()->GetName();
+	//GLogger::LogWithContext(spdlog::level::info, playerName, "Handle_S_SWAP_ITEM", "success: {}",
+	//	pkt.success());
+	if (pkt.success())
+	{
+		serverSession->GetPlayer()->SwapItems(pkt.from_tab(), pkt.inv_from_index(), pkt.to_tab(), pkt.inv_to_index());
+		return true;
+	}
+	return false;
+}
+
 bool Handle_S_GOLD_CHANGE(PacketSessionRef& session, Protocol::S_GOLD_CHANGE& pkt)
 {
 	ServerSessionRef serverSession = static_pointer_cast<ServerSession>(session);
-	
+	string playerName = serverSession->GetPlayer()->GetName();
+
+	//GLogger::LogWithContext(spdlog::level::info, playerName, "Handle_S_GOLD_CHANGE", "new_gold: {} delta: {}",
+	//	pkt.new_gold(), pkt.delta());
+
 	if (pkt.new_gold() > 0)
 	{
 		serverSession->GetPlayer()->SetGold(pkt.new_gold());
@@ -255,6 +314,9 @@ bool Handle_S_ADD_OBJECT(PacketSessionRef& session, Protocol::S_ADD_OBJECT& pkt)
 bool Handle_S_REMOVE_OBJECT(PacketSessionRef& session, Protocol::S_REMOVE_OBJECT& pkt)
 {
 	ServerSessionRef serverSession = static_pointer_cast<ServerSession>(session);
+	string playerName = serverSession->GetPlayer()->GetName();
+
+	//GLogger::LogWithContext(spdlog::level::info, playerName, "Handle_S_GOLD_CHANGE", "removeObjectId: {}", pkt.id());
 
 	if (serverSession->GetPlayer()->GetId() == pkt.id())
 	{

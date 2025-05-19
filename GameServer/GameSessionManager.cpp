@@ -7,8 +7,14 @@
 #include "Player.h"
 #include "MapData.h"
 #include "RoomManager.h"
+#include "RedisManager.h"
+#include "DropTable.h"
+#include "item.h"
 #include "Protocol.pb.h"
 #include <fstream>
+#include "GLogger.h"
+
+shared_ptr<GameSessionManager> GGameSessionManager = make_shared<GameSessionManager>();
 
 void GameSessionManager::Add(GameSessionRef _session)
 {
@@ -19,45 +25,71 @@ void GameSessionManager::Add(GameSessionRef _session)
 		_session->SetId(newId);
 		sessions[newId] = _session;
 	}
+	GLogger::LogWithContext(spdlog::level::info, "GameSessionManager", "Add", "New session added with ID: {}", newId);
+
 }
 
 void GameSessionManager::Remove(GameSessionRef _session)
 {
-	WRITE_LOCK;
+	if (!_session)
 	{
+		ASSERT_CRASH(false);
+		return;
+	}
 
-		if (!_session)
+	GameSessionRef gamesession = _session;
+	auto currentPlayer = gamesession->GetCurrentPlayer();
+
+	if (!currentPlayer)
+		return;
+
+	int id = currentPlayer->GetId();
+	GLogger::LogWithContext(spdlog::level::info, currentPlayer->GetName(), "Remove", "Removing session for player ID: {}", id);
+
+	if (currentPlayer->GetPT() == Protocol::PLAYER_TYPE_CLIENT) {
+		if (currentPlayer->GetName().substr(0, 5) != "dummy")
 		{
-			ASSERT_CRASH(false);
-			return;
+			DBMANAGER.GetSession()->SendSavePkt(
+				id,
+				currentPlayer->GetInventory(),
+				currentPlayer->GetEquipments(),
+				currentPlayer->GetPlayer()
+			);
 		}
+	}
 
-		GameSessionRef gamesession = _session;
-		auto currentPlayer = gamesession->GetCurrentPlayer();
-		if (currentPlayer)
+	unordered_set<uint64> vl;
+	{
+		READ_LOCK;
+		if (sessions[id])
+			vl = sessions[id]->GetViewPlayer();
+	}
+
+	{
+		READ_LOCK;
+		for (const auto& _vl : vl)
 		{
-			int id = currentPlayer->GetId();
+			if (!IsPlayer(_vl)) continue;
+			if (_vl == id) continue;
 
-			if (gamesession->GetCurrentPlayer()->GetPT() == Protocol::PLAYER_TYPE_CLIENT)
-				if (gamesession->GetCurrentPlayer()->GetName().substr(0, 5) != "dummy")
-					ASSERT_CRASH(UserInfoPlayer(id));
+			auto player = sessions[_vl]->GetCurrentPlayer();
+			if (!player) continue;
 
+			if (player->GetState() != ST_INGAME) continue;
+			if (player->GetPT() == Protocol::PLAYER_TYPE_DUMMY) continue;
 
-			unordered_set<uint64> vl = sessions[id]->GetViewPlayer();
-			for (const auto& _vl : vl)
-			{
-				if (false == IsPlayer(_vl)) continue;
-				if (_vl == id) continue;
-				if (sessions[_vl]->GetCurrentPlayer()->GetState() != ST_INGAME) continue;
-				if (sessions[_vl]->GetCurrentPlayer()->GetPT() == Protocol::PLAYER_TYPE_DUMMY) continue;
+			sessions[_vl]->RemovePkt(id);
+			sessions[_vl]->RemoveViewPlayer(id);
+		}
+	}
 
-				sessions[_vl]->RemovePkt(id);
-				sessions[_vl]->RemoveViewPlayer(id);
-			}
-
-			sessions[gamesession->GetCurrentPlayer()->GetId()]->GetCurrentPlayer()->SetState(ST_FREE);
-			freeId.push(gamesession->GetCurrentPlayer()->GetId());
-			sessions[gamesession->GetCurrentPlayer()->GetId()].reset();
+	{
+		WRITE_LOCK;
+		if (sessions[id])
+		{
+			sessions[id]->GetCurrentPlayer()->SetState(ST_FREE);
+			freeId.push(id);
+			sessions[id].reset();
 		}
 	}
 }
@@ -65,63 +97,95 @@ void GameSessionManager::Remove(GameSessionRef _session)
 void GameSessionManager::Broadcast(SendBufferRef _sendBuffer)
 {
 	READ_LOCK;
-	for (GameSessionRef session : sessions)
+	for (auto session : sessions)
 	{
-		if (session->GetCurrentPlayer()->GetId() < MAX_USER)
+		if (session && session->GetCurrentPlayer()->GetId() < MAX_USER)
 			session->Send(_sendBuffer);
+	}
+}
+
+void GameSessionManager::SaveAllPlayerStateSnap()
+{
+	GLogger::Log(spdlog::level::info, "SaveAllPlayerStateSnap EXEC");
+	for (int i = 0; i < MAX_USER; ++i)
+	{
+		READ_LOCK;
+		if (sessions[i] != nullptr) {
+			GLogger::LogWithContext(spdlog::level::info, sessions[i]->GetCurrentPlayer()->GetName(), "SaveAllPlayerStateSnap", "id: {}", i);
+			sessions[i]->SaveStateSnap();
+		}
+	}
+	DoTimer(30000, &GameSessionManager::SaveAllPlayerStateSnap);
+}
+
+void GameSessionManager::SessionRankingUpdate()
+{
+	for (int i = 0; i < MAX_USER; ++i)
+	{
+		READ_LOCK;
+		if (sessions[i] != nullptr)
+			sessions[i]->RankingPkt(REDIS.GetTop5Ranking());
 	}
 }
 
 void GameSessionManager::Respawn(GameSessionRef _session)
 {
-	GameSessionRef gamesession;
-	PlayerRef player;
-	{
-		gamesession = _session;
-		player = gamesession->GetCurrentPlayer();
-	}
+	GameSessionRef gamesession = _session;
+	PlayerRef player = gamesession->GetCurrentPlayer();
 
-	ROOMMANAGER.EnterRoom(_session); // ·ë ´Ù½Ã ÀÔÀå.
+	
+	ROOMMANAGER->EnterRoom(_session);
 
-	gamesession->s_lock.lock();
 	player->SetStatHp(player->GetStat().maxHp);
-	gamesession->s_lock.unlock();
 
-	unordered_set<uint64> vl = ROOMMANAGER.ViewList(gamesession, true);
+	unordered_set<uint64> vl = ROOMMANAGER->ViewList(gamesession, true);
 	gamesession->SetViewPlayer(vl);
 
-	for (auto _vl : vl)
 	{
-		POS plPos = { gamesession->GetCurrentPlayer()->POSX, gamesession->GetCurrentPlayer()->POSY };
+		READ_LOCK;
+		for (auto _vl : vl)
+		{
+			POS plPos = { player->POSX, player->POSY };
 
-		sessions[_vl]->AddObjectPkt(
-			gamesession->GetCurrentPlayer()->GetPT(),
-			gamesession->GetCurrentPlayer()->GetId(),
-			gamesession->GetCurrentPlayer()->GetName(),
-			plPos
-		);
+			if (sessions[_vl])
+			{
+				sessions[_vl]->AddObjectPkt(
+					player->GetPT(),
+					player->GetId(),
+					player->GetName(),
+					plPos
+				);
+			}
+		}
 	}
 
-	{
-		gamesession->s_lock.lock();
-		gamesession->GetCurrentPlayer()->SetState(ST_INGAME);
-		gamesession->s_lock.unlock();
-	}
+
+	player->SetState(ST_INGAME);
 }
 
 void GameSessionManager::PlayerRespawn(uint64 _id)
 {
 	POS pos{ TOWN };
+	GameSessionRef session;
+	PlayerRef player;
+	GLogger::Log(spdlog::level::info, player->GetName(), "Respawn");
+
 	{
-		sessions[_id]->s_lock.lock();
-		sessions[_id]->GetCurrentPlayer()->SetStatHp(sessions[_id]->GetCurrentPlayer()->GetStat().maxHp);
-		sessions[_id]->GetCurrentPlayer()->SetPos(pos);
-		sessions[_id]->GetCurrentPlayer()->SetStatExp(sessions[_id]->GetCurrentPlayer()->GetStat().exp / 2);
-		sessions[_id]->GetCurrentPlayer()->SetState(ST_INGAME);
-		sessions[_id]->s_lock.unlock();
+		READ_LOCK;
+		session = sessions[_id];
 	}
-	ROOMMANAGER.EnterRoom(sessions[_id]);
-	sessions[_id]->RespawnPkt(sessions[_id]->GetCurrentPlayer()->GetStat().hp, pos, sessions[_id]->GetCurrentPlayer()->GetStat().exp);
+
+	if (!session) return;
+
+	player = session->GetCurrentPlayer();
+
+	player->SetStatHp(player->GetStat().maxHp);
+	player->SetPos(pos);
+	player->SetStatExp(player->GetStat().exp / 2);
+	player->SetState(ST_INGAME);
+
+	ROOMMANAGER->EnterRoom(session);
+	session->RespawnPkt(player->GetStat().hp, pos, player->GetStat().exp);
 }
 
 int GameSessionManager::GetNewClientId()
@@ -136,9 +200,9 @@ int GameSessionManager::GetNewClientId()
 		}
 	}
 
+	READ_LOCK;
 	for (int i = 0; i < MAX_USER; ++i)
 	{
-		READ_LOCK;
 		if (sessions[i] == nullptr)
 			return i;
 	}
@@ -148,32 +212,29 @@ int GameSessionManager::GetNewClientId()
 
 void GameSessionManager::WakeNpc(PlayerRef _player, PlayerRef _toPlayer)
 {
-	PlayerRef player;
-	PlayerRef target;
-	{
-		player = _player;
-		target = _toPlayer;
-	}
+	PlayerRef player = _player;
+	PlayerRef target = _toPlayer;
 
-	unordered_set<uint64> vl = ROOMMANAGER.ViewList(player->GetOwnerSession(), true);
+	unordered_set<uint64> vl = ROOMMANAGER->ViewList(player->GetOwnerSession(), true);
 	player->GetOwnerSession()->SetViewPlayer(vl);
 
 	if (player->GetPT() == Protocol::PLAYER_TYPE_CLIENT) return;
-	if (player->active) return; // ÀÌ¹Ì ±ú¾îÀÖÀ¸¸é return
+	if (player->active) return; 
 	bool old_state = false;
 	if (false == atomic_compare_exchange_strong(&player->active, &old_state, true))
-		return; // ÇÑ¾²·¹µå¸¸ Á¢±ÙÇÏ°Ô 
+		return; 
 	DoTimer(1000, &GameSessionManager::NpcAstarMove, player->GetId());
 }
 
 void GameSessionManager::NpcRandomMove(uint64 _id)
 {
 	GameSessionRef gamesession;
-	PlayerRef npc;
 	{
-		gamesession = sessions[_id];
-		npc = gamesession->GetCurrentPlayer();
-	}
+		READ_LOCK;
+		if (sessions[_id])
+			gamesession = sessions[_id];
+	} 
+	PlayerRef npc = gamesession->GetCurrentPlayer();
 
 	if (gamesession->GetViewPlayer().size() > 0) {
 		if (npc->GetState() == ST_INGAME)
@@ -190,58 +251,62 @@ void GameSessionManager::NpcRandomMove(uint64 _id)
 
 void GameSessionManager::NpcAstarMove(uint64 _id)
 {
-	PlayerRef npc;
 	GameSessionRef gamesession;
+	PlayerRef npc;
 	{
-		gamesession = sessions[_id];
-		npc = gamesession->GetCurrentPlayer();
+		READ_LOCK;
+		if (sessions[_id])
+			gamesession = sessions[_id];
 	}
+
+	if (!gamesession) return;
+	npc = gamesession->GetCurrentPlayer();
+	if (!npc) return;
 
 	unordered_set<uint64> viewPlayer = gamesession->GetViewPlayer();
+	if (viewPlayer.empty() || npc->GetState() != ST_INGAME)
+	{
+		npc->active = false;
+		gamesession->ResetPath();
+		return;
+	}
+
 	uint32 closestDistance = INT32_MAX;
-	uint32 closestPlayerId = 0;
+	uint64 closestPlayerId = 0;
 
-	if (viewPlayer.size() > 0) {
-		if (gamesession->GetCurrentPlayer()->GetState() == ST_INGAME)
+	if (gamesession->EmptyPath() || gamesession->GetPathCount() > 3)
+	{
+		gamesession->ResetPath();
+
 		{
-			// ºñ¾îÀÖ°Å³ª(Ã³À½), 3È¸ ÀÌµ¿ÈÄ °¡±î¿î ÇÃ·¹ÀÌ¾î Àç ¼³Á¤
-			if (gamesession->EmptyPath() || gamesession->GetPathCount() > 3) 
+			READ_LOCK;
+			for (auto id : viewPlayer)
 			{
-				gamesession->ResetPath();
+				auto session = sessions[id];
+				if (!session) continue;
 
+				PlayerRef player = session->GetCurrentPlayer();
+				if (!player) continue;
+
+				if (player->GetPT() == Protocol::PLAYER_TYPE_CLIENT && player->GetState() == ST_INGAME)
 				{
-					for (auto id : viewPlayer)
+					POS playerPos = player->GetPos();
+					uint32 distance = abs(npc->GetPos().posx - playerPos.posx) + abs(npc->GetPos().posy - playerPos.posy);
+					if (distance < closestDistance)
 					{
-						if (sessions[id])
-						{
-							if (sessions[id]->GetCurrentPlayer()->GetPT() == Protocol::PLAYER_TYPE_CLIENT && sessions[id]->GetCurrentPlayer()->GetState() == ST_INGAME)
-							{
-								POS playerPos = sessions[id]->GetCurrentPlayer()->GetPos();
-								uint32 distance = abs(npc->GetPos().posx - playerPos.posx) + abs(npc->GetPos().posy - playerPos.posy);
-								if (distance < closestDistance) {
-									closestDistance = distance;
-									closestPlayerId = id;
-								}
-							}
-						}
+						closestDistance = distance;
+						closestPlayerId = id;
 					}
 				}
-
-				NpcAstar(npc->GetId(), closestPlayerId);
-			} 
-
-			if(DoNpcAstarMove(_id))
-				DoTimer(1000, &GameSessionManager::NpcAstarMove, _id);
+			}
 		}
-		else {
-			npc->active = false;
-			npc->GetOwnerSession()->ResetPath();
-		}
+
+		if (closestPlayerId != 0)
+			NpcAstar(npc->GetId(), closestPlayerId);
 	}
-	else {
-		npc->active = false;
-		npc->GetOwnerSession()->ResetPath();
-	}
+
+	if (DoNpcAstarMove(_id))
+		DoTimer(1000, &GameSessionManager::NpcAstarMove, _id);
 }
 
 void GameSessionManager::NpcAstarMoveTo(uint64 _id, uint64 _targetid)
@@ -249,18 +314,19 @@ void GameSessionManager::NpcAstarMoveTo(uint64 _id, uint64 _targetid)
 	PlayerRef npc;
 	GameSessionRef gamesession;
 	{
+		READ_LOCK;
 		gamesession = sessions[_id];
 		npc = gamesession->GetCurrentPlayer();
 	}
-	
+
 	unordered_set<uint64> viewPlayer = gamesession->GetViewPlayer();
 	uint32 closestDistance = INT32_MAX;
 	uint32 closestPlayerId = 0;
 
 	if (viewPlayer.size() > 0) {
-		if (gamesession->GetCurrentPlayer()->GetState() == ST_INGAME)
+		if (npc->GetState() == ST_INGAME)
 		{
-		
+
 			NpcAstar(npc->GetId(), _targetid);
 
 			if (DoNpcAstarMove(_id))
@@ -268,12 +334,12 @@ void GameSessionManager::NpcAstarMoveTo(uint64 _id, uint64 _targetid)
 		}
 		else {
 			npc->active = false;
-			npc->GetOwnerSession()->ResetPath();
+			gamesession->ResetPath();
 		}
 	}
 	else {
 		npc->active = false;
-		npc->GetOwnerSession()->ResetPath();
+		gamesession->ResetPath();
 	}
 }
 
@@ -282,6 +348,7 @@ bool GameSessionManager::DoNpcRandomMove(uint64 _id)
 	GameSessionRef gamesession;
 	PlayerRef player;
 	{
+		READ_LOCK;
 		gamesession = sessions[_id];
 		player = gamesession->GetCurrentPlayer();
 	}
@@ -290,7 +357,7 @@ bool GameSessionManager::DoNpcRandomMove(uint64 _id)
 
 	MoveNpcToRandomPosition(gamesession, player);
 
-	unordered_set<uint64> new_vl = ROOMMANAGER.ViewList(gamesession, true);
+	unordered_set<uint64> new_vl = ROOMMANAGER->ViewList(gamesession, true);
 
 	HandleNPCViewListChanges(gamesession, player, old_vl, new_vl);
 
@@ -303,15 +370,21 @@ bool GameSessionManager::DoNpcAstarMove(uint64 _id)
 	GameSessionRef gamesession;
 	PlayerRef player;
 	{
+		READ_LOCK;
+		if (!sessions[_id])
+			return false;
+
 		gamesession = sessions[_id];
 		player = gamesession->GetCurrentPlayer();
+		if (!player)
+			return false;
 	}
 
 	unordered_set<uint64> old_vl = gamesession->GetViewPlayer();
 
 	AstarMove(gamesession, player);
 
-	unordered_set<uint64> new_vl = ROOMMANAGER.ViewList(gamesession, true);
+	unordered_set<uint64> new_vl = ROOMMANAGER->ViewList(gamesession, true);
 
 	HandleNPCViewListChanges(gamesession, player, old_vl, new_vl);
 
@@ -337,20 +410,12 @@ void GameSessionManager::AstarMove(GameSessionRef& _session, PlayerRef& _player)
 	{
 		if (index >= size)
 		{
-			{
-				player->GetOwnerSession()->s_lock.lock();
+			if (index > 0)
 				player->SetPos(v[index - 1]);
-				player->GetOwnerSession()->s_lock.unlock();
-			}
 		}
 		else
 		{
-			{
-				player->GetOwnerSession()->s_lock.lock();
-				player->SetPos(v[index]);
-				player->GetOwnerSession()->s_lock.unlock();
-			}
-
+			player->SetPos(v[index]);
 			gamesession->SetPathIndex(index + 1);
 		}
 	}
@@ -358,22 +423,28 @@ void GameSessionManager::AstarMove(GameSessionRef& _session, PlayerRef& _player)
 
 void GameSessionManager::NpcAstar(uint64 _id, uint64 _destId)
 {
-	GameSessionRef gamesession = sessions[_id];
-	GameSessionRef dest_gamesession = sessions[_destId];
+	GameSessionRef gamesession;
+	GameSessionRef dest_gamesession;
+	{
+		READ_LOCK;
+		gamesession = sessions[_id];
+		dest_gamesession = sessions[_destId];
+	}
+
 	if (!gamesession || !dest_gamesession) return;
 
 	PlayerRef player = gamesession->GetCurrentPlayer();
-	if (!player) return;
+	PlayerRef target = dest_gamesession->GetCurrentPlayer();
+	if (!player || !target) return;
 
 	if (!gamesession->EmptyPath()) return;
 
 	POS start = player->GetPos();
-	POS dest = dest_gamesession->GetCurrentPlayer()->GetPos();
+	POS dest = target->GetPos();
 
-	// ½ÃÀÛÁ¡°ú ¸ñÀûÁö°¡ °°À¸¸é ¹Ù·Î ¸®ÅÏ
 	if (start == dest) return;
 
-	const int MAX_ITERATIONS = 1000; // ÃÖ´ë ¹Ýº¹ È½¼ö ¼³Á¤
+	const int MAX_ITERATIONS = 1000;
 
 	vector<vector<bool>> closed(W_HEIGHT, vector<bool>(W_WIDTH, false));
 	vector<vector<int>> best(W_HEIGHT, vector<int>(W_WIDTH, INT32_MAX));
@@ -417,20 +488,15 @@ void GameSessionManager::NpcAstar(uint64 _id, uint64 _destId)
 		cnt++;
 	}
 
-	// °æ·Î¸¦ Ã£Áö ¸øÇÑ °æ¿ì
 	if (cnt >= MAX_ITERATIONS)
 	{
-		cout << "Path finding failed: too many iterations" << endl;
-		// ¿©±â¼­ ÀûÀýÇÑ ¿¡·¯ Ã³¸®³ª ·Î±ëÀ» ¼öÇà
+		GLogger::LogWithContext(spdlog::level::err, "Astar", "MAX_ITERATIONS", "NPC Id: {}", _id);
 	}
 }
 
 void GameSessionManager::Attack(GameSessionRef& _session, uint64 _id, uint64 _skill)
 {
-	GameSessionRef gamesession;
-	{
-		gamesession = _session;
-	}
+	GameSessionRef gamesession = _session;
 	unordered_set<uint64> vl = gamesession->GetViewPlayer();
 
 	for (const auto& _vl : vl)
@@ -446,18 +512,14 @@ void GameSessionManager::Attack(GameSessionRef& _session, uint64 _id, uint64 _sk
 
 void GameSessionManager::Move(GameSessionRef& _session, uint64 _direction, int64 _movetime)
 {
-	GameSessionRef gamesession;
-	PlayerRef player;
-	{
-		gamesession = _session;
-		player = gamesession->GetCurrentPlayer();
-	}
+	GameSessionRef gamesession = _session;
+	PlayerRef player = gamesession->GetCurrentPlayer();
 
-	unordered_set<uint64> old_vl = gamesession->GetViewPlayer();;
+	unordered_set<uint64> old_vl = gamesession->GetViewPlayer();
 
 	UpdatePlayerPosition(player, _direction);
 
-	unordered_set<uint64> new_vl = ROOMMANAGER.ViewList(gamesession, false); // ¿òÁ÷ÀÎ ÈÄ ÁÖº¯¾Öµé + WakeNPC±îÁö ÁøÇà¿Ï·á
+	unordered_set<uint64> new_vl = ROOMMANAGER->ViewList(gamesession, false); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Öºï¿½ï¿½Öµï¿½ + WakeNPCï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï·ï¿½
 
 	if (player->GetPT() == Protocol::PLAYER_TYPE_CLIENT)
 		HandleCollisions(gamesession, player, new_vl);
@@ -476,35 +538,32 @@ bool GameSessionManager::IsPlayer(uint64 _id)
 	return _id < MAX_USER;
 }
 
-bool GameSessionManager::UserInfoPlayer(uint64 _id)
-{
-	GameSessionRef gamesession;
-	USER_INFO db;
-	{
-		gamesession = sessions[_id];
-	}
-	{
-		db.level = gamesession->GetCurrentPlayer()->GetStat().level;
-		db.hp = gamesession->GetCurrentPlayer()->GetStat().hp;
-		db.maxHp = gamesession->GetCurrentPlayer()->GetStat().maxHp;
-		db.mp = gamesession->GetCurrentPlayer()->GetStat().mp;
-		db.maxMp = gamesession->GetCurrentPlayer()->GetStat().maxMp;
-		db.exp = gamesession->GetCurrentPlayer()->GetStat().exp;
-		db.maxExp = gamesession->GetCurrentPlayer()->GetStat().maxExp;
-		//db.name = gamesession->GetCurrentPlayer()->GetName();
-		db.posx = gamesession->GetCurrentPlayer()->GetPos().posx;
-		db.posy = gamesession->GetCurrentPlayer()->GetPos().posy;
-	}
-	
-	return true;
-}
+//bool GameSessionManager::UserInfoPlayer(uint64 _id)
+//{
+//	GameSessionRef gamesession;
+//	USER_INFO db;
+//	{
+//		gamesession = sessions[_id];
+//	}
+//	{
+//		db.level = gamesession->GetCurrentPlayer()->GetStat().level;
+//		db.hp = gamesession->GetCurrentPlayer()->GetStat().hp;
+//		db.maxHp = gamesession->GetCurrentPlayer()->GetStat().maxHp;
+//		db.mp = gamesession->GetCurrentPlayer()->GetStat().mp;
+//		db.maxMp = gamesession->GetCurrentPlayer()->GetStat().maxMp;
+//		db.exp = gamesession->GetCurrentPlayer()->GetStat().exp;
+//		db.maxExp = gamesession->GetCurrentPlayer()->GetStat().maxExp;
+//		//db.name = gamesession->GetCurrentPlayer()->GetName();
+//		db.posx = gamesession->GetCurrentPlayer()->GetPos().posx;
+//		db.posy = gamesession->GetCurrentPlayer()->GetPos().posy;
+//	}
+//
+//	return true;
+//}
 
 void GameSessionManager::UpdatePlayerPosition(PlayerRef& _player, uint64 _direction)
 {
-	PlayerRef player;
-	{
-		player = _player;
-	}
+	PlayerRef player = _player;
 	POS pos{ player->POSX, player->POSY };
 
 	switch (_direction)
@@ -527,55 +586,50 @@ void GameSessionManager::UpdatePlayerPosition(PlayerRef& _player, uint64 _direct
 		break;
 	}
 
-	{
-		player->GetOwnerSession()->s_lock.lock();
-		player->SetPos(pos);
-		player->GetOwnerSession()->s_lock.unlock();
-	}
+	player->SetPos(pos);
 }
 
 void GameSessionManager::HandleCollisions(GameSessionRef& _gamesession, PlayerRef& _player, unordered_set<uint64>& _new_vl)
 {
-	GameSessionRef gamesession;
-	PlayerRef player;
-	{
-		gamesession = _gamesession;
-		player = _player;
-	}
+	GameSessionRef gamesession = _gamesession;
+	PlayerRef player = _player;
 
-	for (const auto& vl : _new_vl)
 	{
-		if (sessions[vl]->GetCurrentPlayer()->GetPT() != Protocol::PLAYER_TYPE_CLIENT && sessions[vl]->GetCurrentPlayer()->GetPT() != Protocol::PLAYER_TYPE_DUMMY)
+		READ_LOCK;
+		for (const auto& vl : _new_vl)
 		{
-			if (sessions[vl]->GetCurrentPlayer()->GetPos() == player->GetPos())
+			if (sessions[vl]->GetCurrentPlayer()->GetPT() != Protocol::PLAYER_TYPE_CLIENT && sessions[vl]->GetCurrentPlayer()->GetPT() != Protocol::PLAYER_TYPE_DUMMY)
 			{
+				if (sessions[vl]->GetCurrentPlayer()->GetPos() == player->GetPos())
 				{
-					player->GetOwnerSession()->s_lock.lock();
-					player->UpdateStatHp(sessions[vl]->GetCurrentPlayer()->GetStat().level * -5);
-					player->GetOwnerSession()->s_lock.unlock();
-				}
 
-				if (player->GetStat().hp <= 0)
-				{
-					HandlePlayerDeath(gamesession, player, vl);
-					return;
-				}
-				else
-				{
-					gamesession->StatChangePkt(
-						player->GetStat().level,
-						player->GetStat().hp,
-						player->GetStat().maxHp,
-						player->GetStat().mp,
-						player->GetStat().maxMp,
-						player->GetStat().exp,
-						player->GetStat().maxExp
-					);
+					int damage = sessions[vl]->GetCurrentPlayer()->GetStat().level * 5 - player->GetStat().defencePower;
+					if (damage <= 0)
+						damage = 1;
 
-					stringstream ss;
-					ss << "Player Damage " << (sessions[vl]->GetCurrentPlayer()->GetStat().level * 5) << " <- " << sessions[vl]->GetCurrentPlayer()->GetName();
-					string chat = ss.str();
-					gamesession->ChatPkt(player->GetId(), chat);
+					player->UpdateStatHp(-damage);
+					if (player->GetStat().hp <= 0)
+					{
+						HandlePlayerDeath(gamesession, player, vl);
+						return;
+					}
+					else
+					{
+						gamesession->StatChangePkt(
+							player->GetStat().level,
+							player->GetStat().hp,
+							player->GetStat().maxHp,
+							player->GetStat().mp,
+							player->GetStat().maxMp,
+							player->GetStat().exp,
+							player->GetStat().maxExp
+						);
+
+						stringstream ss;
+						ss << "Damage " << damage << " <- " << sessions[vl]->GetCurrentPlayer()->GetName();
+						string chat = ss.str();
+						gamesession->ChatPkt(player->GetId(), chat);
+					}
 				}
 			}
 		}
@@ -584,12 +638,8 @@ void GameSessionManager::HandleCollisions(GameSessionRef& _gamesession, PlayerRe
 
 void GameSessionManager::HandlePlayerDeath(GameSessionRef& _gamesession, PlayerRef& _player, uint64 _killerId)
 {
-	GameSessionRef gamesession;
-	PlayerRef player;
-	{
-		gamesession = _gamesession;
-		player = _player;
-	}
+	GameSessionRef gamesession = _gamesession;
+	PlayerRef player = _player;
 
 	for (int i = 0; i < MAX_USER; ++i)
 	{
@@ -597,49 +647,42 @@ void GameSessionManager::HandlePlayerDeath(GameSessionRef& _gamesession, PlayerR
 		if (sessions[i] != nullptr)
 			sessions[i]->RemovePkt(player->GetId());
 	}
-
-	{
-		player->GetOwnerSession()->s_lock.lock();
-		player->SetState(ST_FREE);
-		player->GetOwnerSession()->s_lock.unlock();
-	}
-
+	player->SetState(ST_FREE);
 	gamesession->ResetViewPlayer();
-	ROOMMANAGER.LeaveRoom(gamesession);
+	ROOMMANAGER->LeaveRoom(gamesession);
 
 	stringstream ss;
-	ss << "Player " << sessions[_killerId]->GetCurrentPlayer()->GetName() << " Die ";
+	ss << sessions[_killerId]->GetCurrentPlayer()->GetName() << " Die ";
 	string chat = ss.str();
 	gamesession->ChatPkt(player->GetId(), chat);
-
+	GLogger::Log(spdlog::level::info, player->GetName(), "Death");
 	DoTimer(10, &GameSessionManager::PlayerRespawn, player->GetId());
 }
 
 void GameSessionManager::UpdateViewList(GameSessionRef& _gamesession, PlayerRef& _player, unordered_set<uint64>& _old_vl, unordered_set<uint64>& _new_vl, int64 _movetime)
 {
-	GameSessionRef gamesession;
-	PlayerRef player;
-	{
-		gamesession = _gamesession;
-		player = _player;
-	}
+	GameSessionRef gamesession = _gamesession;
+	PlayerRef player = _player;
 
-	for (const auto& pl : _new_vl)
 	{
-		if (IsPlayer(pl) && sessions[pl]->GetCurrentPlayer()->GetPT() == Protocol::PLAYER_TYPE_CLIENT)
+		READ_LOCK;
+		for (const auto& pl : _new_vl)
 		{
-			if (sessions[pl]->GetViewPlayer().count(player->GetId()))
-				sessions[pl]->MovePkt(player->GetId(), player->GetPos(), _movetime);
-			else {
-				sessions[pl]->AddViewPlayer(player->GetId());
-				sessions[pl]->AddObjectPkt(player->GetPT(), player->GetId(), player->GetName(), player->GetPos());
+			if (IsPlayer(pl) && sessions[pl]->GetCurrentPlayer()->GetPT() == Protocol::PLAYER_TYPE_CLIENT)
+			{
+				if (sessions[pl]->GetViewPlayer().count(player->GetId()))
+					sessions[pl]->MovePkt(player->GetId(), player->GetPos(), _movetime);
+				else {
+					sessions[pl]->AddViewPlayer(player->GetId());
+					sessions[pl]->AddObjectPkt(player->GetPT(), player->GetId(), player->GetName(), player->GetPos());
+				}
 			}
-		}
 
-		if (_old_vl.count(pl) == 0 && player->GetPT() == Protocol::PLAYER_TYPE_CLIENT)
-		{
-			gamesession->AddViewPlayer(pl);
-			gamesession->AddObjectPkt(sessions[pl]->GetCurrentPlayer()->GetPT(), sessions[pl]->GetCurrentPlayer()->GetId(), sessions[pl]->GetCurrentPlayer()->GetName(), sessions[pl]->GetCurrentPlayer()->GetPos());
+			if (_old_vl.count(pl) == 0 && player->GetPT() == Protocol::PLAYER_TYPE_CLIENT)
+			{
+				gamesession->AddViewPlayer(pl);
+				gamesession->AddObjectPkt(sessions[pl]->GetCurrentPlayer()->GetPT(), sessions[pl]->GetCurrentPlayer()->GetId(), sessions[pl]->GetCurrentPlayer()->GetName(), sessions[pl]->GetCurrentPlayer()->GetPos());
+			}
 		}
 	}
 
@@ -651,11 +694,14 @@ void GameSessionManager::UpdateViewList(GameSessionRef& _gamesession, PlayerRef&
 				gamesession->RemovePkt(pl);
 			gamesession->RemoveViewPlayer(pl);
 
-			if (sessions[pl]->GetViewPlayer().count(player->GetId()))
 			{
-				if (sessions[pl]->GetCurrentPlayer()->GetPT() == Protocol::PLAYER_TYPE_CLIENT)
-					sessions[pl]->RemovePkt(player->GetId());
-				sessions[pl]->RemoveViewPlayer(player->GetId());
+				READ_LOCK;
+				if (sessions[pl]->GetViewPlayer().count(player->GetId()))
+				{
+					if (sessions[pl]->GetCurrentPlayer()->GetPT() == Protocol::PLAYER_TYPE_CLIENT)
+						sessions[pl]->RemovePkt(player->GetId());
+					sessions[pl]->RemoveViewPlayer(player->GetId());
+				}
 			}
 		}
 	}
@@ -663,44 +709,44 @@ void GameSessionManager::UpdateViewList(GameSessionRef& _gamesession, PlayerRef&
 
 void GameSessionManager::HandleNpcCollision(PlayerRef& _player, uint64 _pl)
 {
-	PlayerRef player;
+	GameSessionRef gamesession;
 	{
-		player = _player;
+		READ_LOCK;
+		gamesession = sessions[_pl];
 	}
 
+	PlayerRef player = gamesession->GetCurrentPlayer();
+
 	{
-		if (sessions[_pl]->GetCurrentPlayer()->POSX == _player->POSX && sessions[_pl]->GetCurrentPlayer()->POSY == _player->POSY)
+		if (player->POSX == _player->POSX && player->POSY == _player->POSY)
 		{
+			
+			int32 damage = _player->GetStat().level * 5 - player->GetStat().defencePower;
+			if (damage <= 0)
+				return;
+			
+			player->UpdateStatHp(-damage);
+			
 
-			int32 damage = sessions[_player->GetId()]->GetCurrentPlayer()->GetStat().level * 5;
-
-			sessions[_pl]->s_lock.lock();
-			sessions[_pl]->GetCurrentPlayer()->UpdateStatHp(damage * -1);
-			sessions[_pl]->s_lock.unlock();
-
-			sessions[_pl]->StatChangePkt(
-				sessions[_pl]->GetCurrentPlayer()->GetStat().level,
-				sessions[_pl]->GetCurrentPlayer()->GetStat().hp,
-				sessions[_pl]->GetCurrentPlayer()->GetStat().maxHp,
-				sessions[_pl]->GetCurrentPlayer()->GetStat().mp,
-				sessions[_pl]->GetCurrentPlayer()->GetStat().maxMp,
-				sessions[_pl]->GetCurrentPlayer()->GetStat().exp,
-				sessions[_pl]->GetCurrentPlayer()->GetStat().maxExp
+			gamesession->StatChangePkt(
+				player->GetStat().level,
+				player->GetStat().hp,
+				player->GetStat().maxHp,
+				player->GetStat().mp,
+				player->GetStat().maxMp,
+				player->GetStat().exp,
+				player->GetStat().maxExp
 			);
 
 
 			stringstream ss;
-			ss << sessions[_pl]->GetCurrentPlayer()->GetName() << " <- Damage " << damage << " Attack ";
+			ss << player->GetName() << " <- Damage " << damage << " Attack ";
 			string chat = ss.str();
-			sessions[_pl]->ChatPkt(_pl, chat);
+			gamesession->ChatPkt(_pl, chat);
 
-			if (sessions[_pl]->GetCurrentPlayer()->GetStat().hp <= 0)
+			if (player->GetStat().hp <= 0)
 			{
-				{
-					sessions[_pl]->s_lock.lock();
-					sessions[_pl]->GetCurrentPlayer()->SetState(ST_FREE);
-					sessions[_pl]->s_lock.unlock();
-				}
+				player->SetState(ST_FREE);
 				DoTimer(10, &GameSessionManager::PlayerRespawn, _pl);
 			}
 		}
@@ -709,20 +755,23 @@ void GameSessionManager::HandleNpcCollision(PlayerRef& _player, uint64 _pl)
 
 void GameSessionManager::HandleNPCViewListChanges(GameSessionRef& _gamesession, PlayerRef& _player, unordered_set<uint64>& _old_vl, unordered_set<uint64>& _new_vl)
 {
-	GameSessionRef gamesession;
-	PlayerRef player;
-	{
-		gamesession = _gamesession;
-		player = _player;
-	}
+	GameSessionRef gamesession = _gamesession;
+	PlayerRef player = _player;
+
+	READ_LOCK;
 
 	for (auto pl : _new_vl)
 	{
 		if (_old_vl.count(pl) == 0)
 		{
 			POS pos = { player->POSX, player->POSY };
-			sessions[pl]->AddObjectPkt(player->GetPT(), player->GetId(), player->GetName(), pos);
-			sessions[pl]->AddViewPlayer(player->GetId());
+			{
+				if (sessions[pl])
+				{
+					sessions[pl]->AddObjectPkt(player->GetPT(), player->GetId(), player->GetName(), pos);
+					sessions[pl]->AddViewPlayer(player->GetId());
+				}
+			}
 		}
 		else
 		{
@@ -731,11 +780,15 @@ void GameSessionManager::HandleNPCViewListChanges(GameSessionRef& _gamesession, 
 			std::int64_t posix_time = since_epoch.count();
 
 			POS pos = { player->POSX, player->POSY };
-			sessions[pl]->MovePkt(player->GetId(), pos, posix_time);
-
-			if (player->GetId() > MAX_USER)
 			{
-				HandleNpcCollision(player, pl);
+				if (sessions[pl])
+				{
+					sessions[pl]->MovePkt(player->GetId(), pos, posix_time);
+
+					if (player->GetId() > MAX_USER)
+						HandleNpcCollision(player, pl);
+
+				}
 			}
 		}
 	}
@@ -746,12 +799,14 @@ void GameSessionManager::HandleNPCViewListChanges(GameSessionRef& _gamesession, 
 		{
 			gamesession->RemoveViewPlayer(pl);
 
-			if (sessions[pl])
 			{
-				if (sessions[pl]->GetViewPlayer().count(player->GetId()))
+				if (sessions[pl])
 				{
-					sessions[pl]->RemovePkt(player->GetId());
-					sessions[pl]->RemoveViewPlayer(player->GetId());
+					if (sessions[pl]->GetViewPlayer().count(player->GetId()))
+					{
+						sessions[pl]->RemovePkt(player->GetId());
+						sessions[pl]->RemoveViewPlayer(player->GetId());
+					}
 				}
 			}
 		}
@@ -760,14 +815,10 @@ void GameSessionManager::HandleNPCViewListChanges(GameSessionRef& _gamesession, 
 
 void GameSessionManager::MoveNpcToRandomPosition(GameSessionRef& _gamesession, PlayerRef& _player)
 {
-	GameSessionRef gamesession;
-	PlayerRef player;
-	{
-		gamesession = _gamesession;
-		player = _player;
-	}
-
-	std::vector<int> indices = gamesession->GetRandomDirectionIndices();
+	GameSessionRef gamesession = _gamesession;
+	PlayerRef player = _player;
+	
+	vector<int> indices = gamesession->GetRandomDirectionIndices();
 
 	for (int index : indices) {
 		pair<int, int> pp = directions[index];
@@ -775,12 +826,7 @@ void GameSessionManager::MoveNpcToRandomPosition(GameSessionRef& _gamesession, P
 		int newY = player->POSY + pp.second;
 
 		if (newX >= 0 && newX < W_WIDTH && newY >= 0 && newY < W_HEIGHT && MAPDATA.GetTile(newY, newX) == MAPDATA.e_PLAT) {
-			POS pos = { newX, newY };
-			{
-				player->GetOwnerSession()->s_lock.lock();
-				player->SetPos(pos);
-				player->GetOwnerSession()->s_lock.unlock();
-			}
+			player->SetPos({ newX, newY });
 			break;
 		}
 	}
@@ -791,14 +837,17 @@ bool GameSessionManager::IsAdjacent(uint64 _attackerId, uint64 _targetId)
 	GameSessionRef attack_gamesession;
 	GameSessionRef target_gamesession;
 	{
+		READ_LOCK;
 		attack_gamesession = sessions[_attackerId];
 		target_gamesession = sessions[_targetId];
-
 	}
-	return (target_gamesession->GetCurrentPlayer()->POSX == attack_gamesession->GetCurrentPlayer()->POSX && target_gamesession->GetCurrentPlayer()->POSY == attack_gamesession->GetCurrentPlayer()->POSY - 1) ||
-		(target_gamesession->GetCurrentPlayer()->POSX == attack_gamesession->GetCurrentPlayer()->POSX && target_gamesession->GetCurrentPlayer()->POSY == attack_gamesession->GetCurrentPlayer()->POSY + 1) ||
-		(target_gamesession->GetCurrentPlayer()->POSX == attack_gamesession->GetCurrentPlayer()->POSX - 1 && target_gamesession->GetCurrentPlayer()->POSY == attack_gamesession->GetCurrentPlayer()->POSY) ||
-		(target_gamesession->GetCurrentPlayer()->POSX == attack_gamesession->GetCurrentPlayer()->POSX + 1 && target_gamesession->GetCurrentPlayer()->POSY == attack_gamesession->GetCurrentPlayer()->POSY);
+	PlayerRef attack = attack_gamesession->GetCurrentPlayer();
+	PlayerRef target = target_gamesession->GetCurrentPlayer();
+
+	return (target->POSX == attack->POSX && target->POSY == attack->POSY - 1) ||
+		(target->POSX == attack->POSX && target->POSY == attack->POSY + 1) ||
+		(target->POSX == attack->POSX - 1 && target->POSY == attack->POSY) ||
+		(target->POSX == attack->POSX + 1 && target->POSY == attack->POSY);
 }
 
 void GameSessionManager::HandleAttack(uint64 _attackerId, uint64 _targetId)
@@ -806,23 +855,23 @@ void GameSessionManager::HandleAttack(uint64 _attackerId, uint64 _targetId)
 	GameSessionRef attack_gamesession;
 	GameSessionRef target_gamesession;
 	{
+		READ_LOCK;
 		attack_gamesession = sessions[_attackerId];
 		target_gamesession = sessions[_targetId];
-
 	}
 
-	{
-		if (target_gamesession->GetCurrentPlayer()->GetState() == ST_INGAME)
-		{
-			target_gamesession->s_lock.lock();
-			target_gamesession->GetCurrentPlayer()->UpdateStatHp(attack_gamesession->GetCurrentPlayer()->GetStat().level * -3);
-			target_gamesession->s_lock.unlock();
+	PlayerRef monster = target_gamesession->GetCurrentPlayer();
+	PlayerRef user = attack_gamesession->GetCurrentPlayer();
 
-			if (target_gamesession->GetCurrentPlayer()->GetStat().hp <= 0) // Target died
-				HandleNPCDeath(_attackerId, _targetId);
-			else
-				BroadcastAttackMessage(_attackerId, _targetId);
-		}
+
+	if (monster->GetState() == ST_INGAME)
+	{
+
+		int damage = user->GetStat().level * 3 + user->GetStat().attackPower;
+		monster->UpdateStatHp(-damage);
+
+		if (monster->GetStat().hp <= 0) // Target died
+			HandleNPCDeath(_attackerId, _targetId);
 	}
 }
 
@@ -831,75 +880,56 @@ void GameSessionManager::HandleNPCDeath(uint64 _attackerId, uint64 _targetId)
 	GameSessionRef attack_gamesession;
 	GameSessionRef target_gamesession;
 	{
+		READ_LOCK;
 		attack_gamesession = sessions[_attackerId];
 		target_gamesession = sessions[_targetId];
+	}
 
-	}
-	{
-		target_gamesession->s_lock.lock();
-		target_gamesession->GetCurrentPlayer()->active = false;
-		target_gamesession->GetCurrentPlayer()->SetState(ST_FREE);
-		target_gamesession->s_lock.unlock();
-	}
-	{
-		attack_gamesession->s_lock.lock();
-		attack_gamesession->GetCurrentPlayer()->UpdateStatExp(target_gamesession->GetCurrentPlayer()->GetStat().exp);
-		attack_gamesession->s_lock.unlock();
-	}
-	{
-		if (attack_gamesession->GetCurrentPlayer()->GetStat().exp >= attack_gamesession->GetCurrentPlayer()->GetStat().maxExp) // Level up
-		{
-			{
-				attack_gamesession->s_lock.lock();
-				attack_gamesession->GetCurrentPlayer()->LevelUp();
-				attack_gamesession->s_lock.unlock();
-			}
-			attack_gamesession->StatChangePkt(
-				attack_gamesession->GetCurrentPlayer()->GetStat().level,
-				attack_gamesession->GetCurrentPlayer()->GetStat().hp,
-				attack_gamesession->GetCurrentPlayer()->GetStat().maxHp,
-				attack_gamesession->GetCurrentPlayer()->GetStat().mp,
-				attack_gamesession->GetCurrentPlayer()->GetStat().maxMp,
-				attack_gamesession->GetCurrentPlayer()->GetStat().exp,
-				attack_gamesession->GetCurrentPlayer()->GetStat().maxExp
-			);
+	PlayerRef monster = target_gamesession->GetCurrentPlayer();
+	PlayerRef user = attack_gamesession->GetCurrentPlayer();
+	monster->active = false;
+	monster->SetState(ST_FREE);
+	user->UpdateStatExp(target_gamesession->GetCurrentPlayer()->GetStat().exp);
 
-			stringstream ss;
-			ss << "Player LV " << (attack_gamesession->GetCurrentPlayer()->GetStat().level - 1) << " -> " << attack_gamesession->GetCurrentPlayer()->GetStat().level << " UP";
-			string chat = ss.str();
-			attack_gamesession->ChatPkt(_attackerId, chat);
-		}
-		else
-		{
-			stringstream ss;
-			ss << "Player Catch " << (target_gamesession->GetCurrentPlayer()->GetName()) << " -> " << target_gamesession->GetCurrentPlayer()->GetStat().exp << " UP";
-			string chat = ss.str();
-			attack_gamesession->ChatPkt(_attackerId, chat);
+	DropItems(target_gamesession, attack_gamesession);
 
-			attack_gamesession->StatChangePkt(
-				attack_gamesession->GetCurrentPlayer()->GetStat().level,
-				attack_gamesession->GetCurrentPlayer()->GetStat().hp,
-				attack_gamesession->GetCurrentPlayer()->GetStat().maxHp,
-				attack_gamesession->GetCurrentPlayer()->GetStat().mp,
-				attack_gamesession->GetCurrentPlayer()->GetStat().maxMp,
-				attack_gamesession->GetCurrentPlayer()->GetStat().exp,
-				attack_gamesession->GetCurrentPlayer()->GetStat().maxExp
-			);
-		}
+	if (user->GetStat().exp >= user->GetStat().maxExp) // Level up
+	{
+		user->LevelUp();
+		stringstream ss;
+		ss << "LV " << (attack_gamesession->GetCurrentPlayer()->GetStat().level - 1) << " -> " << attack_gamesession->GetCurrentPlayer()->GetStat().level << " UP";
+		string chat = ss.str();
+		attack_gamesession->ChatPkt(_attackerId, chat);
 	}
-	for (int i = 0; i < MAX_USER; ++i)
+	else
+	{
+		stringstream ss;
+		ss << "Catch " << (target_gamesession->GetCurrentPlayer()->GetName()) << " -> " << target_gamesession->GetCurrentPlayer()->GetStat().exp << " EXP";
+		string chat = ss.str();
+		attack_gamesession->ChatPkt(_attackerId, chat);
+	}
+
+	attack_gamesession->StatChangePkt(
+		user->GetStat().level,
+		user->GetStat().hp,
+		user->GetStat().maxHp,
+		user->GetStat().mp,
+		user->GetStat().maxMp,
+		user->GetStat().exp,
+		user->GetStat().maxExp
+	);
+
 	{
 		READ_LOCK;
-		if (sessions[i] != nullptr)
-			sessions[i]->RemovePkt(_targetId);
+		for (int i = 0; i < MAX_USER; ++i)
+		{
+			if (sessions[i] != nullptr)
+				sessions[i]->RemovePkt(_targetId);
+		}
 	}
 
-	{
-		target_gamesession->s_lock.lock();
-		target_gamesession->GetCurrentPlayer()->SetState(ST_SLEEP);
-		target_gamesession->s_lock.unlock();
-	}
-	ROOMMANAGER.LeaveRoom(sessions[_targetId]);
+	target_gamesession->GetCurrentPlayer()->SetState(ST_SLEEP);
+	ROOMMANAGER->LeaveRoom(sessions[_targetId]);
 	DoTimer(10000, &GameSessionManager::Respawn, target_gamesession);
 }
 
@@ -908,27 +938,105 @@ void GameSessionManager::BroadcastAttackMessage(uint64 _attackerId, uint64 _targ
 	GameSessionRef attack_gamesession;
 	GameSessionRef target_gamesession;
 	{
+		READ_LOCK;
 		attack_gamesession = sessions[_attackerId];
 		target_gamesession = sessions[_targetId];
 	}
+
 	stringstream ss;
-	ss << "Player " << attack_gamesession->GetCurrentPlayer()->GetName() << " Attack -> " << target_gamesession->GetCurrentPlayer()->GetName();
+	ss << attack_gamesession->GetCurrentPlayer()->GetName() << " Attack -> " << target_gamesession->GetCurrentPlayer()->GetName();
 	string chat = ss.str();
+
 	attack_gamesession->ChatPkt(_attackerId, chat);
 
 	unordered_set<uint64> viewList = attack_gamesession->GetViewPlayer();
-	for (int i = 0; i < MAX_USER; ++i)
-	{
-		if (i == _attackerId)
-			continue;
 
-		if (sessions[i] != nullptr && sessions[i]->GetCurrentPlayer() != nullptr)
+	{
+		READ_LOCK;
+		for (int i = 0; i < MAX_USER; ++i)
 		{
-			for (auto viewerId : viewList)
+			if (i == _attackerId)
+				continue;
+
+			if (sessions[i] != nullptr && sessions[i]->GetCurrentPlayer() != nullptr)
 			{
-				sessions[viewerId]->ChatPkt(_attackerId, chat);
+				for (auto viewerId : viewList)
+				{
+					sessions[viewerId]->ChatPkt(_attackerId, chat);
+				}
 			}
 		}
+	}
+}
+
+void GameSessionManager::DropItems(GameSessionRef& _gamesession, GameSessionRef& _usersession)
+{
+	GameSessionRef gamesession = _gamesession;
+	GameSessionRef usersession = _usersession;
+	PlayerRef monster = gamesession->GetCurrentPlayer();
+	PlayerRef user = usersession->GetCurrentPlayer();
+
+	int monsterId = static_cast<int>(monster->GetPT()) - 1;
+	auto dropTable = GDROPTABLE.GetDropTable(monsterId);
+	if (dropTable == nullptr)
+		return;
+
+	random_device rd;
+	mt19937 gen(rd());
+	uniform_real_distribution<> chance(0.0, 1.0);
+
+	for (const auto& drop : dropTable->drops)
+	{
+		float roll = static_cast<float>(chance(gen));
+		if (roll <= drop.dropRate)
+		{
+			uniform_int_distribution<> quantityGen(drop.minQuantity, drop.maxQuantity);
+			int quantity = quantityGen(gen);
+
+			if (drop.itemId == GOLD) {
+				GLogger::LogWithContext(spdlog::level::info, user->GetName(), "DropItems - Gold","quantity: {}", quantity);
+				user->AddGold(quantity); 
+				continue;
+			}
+
+			auto item = ITEM.GetItem(drop.itemId);
+			auto slotIndex = user->GetEmptyIndex(item->itemType);
+			if (slotIndex < 0)
+				continue; 
+			GLogger::LogWithContext(spdlog::level::info, user->GetName(), "DropItems - AddItem", "itemId: {} quantity: {}", 
+				drop.itemId, quantity);
+
+			user->AddItem(drop.itemId, item->itemType, slotIndex, quantity);
+			stringstream ss;
+			ss << ITEM.GetItem(drop.itemId)->name << " acquire!";
+			string s = ss.str();
+			usersession->ChatPkt(usersession->GetId(), s);
+		}
+	}
+}
+
+void GameSessionManager::UpdateGold(const string& _name, const int _newGold)
+{
+	vector<RankingData> newTop5;
+	if (REDIS.UpdatePlayerGold(_name, _newGold, newTop5))
+	{
+		READ_LOCK;
+		for (int i = 0; i < MAX_USER; ++i)
+		{
+			if (sessions[i] != nullptr)
+				sessions[i]->RankingPkt(newTop5);
+		}
+	}
+}
+
+void GameSessionManager::UpdateGold()
+{
+	auto top5 = REDIS.GetTop5Ranking();
+	READ_LOCK;
+	for (int i = 0; i < MAX_USER; ++i)
+	{
+		if (sessions[i] != nullptr)
+			sessions[i]->RankingPkt(top5);
 	}
 }
 
@@ -945,9 +1053,10 @@ void GameSessionManager::SetupPlayerAndSession(int _id, const string& _name, con
 	}
 
 	{
+		WRITE_LOCK;
 		sessions[_id] = session;
 	}
-	ROOMMANAGER.EnterRoom(session);
+	ROOMMANAGER->EnterRoom(session);
 }
 
 void GameSessionManager::GenerateNPCAttributes(int _id, string& _name, STAT& _st, POS& _pos, Protocol::PlayerType& _pt)
@@ -1006,6 +1115,7 @@ void GameSessionManager::InitializeNPC()
 		POS pos;
 		Protocol::PlayerType pt;
 
+
 		GenerateNPCAttributes(i, name, st, pos, pt);
 		SetupPlayerAndSession(i, name, st, pos, pt);
 	}
@@ -1013,5 +1123,4 @@ void GameSessionManager::InitializeNPC()
 
 	cout << "NPC initialize end." << endl;
 }
-
 

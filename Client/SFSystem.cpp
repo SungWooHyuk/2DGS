@@ -4,6 +4,8 @@
 #include "Client.h"
 #include "Player.h"
 #include "Item.h"
+#include "GLogger.h"
+
 SFSystem::SFSystem()
 {
 	text.resize(static_cast<int>(SystemText::CHAT) + 1);
@@ -208,7 +210,7 @@ void SFSystem::InitializeUI()
 
 	// 골드 랭킹 초기화
 	goldRankings.clear();
-	goldRankingBox.setSize(sf::Vector2f(200, 150));
+	goldRankingBox.setSize(sf::Vector2f(300, 150));
 	goldRankingBox.setFillColor(sf::Color(40, 40, 40, 220));
 	goldRankingBox.setOutlineColor(sf::Color(255, 215, 0));
 	goldRankingBox.setOutlineThickness(2);
@@ -219,7 +221,7 @@ void SFSystem::InitializeUI()
 	goldRankingTitle.setFillColor(sf::Color(255, 215, 0));
 	goldRankingTitle.setStyle(sf::Text::Bold);
 	goldRankingTitle.setString("Gold Ranking");
-	goldRankingTitle.setPosition(goldRankingBox.getPosition().x + 10, goldRankingBox.getPosition().y + 10);
+	goldRankingTitle.setPosition(goldRankingBox.getPosition().x + 75, goldRankingBox.getPosition().y + 10);
 
 	for (int i = 0; i < 5; ++i)
 	{
@@ -711,15 +713,6 @@ bool SFSystem::TryDropToInventory(const sf::Vector2i& _mousePos)
 			// 목적지 슬롯이 비어있는 경우
 			if (!destItem)
 			{
-				// 기존 장비를 인벤토리에 추가
-				/*INVEN newItem;
-				newItem.itemId = draggedItem.itemId;
-				newItem.tab_type = currentInventoryTab;
-				newItem.slot_index = pi.second;
-				newItem.quantity = 1;*/
-
-				//user->SendAddItemPkt(newItem);
-				//서버에서 UnEquip과 동시에 인벤토리 pi.second 위치에 추가
 				user->SendUnEquipPkt(draggedItem.itemId, pi.second, Protocol::EQUIP, static_cast<Protocol::EquipmentSlot>(draggedItem.slot_index));
 				return true;
 			}
@@ -740,15 +733,12 @@ bool SFSystem::TryDropToInventory(const sf::Vector2i& _mousePos)
 				if (!destItem)
 				{
 					user->SendMoveInventoryItemPkt(draggedItem.tab_type, dragStartSlot, currentInventoryTab, pi.second);
-					//user->MoveItem(draggedItem.tab_type, dragStartSlot, currentInventoryTab, pi.second, srcItem->quantity);
 					return true;
 				}
 				// 목적지 슬롯에 다른 아이템이 있는 경우
 				else if (destItem->itemId != srcItem->itemId)
 				{
-					user->SendSwapItemPkt(draggedItem.itemId, draggedItem.tab_type, dragStartSlot, destItem->itemId, currentInventoryTab, pi.second);
-					//user->SwapItems(draggedItem.tab_type, dragStartSlot, currentInventoryTab, pi.second);
-					return true;
+					user->SendSwapItemPkt(draggedItem.itemId, draggedItem.tab_type, dragStartSlot, destItem->itemId, currentInventoryTab, pi.second);					return true;
 				}
 				// 같은 아이템인 경우 (소비 아이템 또는 기타 아이템)
 				else if (currentInventoryTab == Protocol::CONSUME || currentInventoryTab == Protocol::MISC)
@@ -758,15 +748,11 @@ bool SFSystem::TryDropToInventory(const sf::Vector2i& _mousePos)
 					if (totalQuantity <= maxQuantity)
 					{
 						user->SendUpdateItemPkt(currentInventoryTab, destItem->itemId, destItem->slot_index, totalQuantity);
-						//user->UpdateItemQuantity(currentInventoryTab, pi.second, totalQuantity);
 						user->SendRemoveItemPkt(srcItem->itemId, currentInventoryTab, srcItem->slot_index);
-						//user->RemoveItem(draggedItem.tab_type, dragStartSlot);
 					}
 					else
 					{
 						int remainingQuantity = totalQuantity - maxQuantity;
-						//user->UpdateItemQuantity(currentInventoryTab, pi.second, maxQuantity);
-						//user->UpdateItemQuantity(draggedItem.tab_type, dragStartSlot, remainingQuantity);
 						user->SendUpdateItemPkt(currentInventoryTab, destItem->itemId, destItem->slot_index, maxQuantity);
 						user->SendUpdateItemPkt(currentInventoryTab, srcItem->itemId, srcItem->slot_index, remainingQuantity);
 					}
@@ -790,44 +776,11 @@ bool SFSystem::TryDropToEquipment(const sf::Vector2i& _mousePos)
 		{
 			Protocol::EquipmentSlot slotType = static_cast<Protocol::EquipmentSlot>(i);
 
-			//// 장비창 내 이동인 경우
-			//if (draggedItem.tab_type == Protocol::INVENTORY_TAB_NONE)
-			//{
-			//	// 같은 슬롯으로 이동하는 경우 무시
-			//	if (dragStartSlot == i + 1) return true;
-
-			//	// 장비 타입 체크
-			//	if (!IsValidEquipmentType(slotType, draggedItem.itemId)) return false;
-
-			//	// 장비 교환
-			//	uint32_t oldItemId = user->GetEquip(slotType);
-			//	user->SetEquip(slotType, draggedItem.itemId);
-			//	user->SetEquip(static_cast<Protocol::EquipmentSlot>(dragStartSlot), oldItemId);
-			//	return true;
-			//}
-			//// 인벤토리에서 장비창으로 이동
-			//else
-			//{
-				// 장비 타입 체크
 			if (!IsValidEquipmentType(slotType, draggedItem.itemId)) return false;
-
-			//uint32_t oldEquipId = user->GetEquip(slotType);
-			/*user->SetEquip(slotType, draggedItem.itemId);
-			user->RemoveItem(draggedItem.tab_type, dragStartSlot);*/
 
 			user->SendEquipPkt(draggedItem.itemId, draggedItem.tab_type, dragStartSlot, slotType);
 			
-			/*if (oldEquipId != 0)
-			{
-				INVEN oldEquip;
-				oldEquip.itemId = oldEquipId;
-				oldEquip.quantity = 1;
-				oldEquip.slot_index = dragStartSlot;
-				oldEquip.tab_type = draggedItem.tab_type;
-				user->AddItem(oldEquip);
-			}*/
 			return true;
-			//}
 		}
 	}
 	return false;
@@ -1126,20 +1079,11 @@ void SFSystem::UseQuickSlotItem(uint32 slotIndex)
 	{
 		if (it->quantity > 0)
 		{
-			//user->UpdateItemQuantity(quickSlotTabs[slotIndex], quickSlotItems[slotIndex], newQuantity);
-			//user->SendUpdateItemPkt(quickSlotTabs[slotIndex], it->itemId, quickSlotItems[slotIndex], it->quantity - 1);
 			user->SendConsumeItemPkt(it->itemId, quickSlotTabs[slotIndex], quickSlotItems[slotIndex]);
-			// 왔을때 or 서버에서 처리 후 알려주기 
-			/*if (newQuantity <= 0)
-			{
-				user->RemoveItem(quickSlotTabs[slotIndex], quickSlotItems[slotIndex]);
-				quickSlotItems[slotIndex] = -1;
-				quickSlotTabs[slotIndex] = Protocol::INVENTORY_TAB_NONE;
-			}*/
 		}
 	}
 }
-void SFSystem::AddSystemMessage(const std::string& msg)
+void SFSystem::AddSystemMessage(const string& msg)
 {
 	sf::Text text;
 	text.setFont(font);
@@ -1156,9 +1100,9 @@ void SFSystem::AddSystemMessage(const std::string& msg)
 
 void SFSystem::DrawSystemMessages()
 {
-	float startX = window->getSize().x - 400; // 우측상단 기준
+	float startX = window->getSize().x - 310; // 우측상단 기준
 	float startY = 20;
-	float lineGap = 18;
+	float lineGap = 30;
 	int idx = 0;
 	for (const auto& msg : messageQueue)
 	{
@@ -1221,7 +1165,7 @@ void SFSystem::SetQuickSlotReset(uint64 _slotIndex)
 	quickSlotTabs[_slotIndex] = Protocol::INVENTORY_TAB_NONE;
 }
 
-void SFSystem::UpdateGoldRanking(const vector<GoldRanking>& rankings)
+void SFSystem::UpdateGoldRanking(vector<GoldRanking>& rankings)
 {
 	goldRankings = rankings;
 	for (int i = 0; i < 5; ++i)

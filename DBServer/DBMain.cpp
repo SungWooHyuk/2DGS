@@ -9,7 +9,6 @@
 #include "BufferWriter.h"
 
 #include "Job.h"
-#include "Logger.h"
 #include "GLogger.h"
 using namespace std;
 
@@ -34,7 +33,8 @@ void DoWorkerJob(DBServerServiceRef& service)
 
 int main()
 {
-	GLogger::Init("DBServer");
+	GLogger::Initialize("DBServer"); // 로그찍을준비
+	GLogger::Log(spdlog::level::err, "DBServer Begin");
 	// 패킷 핸들러 초기화
 	DBPacketHandler::Init();
 
@@ -62,6 +62,6 @@ int main()
 
 	// 모든 스레드 종료 대기
 	GThreadManager->Join();
-
+	spdlog::shutdown(); 
 	return 0;
 }

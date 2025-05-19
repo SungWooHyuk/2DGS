@@ -1,10 +1,6 @@
 #pragma once
 #include <hiredis.h>
-
-struct RankingData {
-    string playerName;
-    int32 level;
-};
+#include "utils.h"
 
 class RedisManager {
 public:
@@ -16,11 +12,13 @@ public:
     bool Init();
     void Close();
 
-    // 플레이어 레벨 업데이트
-    bool UpdatePlayerLevel(const string& playerName, int32 level);
-    
+    // 플레이어 골드 업데이트
+    bool UpdatePlayerGold(const string& _playerName, uint64 _newGold, vector<RankingData>& _outUpdatedTop5);
+    void RegisterPlayerRanking(const string& _playerName, uint64 _gold);
+    bool ResetRanking();
     // 상위 5명의 랭킹 조회
-    vector<RankingData> GetTop5Ranking();
+    vector<RankingData> GetTop5Ranking() const;
+
 
 private:
     RedisManager() = default;
@@ -28,6 +26,8 @@ private:
     RedisManager(const RedisManager&) = delete;
     RedisManager& operator=(const RedisManager&) = delete;
 
+    mutable     USE_LOCK;
     redisContext* context = nullptr;
     const char* RANKING_KEY = "player_ranking";
+
 }; 

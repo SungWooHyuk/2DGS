@@ -8,7 +8,8 @@ public:
 	void									Leave(PlayerRef _player);
 	void									Broadcast(SendBufferRef _sendBuffer);
 
-	const unordered_map<uint64, PlayerRef>& GetPlayers() { READ_LOCK; return players; };
+	const unordered_map<uint64, PlayerRef>& GetPlayers() { READ_LOCK; return players; }
+	unordered_map<uint64, PlayerRef> GetPlayersCopy() { READ_LOCK; return players; }
 	void									SetPlayers(const unordered_map<uint64_t, PlayerRef>& _newPlayers) { WRITE_LOCK; players = _newPlayers; };
 private:
 	USE_LOCK;

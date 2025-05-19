@@ -30,6 +30,10 @@ public:
 	bool InventoryToEquip(string _name, uint32 _itemId, uint32 _tab_type, uint32 _slot_index);
 	bool IsUserExists(string _name);
 	bool RegisterNewUser(string _name);
+	bool UpdateUserEquipment(const string& _name, const vector<Protocol::EquipmentItem>& _eqList);
+	bool InsertInventorySlot(const string& name, const Protocol::InventorySlot& slot);
+	bool ClearInventory(const string& _name);
+	bool UpdateUserGold(const string& _name, int _gold);
 	string WstringToString(const wstring& wstr); // wstring -> string º¯È¯
 
 private:

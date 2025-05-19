@@ -19,7 +19,7 @@ public:
 
 	int		GetId() { return myId; };
 	void	SetId(uint64 _id) { myId = _id; }
-	string	GetName() { return myName; }
+	const string&	GetName() const { return myName; }
 	void	SetName(string _name) { myName = _name; }
 
 	POS		GetPos() const { return myPos; };

@@ -21,9 +21,9 @@ public:
 	}
 
 public:
-	void				SetSession(DBGameSessionRef session) { dbSession = session; }
-	DBGameSessionRef	GetSession() { return dbSession; }
-	void				RemoveSession() { dbSession = nullptr; }
+	void				SetSession(DBGameSessionRef session) { WRITE_LOCK; dbSession = session; }
+	DBGameSessionRef	GetSession() { READ_LOCK; return dbSession; }
+	void				RemoveSession() { WRITE_LOCK; dbSession = nullptr; }
 
 private:
 	USE_LOCK;

@@ -11,6 +11,8 @@
 #include "Job.h"
 #include "Logger.h"
 #include "GLogger.h"
+#include "DropTable.h"
+#include "RedisManager.h"
 #include <spdlog/spdlog.h>
 
 #include "MapData.h"
@@ -54,13 +56,17 @@ void DoDBWorkerJob(DBServiceRef& service)
 }
 int main()
 {
-	GLogger::Init("GameServer");
+	GLogger::Initialize("GameServer"); // 로그찍을준비
 	MAPDATA.InitMAP();
 	ClientPacketHandler::Init();
 	GameDBPacketHandler::Init();
-	GAMESESSIONMANAGER.InitializeNPC();
+	GAMESESSIONMANAGER->InitializeNPC();
+	REDIS.Init();
+	GAMESESSIONMANAGER->SaveAllPlayerStateSnap(); // 주기적 snap 30초마다 
 	ITEM.LoadFromJson("items.json");
-	//GLogger::Log(spdlog::level::err, "Begin");
+	//REDIS.ResetRanking();
+	GDROPTABLE.LoadFromJson("droptable.json");
+	GLogger::Log(spdlog::level::info, "Server Begin");
 
 	ServerServiceRef service = MakeShared<ServerService>(
 		NetAddress(L"127.0.0.1", 4000),
@@ -102,5 +108,5 @@ int main()
 
 	DoGameWorkerJob(service);
 	GThreadManager->Join();
-
+	spdlog::shutdown();
 }

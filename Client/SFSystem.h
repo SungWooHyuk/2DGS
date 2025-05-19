@@ -61,7 +61,7 @@ public:
     void UpdateInventoryTab(Protocol::InventoryTab _tab);
     // 골드 관련 함수
     void SetGold(uint64 _gold);
-    void UpdateGoldRanking(const vector<GoldRanking>& rankings);
+    void UpdateGoldRanking(vector<GoldRanking>& rankings);
     void DrawGoldRanking();
 
     void HandleMousePressed(const sf::Vector2i& _mousePos);
@@ -86,7 +86,7 @@ public:
     bool TryDropToQuickSlot(const sf::Vector2i& mousePos, uint32 _slotIndex);
     void UseQuickSlotItem(uint32 _slotIndex);
 
-    void AddSystemMessage(const std::string& msg);
+    void AddSystemMessage(const string& msg);
     void DrawSystemMessages();
 
     void InitializeGoldSlot();

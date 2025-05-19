@@ -30,15 +30,17 @@ enum : uint16
 	PKT_S_MOVE_INVENTORY_RESULT = 1021,
 	PKT_S_EQUIP_RESULT = 1022,
 	PKT_S_UNEQUIP_RESULT = 1023,
-	PKT_S_GOLD_CHANGE = 1024,
-	PKT_S_ADD_OBJECT = 1025,
-	PKT_S_REMOVE_OBJECT = 1026,
-	PKT_S_MOVE_OBJECT = 1027,
-	PKT_S_CHAT = 1028,
-	PKT_S_STAT_CHANGE = 1029,
-	PKT_S_DAMAGE = 1030,
-	PKT_S_RESPAWN = 1031,
-	PKT_S_RANKING = 1032,
+	PKT_S_SWAP_ITEM = 1024,
+	PKT_S_GOLD_CHANGE = 1025,
+	PKT_S_REMOVE_ITEM = 1026,
+	PKT_S_ADD_OBJECT = 1027,
+	PKT_S_REMOVE_OBJECT = 1028,
+	PKT_S_MOVE_OBJECT = 1029,
+	PKT_S_CHAT = 1030,
+	PKT_S_STAT_CHANGE = 1031,
+	PKT_S_DAMAGE = 1032,
+	PKT_S_RESPAWN = 1033,
+	PKT_S_RANKING = 1034,
 };
 
 // Custom Handlers
@@ -98,7 +100,9 @@ public:
 	static SendBufferRef MakeSendBuffer(Protocol::S_MOVE_INVENTORY_RESULT& pkt) { return MakeSendBuffer(pkt, PKT_S_MOVE_INVENTORY_RESULT); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_EQUIP_RESULT& pkt) { return MakeSendBuffer(pkt, PKT_S_EQUIP_RESULT); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_UNEQUIP_RESULT& pkt) { return MakeSendBuffer(pkt, PKT_S_UNEQUIP_RESULT); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_SWAP_ITEM& pkt) { return MakeSendBuffer(pkt, PKT_S_SWAP_ITEM); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_GOLD_CHANGE& pkt) { return MakeSendBuffer(pkt, PKT_S_GOLD_CHANGE); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_REMOVE_ITEM& pkt) { return MakeSendBuffer(pkt, PKT_S_REMOVE_ITEM); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_ADD_OBJECT& pkt) { return MakeSendBuffer(pkt, PKT_S_ADD_OBJECT); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_REMOVE_OBJECT& pkt) { return MakeSendBuffer(pkt, PKT_S_REMOVE_OBJECT); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_MOVE_OBJECT& pkt) { return MakeSendBuffer(pkt, PKT_S_MOVE_OBJECT); }

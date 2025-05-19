@@ -3,7 +3,7 @@
 #include "ServerSession.h"
 #include "Player.h"
 #include "Client.h"
-
+#include "GLogger.h"
 Player::Player(sf::Texture& _attackT, sf::Texture& _playerT, int _x, int _y, int _x2, int _y2, POS _pos, TP _tp, int32 _id, const string& _name, const uint64 _gold)
 	:Client(Protocol::PLAYER_TYPE_CLIENT, _pos, _id, _name), myTp(_tp), myGold(_gold)
 {
@@ -24,6 +24,10 @@ void Player::SetAttackTime()
 
 void Player::SetStat(STAT _st)
 {
+	GLogger::LogWithContext(spdlog::level::info, myName, "SetStat", "Level = {} HP = {} / {} MP = {} / {} EXP = {} / {} AP = {} DP = {} MPower = {} STR = {}",
+		_st.level, _st.hp, _st.maxHp, _st.mp, _st.maxMp,
+		_st.exp, _st.maxExp, _st.attackPower, _st.defencePower, _st.magicPower, _st.strength);
+
 	myStat.hp = _st.hp;
 	myStat.maxHp = _st.maxHp;
 	myStat.mp = _st.mp;
@@ -66,6 +70,7 @@ void Player::Draw()
 
 bool Player::Respawn(uint64 _exp, uint64 _hp, uint64 _x, uint64 _y)
 {
+	GLogger::LogWithContext(spdlog::level::info, myName, "Respawn","EXP={} HP={} Pos=({}, {})", _exp, _hp, _x, _y);
 	myStat.exp = _exp;
 	myStat.hp = _hp;
 	myPos.posx = _x;
@@ -75,7 +80,8 @@ bool Player::Respawn(uint64 _exp, uint64 _hp, uint64 _x, uint64 _y)
 
 void Player::AddItem(const INVEN& _item)
 {
-	//SendAddItemPkt(_item);
+	GLogger::LogWithContext(spdlog::level::info, myName ,"AddItem","ItemID = {} Slot = {} Tab = {}", 
+		_item.itemId, _item.slot_index,static_cast<int>(_item.tab_type));
 	myInventory.push_back(_item);
 }
 void Player::RemoveItem(Protocol::InventoryTab tabType, uint64 slotIndex)
@@ -86,8 +92,12 @@ void Player::RemoveItem(Protocol::InventoryTab tabType, uint64 slotIndex)
 		});
 	if (it != myInventory.end())
 	{
+		GLogger::LogWithContext(spdlog::level::info, myName,"RemoveItem", "Removed ItemID = {} Slot = {}", it->itemId, it->slot_index);
 		myInventory.erase(it);
-		//SendRemoveItemPkt(it->itemId, tabType, slotIndex);
+	}
+	else
+	{
+		GLogger::LogWithContext(spdlog::level::warn, myName, "RemoveItem", "Item not found PlayerID={} Tab={} Slot={}", static_cast<int>(tabType), slotIndex);
 	}
 }
 
@@ -99,10 +109,14 @@ void Player::MoveItem(Protocol::InventoryTab fromTab, uint64 fromSlot, Protocol:
 		});
 	if (it != myInventory.end())
 	{
+		GLogger::LogWithContext(spdlog::level::info, myName, "MoveItem", "ItemID={} From[Tab={}, Slot={}] To[Tab={}, Slot={}]",
+			it->itemId, static_cast<int>(fromTab), fromSlot, static_cast<int>(toTab), toSlot);
 		it->tab_type = toTab;
 		it->slot_index = toSlot;
-		// C_MOVProtocol::InventoryTabTORY_ITEM
-		// SendMoveInventoryItemPkt(fromTab, fromSlot, toTab, toSlot);
+	}
+	else
+	{
+		GLogger::LogWithContext(spdlog::level::warn, myName, "MoveItem", "Tab={} Slot={}", static_cast<int>(fromTab), fromSlot);
 	}
 }
 
@@ -116,15 +130,10 @@ void Player::SetEquipToInventory(uint64 slotIndex, const INVEN& item)
 	{
 		RemoveItem(it->tab_type, it->slot_index);
 		AddItem(item);
-		//SendAddItemPkt(item);
 	}
 	else
-	{
-		// C_UNEQUIP ? ADD
-		// myInventory.push_back(item);
-		//SendAddItemPkt(item);
 		AddItem(item);
-	}
+	
 }
 
 void Player::SwapItems(Protocol::InventoryTab tab1, uint64 slot1, Protocol::InventoryTab tab2, uint64 slot2)
@@ -140,9 +149,15 @@ void Player::SwapItems(Protocol::InventoryTab tab1, uint64 slot1, Protocol::Inve
 	
 	if (it1 != myInventory.end() && it2 != myInventory.end())
 	{
+		GLogger::LogWithContext(spdlog::level::info, myName, "SwapItems", "Swap Item1[ID={}, Tab={}, Slot={}] <--> Item2[ID={}, Tab={}, Slot={}]",
+			it1->itemId, static_cast<int>(tab1), slot1, it2->itemId, static_cast<int>(tab2), slot2);
 		swap(it1->tab_type, it2->tab_type);
 		swap(it1->slot_index, it2->slot_index);
-		//SendSwapItemPkt(it1->itemId, tab1, slot1, it2->itemId, tab2, slot2);
+	}
+	else
+	{
+		GLogger::LogWithContext(spdlog::level::warn, myName, "SwapItems", "Swap failed. Found: Item1[{}], Item2[{}]",
+			it1 != myInventory.end(), it2 != myInventory.end());
 	}
 }
 
@@ -154,26 +169,33 @@ void Player::UpdateItemQuantity(Protocol::InventoryTab tabType, uint64 slotIndex
 		});
 	if (it != myInventory.end())
 	{
+		GLogger::LogWithContext(spdlog::level::info, myName, "UpdateItemQuantity", "ItemID={} Slot={} Tab={} OldQty={} NewQty={}",
+			it->itemId, slotIndex, static_cast<int>(tabType), it->quantity, newQuantity);
+
 		it->quantity = newQuantity;
 		if (newQuantity <= 0)
 		{
+			GLogger::LogWithContext(spdlog::level::info, myName, "UpdateItemQuantity", "Removing ItemID={} due to zero quantity",
+				it->itemId);
 			myInventory.erase(it);
 		}
-		//SendConsumeItemPkt(it->itemId, tabType, slotIndex);
+	}
+	else
+	{
+		GLogger::LogWithContext(spdlog::level::warn, myName, "UpdateItemQuantity", "Item not found Tab={} Slot={}",
+			static_cast<int>(tabType), slotIndex);
 	}
 }
 
 void Player::UnEquip(Protocol::EquipmentSlot _slot, uint64 _itemId)
 {
-	//if (myEquipments[_slot] != 0)
-		//SendUnEquipPkt(_itemId, _slot);
+	GLogger::LogWithContext(spdlog::level::info, myName, "UnEquip", "Slot={} UnEquipped ItemID={}", static_cast<int>(_slot), _itemId);
 	myEquipments[_slot] = 0;
-	
 }
 
 void Player::SetEquip(Protocol::EquipmentSlot _slot, uint32 _itemId)
 {
-	//SendEquipPkt(_itemId, Protocol::InventoryTab::EQUIP, _slot);
+	GLogger::LogWithContext(spdlog::level::info, myName, "SetEquip","Slot = {} Equipped ItemID = {}", static_cast<int>(_slot), _itemId);
 	myEquipments[_slot] = _itemId;
 }
 bool Player::HasItem(Protocol::InventoryTab tabType, uint64 slotIndex) const

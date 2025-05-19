@@ -16,6 +16,7 @@ GlobalQueue*		GGlobalQueue = nullptr;
 JobTimer*			GJobTimer = nullptr;
 DeadLockProfiler*	GDeadLockProfiler = nullptr;
 ConsoleLog*			GConsoleLogger = nullptr;
+
 class CoreGlobal
 {
 public:

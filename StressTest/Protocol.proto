@@ -138,7 +138,7 @@ message S_DROP_RESULT {
 	uint64			item_id = 2;
 	InventoryTab	tab_type = 3;
 	uint64			inv_slot_index = 4;
-	//uint64 quantity_dropped = 5;
+	uint64			quantity_dropped = 5;
 	//uint64 remaining_quantity = 6;
 }
 
@@ -166,11 +166,23 @@ message S_UNEQUIP_RESULT {
 	uint64			inv_to_slot_index = 5;   // 인벤으로 돌아갈 슬롯
 }
 
+message S_SWAP_ITEM {
+	bool			success = 1;
+	InventoryTab	from_tab = 2;
+	uint64			inv_from_index = 3;
+	InventoryTab	to_tab = 4;
+	uint64			inv_to_index = 5;
+}
+
 message S_GOLD_CHANGE {
 	uint64 new_gold = 1;    // 변경 후 골드
 	int64 delta = 2;        // 증감량 (양수/음수 모두 가능)
 }
-
+message S_REMOVE_ITEM {
+	uint64			item_id = 1;
+	InventoryTab	tab = 2;
+	uint64			inv_slot_index = 3;
+}
 message S_ADD_OBJECT
 {
 	repeated AddPlayer players = 1;

@@ -3,16 +3,19 @@
 #include "DBSession.h"
 #include "DBProtocol.pb.h"
 #include "Struct.pb.h"
+#include "GLogger.h"
+
 void DBSession::OnConnected()
 {
 	cout << "DB Server Connected" << endl;
 	Init();
 	cout << "DB Init()" << endl;
+	GLogger::Log(spdlog::level::info, "DB Init");
 }
 
 void DBSession::OnDisconnected()
 {
-	cout << "DB Server Disconnected" << endl;
+	GLogger::Log(spdlog::level::info, "DBDisConnected");
 }
 
 void DBSession::OnRecvPacket(BYTE* buffer, int32 len)
@@ -95,10 +98,12 @@ bool DBSession::GetAllItem()
 	if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
 		// 결과 처리 가능 (생략 또는 Result 처리 코드 삽입 가능)
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
+		GLogger::Log(spdlog::level::info, "GetAllItem success");
 		return true;
 	}
 	else {
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
+		GLogger::Log(spdlog::level::warn, "GetAllItem Fail");
 		return false;
 	}
 }
@@ -127,9 +132,11 @@ bool DBSession::CheckUserHaveItem(string _name, uint32 _itemId)
 			SQLGetData(hstmt, 1, SQL_C_LONG, &result, 0, NULL);
 		}
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
+		GLogger::Log(spdlog::level::info, "CheckUserHaveItem Success: user = {}, itemId = {}, have = {}", _name, _itemId, result);
 		return result == 1;
 	}
 
+	GLogger::Log(spdlog::level::warn, "CheckUserHaveItem Fail");
 	SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
 	return false;
 }
@@ -154,21 +161,17 @@ bool DBSession::FarmingItem(string _name, uint32 _itemId, uint32 _amount, uint32
 	SQLBindParameter(hstmt, 4, SQL_PARAM_INPUT, SQL_C_LONG, SQL_INTEGER, 0, 0, &_tab_type, 0, NULL);
 	SQLBindParameter(hstmt, 5, SQL_PARAM_INPUT, SQL_C_LONG, SQL_INTEGER, 0, 0, &_slot_index, 0, NULL);
 
-	// _tab_type이 1이면 그냥 새로 추가(수량증가가 아님)
-	// _tab_type이 2,3 - 소비,기타면 수량증가 일 수 있음.
-	// 그런데 서버에서 slot_index를 보낼 때 장비라면 어차피 다음 슬롯으로 지정해줬을것이고, 25칸을 넘는지도 체크했을테니 상관없으며
-	// 소비,기타도 99가 넘는지 수량체크를 서버에서 진행한 뒤 디비에 넘기는 것이기에 그냥 보내고 결과만 받으면 된다.
-
 	retcode = SQLExecDirect(hstmt, (SQLWCHAR*)proc.c_str(), SQL_NTS);
 
 	if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
-		cout << "FarmingItem add success" << endl;
+		GLogger::Log(spdlog::level::info, "FarmingItem Success: user = {}, itemId = {}, amount = {}, tab = {}, slot = {}", 
+			_name, _itemId, _amount, _tab_type, _slot_index);
 		return true;
 	}
 	else {
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
-		cout << "FarmingItem add fail" << endl;
+		GLogger::Log(spdlog::level::warn, "FarmingItem Fail: user = {}, itemId = {}", _name, _itemId);
 		return false;
 	}
 }
@@ -193,7 +196,6 @@ bool DBSession::GetUserEquipment(string _name, vector<Protocol::EquipmentItem>& 
 
 	if (retcode != SQL_SUCCESS && retcode != SQL_SUCCESS_WITH_INFO)
 	{
-		cout << "GetUserEquipment: sp_get_equipment fail" << endl;
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
 		return false;
 	}
@@ -237,12 +239,18 @@ bool DBSession::GetUserEquipment(string _name, vector<Protocol::EquipmentItem>& 
 			_equip.push_back(bottom);
 		}
 
+		string equipLog;
+		for (const auto& eq : _equip) {
+			equipLog += fmt::format("[slot: {}, item_id: {}] ", static_cast<int>(eq.eq_slot()), eq.item_id());
+		}
+
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
+		GLogger::Log(spdlog::level::info, "GetUserEquipment Success - user: {}, items: {}", _name, equipLog);
 		return true;
 	}
 	else
 	{
-		cout << "equip fail" << endl;
+		GLogger::Log(spdlog::level::warn, "GetUserEquipment Fail - user: {}", _name);
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
 		return false;
 	}
@@ -267,8 +275,8 @@ bool DBSession::GetUserInfo(string _name, uint64 _pktId)
 	retcode = SQLExecDirect(hstmt, (SQLWCHAR*)proc.c_str(), SQL_NTS);
 
 	if (retcode != SQL_SUCCESS && retcode != SQL_SUCCESS_WITH_INFO) {
-		cout << "sp_get_user_info fail" << endl;
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
+		GLogger::Log(spdlog::level::warn, "UserInfo Fail user: {}", _name);
 		return false;
 	}
 
@@ -295,11 +303,15 @@ bool DBSession::GetUserInfo(string _name, uint64 _pktId)
 		vector<Protocol::EquipmentItem> equipmentList;
 
 		string name = WstringToString(bindInfo.user_id);
-		if (!GetUserInventory(name, inventoryList))
+		if (!GetUserInventory(name, inventoryList)) {
+			GLogger::Log(spdlog::level::warn, "UserInfo GetInventory Fail user: {}", _name);
 			return false;
+		}
 
-		if (!GetUserEquipment(name, equipmentList))
+		if (!GetUserEquipment(name, equipmentList)) {
+			GLogger::Log(spdlog::level::warn, "UserInfo GetEquip Fail user: {}", _name);
 			return false;
+		}
 	
 		DBProtocol::DS_LOGIN pkt;
 		
@@ -334,7 +346,7 @@ bool DBSession::GetUserInfo(string _name, uint64 _pktId)
 	}
 	else
 	{
-		cout << "Login Bind fail" << endl;
+		GLogger::Log(spdlog::level::warn, "GetUserInfo Fail - user: {}", _name);
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
 		return false;
 	}
@@ -359,6 +371,7 @@ bool DBSession::GetUserInventory(string _name, vector<Protocol::InventorySlot>& 
 	retcode = SQLExecDirect(hstmt, (SQLWCHAR*)proc.c_str(), SQL_NTS);
 	if (retcode != SQL_SUCCESS && retcode != SQL_SUCCESS_WITH_INFO)
 	{
+		GLogger::Log(spdlog::level::warn, "GetUserInventory Fail user: {}", _name);
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
 		return false;
 	}
@@ -405,12 +418,12 @@ bool DBSession::InitializeUserInventoryEquipment(string _name)
 
 	if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
-		cout << "Initialize and reset success" << endl;
+		GLogger::Log(spdlog::level::warn, "InitializeUserInventoryEquipment Success user: {}", _name);
 		return true;
 	}
 	else {
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
-		cout << "Initialize and reset fail" << endl;
+		GLogger::Log(spdlog::level::warn, "InitializeUserInventoryEquipment Fail user: {}", _name);
 		return false;
 	}
 }
@@ -429,13 +442,13 @@ bool DBSession::UnEquipItem(string _name, E_EQUIP _type, uint32 _tab_type, uint3
 	case E_EQUIP::TOP:     typeStr = L"top";    break;
 	case E_EQUIP::BOTTOM:  typeStr = L"bottom"; break;
 	default:
-		cout << "잘못된 장비 타입" << endl;
+		GLogger::Log(spdlog::level::warn, "UnEquipItem item type Fail user: {} type : {}", _name, static_cast<int>(_type));
 		return false;
 	}
 
 	retcode = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
 	if (retcode != SQL_SUCCESS && retcode != SQL_SUCCESS_WITH_INFO) {
-		cout << "SQL 문 핸들 할당 실패 (UnEquipItem)" << endl;
+		GLogger::Log(spdlog::level::warn, "UnEquipItem Fail user: {}", _name);
 		return false;
 	}
 
@@ -452,6 +465,7 @@ bool DBSession::UnEquipItem(string _name, E_EQUIP _type, uint32 _tab_type, uint3
 		return true;
 	}
 	else {
+		GLogger::Log(spdlog::level::warn, "UnEquipItem query Fail user: {}", _name);
 		return false;
 	}
 }
@@ -460,9 +474,9 @@ bool DBSession::UpdateUserInfo(USER_INFO _userInfo)
 {
 	SQLHSTMT hstmt = 0;
 	SQLRETURN retcode;
-
+	
 	wstring wname = wstring(_userInfo.name.begin(), _userInfo.name.end());
-	wstring proc = L"{CALL sp_update_user_info (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";  // 파라미터화된 쿼리 사용
+	wstring proc = L"{CALL sp_update_user_info (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";  // 파라미터화된 쿼리 사용
 
 	retcode = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
 
@@ -489,12 +503,16 @@ bool DBSession::UpdateUserInfo(USER_INFO _userInfo)
 
 	if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
-		cout << "user info update success" << endl;
+		/*GLogger::Log(spdlog::level::info, "UpdateUserInfo user: {} POS: [ {},{} ] level: {} hp: {}/{} mp: {}/{} exp: {}/{} gold: {}",
+			_userInfo.name, _userInfo.posx, _userInfo.posy, _userInfo.level, _userInfo.hp, _userInfo.maxHp, _userInfo.mp, _userInfo.maxMp,
+			_userInfo.gold);*/
 		return true;
 	}
 	else {
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
-		cout << "user info update fail" << endl;
+		GLogger::Log(spdlog::level::warn, "UpdateUserInfo Fail user: {} POS: [ {},{} ] level: {} hp: {}/{} mp: {}/{} exp: {}/{} gold: {}",
+			_userInfo.name, _userInfo.posx, _userInfo.posy, _userInfo.level, _userInfo.hp, _userInfo.maxHp, _userInfo.mp, _userInfo.maxMp,
+			_userInfo.gold);
 		return false;
 	}
 }
@@ -512,7 +530,7 @@ bool DBSession::UseItem(string _name, uint32 _itemId, uint32 _amount, uint32 _ta
 
 	retcode = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
 	if (retcode != SQL_SUCCESS && retcode != SQL_SUCCESS_WITH_INFO) {
-		cout << "SQL 문 핸들 할당 실패 (UseItem)" << endl;
+		GLogger::Log(spdlog::level::warn, "UseItem Fail user: {}", _name);
 		return false;
 	}
 
@@ -527,11 +545,11 @@ bool DBSession::UseItem(string _name, uint32 _itemId, uint32 _amount, uint32 _ta
 	SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
 
 	if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
-		cout << "UseItem success" << endl;
+		GLogger::Log(spdlog::level::info, "UseItem Success user: {} item_id: {} quantity: {}", _name, _itemId, _amount);
 		return true;
 	}
 	else {
-		cout << "UseItem fail" << endl;
+		GLogger::Log(spdlog::level::warn, "UseItem Fail user: {} item_id: {} quantity: {}", _name, _itemId, _amount);
 		return false;
 	}
 
@@ -562,12 +580,12 @@ bool DBSession::InventoryToEquip(string _name, uint32 _itemId, uint32 _tab_type,
 
 	if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
-		cout << "Inventory to equip success" << endl;
+		GLogger::Log(spdlog::level::info, "InventoryToEquip Success user: {}", _name);
 		return true;
 	}
 	else {
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
-		cout << "Inventory to equip fail" << endl;
+		GLogger::Log(spdlog::level::warn, "InventoryToEquip Fail user: {}", _name);
 		return false;
 	}
 }
@@ -624,12 +642,131 @@ bool DBSession::RegisterNewUser(string _name)
 
 	if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
-		cout << "reigster success" << endl;
+		GLogger::Log(spdlog::level::info, "RegisterNewUser Success user: {}", _name);
 		return true;
 	}
 	else {
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
-		cout << "register fail" << endl;
+		GLogger::Log(spdlog::level::warn, "RegisterNewUser Fail user: {}", _name);
 		return false;
 	}
+}
+
+bool DBSession::UpdateUserEquipment(const string& _name, const vector<Protocol::EquipmentItem>& _eqList)
+{
+	SQLHSTMT hstmt = 0;
+	SQLRETURN retcode;
+	wstring wname(_name.begin(), _name.end());
+
+	int weapon = NULL;
+	int helmet = NULL;
+	int top = NULL;
+	int bottom = NULL;
+
+	for (const auto& item : _eqList)
+	{
+		switch (item.eq_slot())
+		{
+		case Protocol::WEAPON:  weapon = static_cast<int>(item.item_id()); break;
+		case Protocol::HELMET:  helmet = static_cast<int>(item.item_id()); break;
+		case Protocol::TOP:     top = static_cast<int>(item.item_id()); break;
+		case Protocol::BOTTOM:  bottom = static_cast<int>(item.item_id()); break;
+		default: break;
+		}
+	}
+
+	wstring proc = L"{CALL sp_update_user_equipment (?, ?, ?, ?, ?)}";
+
+	retcode = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
+	if (retcode != SQL_SUCCESS && retcode != SQL_SUCCESS_WITH_INFO)
+		return false;
+
+	SQLBindParameter(hstmt, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WCHAR, 20, 0, (SQLWCHAR*)wname.c_str(), 0, NULL);
+	SQLBindParameter(hstmt, 2, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, (weapon != NULL ? &weapon : NULL), 0, NULL);
+	SQLBindParameter(hstmt, 3, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, (helmet != NULL ? &helmet : NULL), 0, NULL);
+	SQLBindParameter(hstmt, 4, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, (top != NULL ? &top : NULL), 0, NULL);
+	SQLBindParameter(hstmt, 5, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, (bottom != NULL ? &bottom : NULL), 0, NULL);
+
+	retcode = SQLExecDirect(hstmt, (SQLWCHAR*)proc.c_str(), SQL_NTS);
+
+	SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
+
+	return retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO;
+}
+
+bool DBSession::InsertInventorySlot(const string& name, const Protocol::InventorySlot& slot)
+{
+	SQLHSTMT hstmt = 0;
+	SQLRETURN retcode;
+	wstring wname(name.begin(), name.end());
+	wstring proc = L"{CALL sp_Insert_InventorySlot (?, ?, ?, ?, ?)}";
+
+	retcode = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
+	if (retcode != SQL_SUCCESS && retcode != SQL_SUCCESS_WITH_INFO)
+		return false;
+
+	uint64 tabType = static_cast<int>(slot.tab_type());
+	uint64 itemId = slot.item_id();
+	uint64 quantity = slot.quantity();
+	uint64 slotIndex = slot.inv_slot_index();
+
+	SQLBindParameter(hstmt, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WCHAR, 20, 0, (SQLWCHAR*)wname.c_str(), 0, NULL);
+	SQLBindParameter(hstmt, 2, SQL_PARAM_INPUT, SQL_C_LONG, SQL_INTEGER, 0, 0, &itemId, 0, NULL);
+	SQLBindParameter(hstmt, 3, SQL_PARAM_INPUT, SQL_C_LONG, SQL_INTEGER, 0, 0, &quantity, 0, NULL);
+	SQLBindParameter(hstmt, 4, SQL_PARAM_INPUT, SQL_C_LONG, SQL_INTEGER, 0, 0, &tabType, 0, NULL);
+	SQLBindParameter(hstmt, 5, SQL_PARAM_INPUT, SQL_C_LONG, SQL_INTEGER, 0, 0, &slotIndex, 0, NULL);
+
+	retcode = SQLExecDirect(hstmt, (SQLWCHAR*)proc.c_str(), SQL_NTS);
+	SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
+
+	return retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO;
+}
+
+bool DBSession::ClearInventory(const string& _name)
+{
+	SQLHSTMT hstmt = 0;
+	SQLRETURN retcode;
+	wstring wname(_name.begin(), _name.end());
+	wstring proc = L"{CALL sp_Clear_Inventory (?)}";
+
+	retcode = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
+	if (retcode != SQL_SUCCESS && retcode != SQL_SUCCESS_WITH_INFO)
+		return false;
+
+	SQLBindParameter(hstmt, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WCHAR, 20, 0, (SQLWCHAR*)wname.c_str(), 0, NULL);
+	retcode = SQLExecDirect(hstmt, (SQLWCHAR*)proc.c_str(), SQL_NTS);
+	SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
+
+	if (retcode != SQL_SUCCESS && retcode != SQL_SUCCESS_WITH_INFO)
+		return false;
+}
+
+bool DBSession::UpdateUserGold(const string& _name, int _gold)
+{
+	SQLHSTMT hstmt = 0;
+	SQLRETURN retcode;
+
+	wstring wname = wstring(_name.begin(), _name.end());
+	wstring proc = L"{CALL sp_update_user_gold(?, ?)}";
+
+	retcode = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
+	if (retcode != SQL_SUCCESS && retcode != SQL_SUCCESS_WITH_INFO) {
+		GLogger::Log(spdlog::level::warn, "UpdateUserGold assign Fail user: {} gold: {}", _name, _gold);
+		return false;
+	}
+
+	SQLBindParameter(hstmt, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WCHAR, 20, 0,(SQLWCHAR*)wname.c_str(), 0, NULL);
+	SQLBindParameter(hstmt, 2, SQL_PARAM_INPUT, SQL_C_LONG, SQL_INTEGER, 0, 0, &_gold, 0,NULL);
+
+	retcode = SQLExecDirect(hstmt, (SQLWCHAR*)proc.c_str(), SQL_NTS);
+	if (retcode != SQL_SUCCESS && retcode != SQL_SUCCESS_WITH_INFO)
+	{
+		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
+		GLogger::Log(spdlog::level::warn, "UpdateUserGold Fail user: {} gold: {}", _name, _gold);
+		return false;
+	}
+
+	SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
+	GLogger::Log(spdlog::level::info, "UpdateUserGold Success user: {} gold: {}", _name, _gold);
+	return true;
 }

@@ -2,6 +2,7 @@
 
 #include "Client.h"
 #include "SFSystem.h"
+#include "GLogger.h"
 #include "pch.h"
 
 class Player : public Client
@@ -27,7 +28,7 @@ public:
 
 	void	SetEquip(Protocol::EquipmentSlot _slot, uint32 _itemId);
 
-	void	SetGold(uint64 _gold) { myGold = _gold; }
+	void	SetGold(uint64 _gold) { GLogger::LogWithContext(spdlog::level::info, myName, "SetGold", "Gold changed to {}", _gold); myGold = _gold; }
 	const	uint64 GetGold() const { return myGold; }
 
 	const	uint32	GetEquip(Protocol::EquipmentSlot _slot) const;

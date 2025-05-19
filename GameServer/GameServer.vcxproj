@@ -191,6 +191,7 @@
     <ClInclude Include="DBGameSession.h" />
     <ClInclude Include="DBGameSessionManager.h" />
     <ClInclude Include="DBProtocol.pb.h" />
+    <ClInclude Include="DropTable.h" />
     <ClInclude Include="Enum.pb.h" />
     <ClInclude Include="GameDBPacketHandler.h" />
     <ClInclude Include="GameSession.h" />
@@ -208,6 +209,7 @@
     <ClInclude Include="RedisManager.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="RoomManager.h" />
+    <ClInclude Include="StateSnap.h" />
     <ClInclude Include="Struct.pb.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
@@ -221,6 +223,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="DropTable.cpp" />
     <ClCompile Include="Enum.pb.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -253,6 +256,7 @@
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="RoomManager.cpp" />
     <ClCompile Include="ServerMain.cpp" />
+    <ClCompile Include="StateSnap.cpp" />
     <ClCompile Include="Struct.pb.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>

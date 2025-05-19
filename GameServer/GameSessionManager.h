@@ -9,17 +9,9 @@ using GameSessionRef = shared_ptr<GameSession>;
 
 class GameSessionManager : public JobQueue
 {
-private:
+public:
 	GameSessionManager() {};
 	~GameSessionManager() {};
-	GameSessionManager(const GameSessionManager&) = delete;
-	GameSessionManager& operator=(const GameSessionManager&) = delete;
-public:
-	static GameSessionManager& GetInstance()
-	{
-		static GameSessionManager instance;
-		return instance;
-	}
 
 	void			Add(GameSessionRef _session);
 	void			Remove(GameSessionRef _session);
@@ -28,9 +20,9 @@ public:
 	void			PlayerRespawn(uint64 _id);
 
 	int				GetNewClientId();
-
-	void			AddSession(uint64 _id, GameSessionRef session);
-
+	
+	void			SaveAllPlayerStateSnap();
+	void			SessionRankingUpdate();
 	void			NpcRandomMove(uint64 _id);
 	void			NpcAstarMove(uint64 _id);
 	void			NpcAstarMoveTo(uint64 _id, uint64 _targetid);
@@ -45,7 +37,7 @@ public:
 	void			InitializeNPC();
 	void			WakeNpc(PlayerRef _player, PlayerRef _toPlayer);
 	GameSessionRef	GetSession(uint64 _id);
-	bool			UserInfoPlayer(uint64 _id);
+	//bool			UserInfoPlayer(uint64 _id);
 
 public:
 	void			SetupPlayerAndSession(int id, const string& name, const STAT& st, const POS& pos, Protocol::PlayerType pt);
@@ -65,7 +57,10 @@ public:
 	void			HandleAttack(uint64 _attackerId, uint64 _targetId);
 	void			HandleNPCDeath(uint64 _attackerId, uint64 _targetId);
 	void			BroadcastAttackMessage(uint64 _attackerId, uint64 _targetId);
-
+	
+	void			DropItems(GameSessionRef& _gamesession,GameSessionRef& _usersession);
+	void			UpdateGold(const string& _name, const int _newGold);
+	void			UpdateGold();
 public:
 	USE_LOCK;
 	Array<GameSessionRef, MAX_USER + MAX_NPC> sessions;
@@ -73,30 +68,7 @@ public:
 
 private:
 	queue<uint64> freeId;
-
-private:
-	const array<pair<int, int>, 4> directions = { { {0,1}, {0,-1}, {1, 0}, {-1, 0} } };
-
-	POS dirs[8] =
-	{	POS { -1,  0},		// UP
-		POS {  0, -1},		// LEFT
-		POS {  1,  0},		// DOWN
-		POS {  0,  1},		// RIGHT
-		POS { -1, -1},		// UP_LEFT
-		POS {  1, -1},		// DOWN_LEFT
-		POS {  1,  1},		// DOWN_RIGHT
-		POS { -1,  1}		// UP_RIGHT 
-	};
-
-	int32 cost[8] =
-	{
-		10,
-		10,
-		10,
-		10,
-		14,
-		14,
-		14,
-		14
-	};
+	
 };
+
+extern shared_ptr<GameSessionManager> GGameSessionManager;

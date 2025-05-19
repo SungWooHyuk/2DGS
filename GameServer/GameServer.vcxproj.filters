@@ -90,6 +90,12 @@
     <ClInclude Include="DBGameSessionManager.h">
       <Filter>Main</Filter>
     </ClInclude>
+    <ClInclude Include="StateSnap.h">
+      <Filter>GameContents</Filter>
+    </ClInclude>
+    <ClInclude Include="DropTable.h">
+      <Filter>GameContents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -145,6 +151,12 @@
     </ClCompile>
     <ClCompile Include="DBGameSessionManager.cpp">
       <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="StateSnap.cpp">
+      <Filter>GameContents</Filter>
+    </ClCompile>
+    <ClCompile Include="DropTable.cpp">
+      <Filter>GameContents</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

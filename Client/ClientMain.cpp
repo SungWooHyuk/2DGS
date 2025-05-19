@@ -14,6 +14,8 @@
 #include "Service.h"
 #include "BufferReader.h"
 
+#include "GLogger.h"
+#include "Logger.h"
 uint32	g_left_x;
 uint32	g_top_y;
 
@@ -35,9 +37,12 @@ void InitSingletons()
 
 int main()
 {
+	GLogger::Initialize("Client");
+	GLogger::Log(spdlog::level::err, "client Begin");
 	InitSingletons();
 	ITEM.InitItemICons();
 	ServerPacketHandler::Init(); // packethandler init
+	SetProcessDPIAware();
 
 	ClientServiceRef service = MakeShared<ClientService>( // connect
 		NetAddress(IP, PORT_NUM),
@@ -131,5 +136,6 @@ int main()
 		window.display();
 	}
 
+	spdlog::shutdown();
 	GThreadManager->Join();
 }

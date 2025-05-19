@@ -1,0 +1,202 @@
+{
+  "1": [
+   {
+      "itemId": 9999,
+      "minQuantity": 50,
+      "maxQuantity": 100,
+      "dropRate": 1.0
+    },  
+    {
+      "itemId": 1001,
+      "minQuantity": 1,
+      "maxQuantity": 2,
+      "dropRate": 1
+    },
+    {
+      "itemId": 1002,
+      "minQuantity": 1,
+      "maxQuantity": 5,
+      "dropRate": 1
+    },
+    {
+      "itemId": 2001,
+      "minQuantity": 1,
+      "maxQuantity": 10,
+      "dropRate": 0.2
+    },
+    {
+      "itemId": 3001,
+      "minQuantity": 1,
+      "maxQuantity": 1,
+      "dropRate": 0.2
+    },
+    {
+      "itemId": 3002,
+      "minQuantity": 1,
+      "maxQuantity": 1,
+      "dropRate": 0.2
+    },
+    {
+      "itemId": 3003,
+      "minQuantity": 1,
+      "maxQuantity": 1,
+      "dropRate": 0.2
+    },
+    {
+      "itemId": 3004,
+      "minQuantity": 1,
+      "maxQuantity": 1,
+      "dropRate": 0.2
+    }
+  ],
+  "2": [
+   {
+      "itemId": 9999,
+      "minQuantity": 50,
+      "maxQuantity": 100,
+      "dropRate": 1.0
+    },  
+    {
+      "itemId": 1001,
+      "minQuantity": 1,
+      "maxQuantity": 2,
+      "dropRate": 1
+    },
+    {
+      "itemId": 1002,
+      "minQuantity": 1,
+      "maxQuantity": 5,
+      "dropRate": 1
+    },
+    {
+      "itemId": 2002,
+      "minQuantity": 1,
+      "maxQuantity": 10,
+      "dropRate": 1
+    },
+    {
+      "itemId": 3001,
+      "minQuantity": 1,
+      "maxQuantity": 1,
+      "dropRate": 0.2
+    },
+    {
+      "itemId": 3002,
+      "minQuantity": 1,
+      "maxQuantity": 1,
+      "dropRate": 0.2
+    },
+    {
+      "itemId": 3003,
+      "minQuantity": 1,
+      "maxQuantity": 1,
+      "dropRate": 0.2
+    },
+    {
+      "itemId": 3004,
+      "minQuantity": 1,
+      "maxQuantity": 1,
+      "dropRate": 0.2
+    }
+  ],
+"3": [
+   {
+      "itemId": 9999,
+      "minQuantity": 50,
+      "maxQuantity": 100,
+      "dropRate": 1.0
+    },  
+    {
+      "itemId": 1001,
+      "minQuantity": 1,
+      "maxQuantity": 2,
+      "dropRate": 1
+    },
+    {
+      "itemId": 1002,
+      "minQuantity": 1,
+      "maxQuantity": 5,
+      "dropRate": 1
+    },
+    {
+      "itemId": 2003,
+      "minQuantity": 1,
+      "maxQuantity": 10,
+      "dropRate": 1
+    },
+    {
+      "itemId": 3001,
+      "minQuantity": 1,
+      "maxQuantity": 1,
+      "dropRate": 0.2
+    },
+    {
+      "itemId": 3002,
+      "minQuantity": 1,
+      "maxQuantity": 1,
+      "dropRate": 0.2
+    },
+    {
+      "itemId": 3003,
+      "minQuantity": 1,
+      "maxQuantity": 1,
+      "dropRate": 0.2
+    },
+    {
+      "itemId": 3004,
+      "minQuantity": 1,
+      "maxQuantity": 1,
+      "dropRate": 0.2
+    }
+  ],
+"4": [
+    {
+      "itemId": 9999,
+      "minQuantity": 50,
+      "maxQuantity": 100,
+      "dropRate": 1.0
+    },    
+    {
+      "itemId": 1001,
+      "minQuantity": 1,
+      "maxQuantity": 2,
+      "dropRate": 1.0
+    },
+    {
+      "itemId": 1002,
+      "minQuantity": 1,
+      "maxQuantity": 5,
+      "dropRate": 1.0
+    },
+    {
+      "itemId": 2004,
+      "minQuantity": 1,
+      "maxQuantity": 10,
+      "dropRate": 1.0
+    },
+    {
+      "itemId": 3001,
+      "minQuantity": 1,
+      "maxQuantity": 1,
+      "dropRate": 0.2
+    },
+    {
+      "itemId": 3002,
+      "minQuantity": 1,
+      "maxQuantity": 1,
+      "dropRate": 0.2
+    },
+    {
+      "itemId": 3003,
+      "minQuantity": 1,
+      "maxQuantity": 1,
+      "dropRate": 0.2
+    },
+    {
+      "itemId": 3004,
+      "minQuantity": 1,
+      "maxQuantity": 1,
+      "dropRate": 0.2
+    }
+  ]
+}

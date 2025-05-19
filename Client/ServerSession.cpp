@@ -2,6 +2,7 @@
 #include "ServerSession.h"
 #include "ServerPacketHandler.h"
 #include <codecvt>
+#include "GLogger.h"
 
 void ServerSession::OnConnected()
 {

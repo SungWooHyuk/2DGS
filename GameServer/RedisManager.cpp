@@ -14,6 +14,18 @@ bool RedisManager::Init() {
         }
         return false;
     }
+
+    const char* password = "1234";
+    redisReply* authReply = (redisReply*)redisCommand(context, "AUTH %s", password);
+    if (!authReply || authReply->type == REDIS_REPLY_ERROR) {
+        if (authReply) {
+            printf("AUTH failed: %s\n", authReply->str);
+            freeReplyObject(authReply);
+        }
+        return false;
+    }
+
+    freeReplyObject(authReply);
     return true;
 }
 
@@ -24,36 +36,62 @@ void RedisManager::Close() {
     }
 }
 
-bool RedisManager::UpdatePlayerLevel(const string& playerName, int32 level) {
+bool RedisManager::UpdatePlayerGold(const string& _playerName, uint64 _newGold, vector<RankingData>& _outUpdatedTop5) {
+    WRITE_LOCK;
     if (!context) return false;
 
-    // 현재 플레이어의 점수를 확인
-    redisReply* scoreReply = (redisReply*)redisCommand(context, "ZSCORE %s %s", RANKING_KEY, playerName.c_str());
+    auto oldTop5 = GetTop5Ranking();
 
-    if (scoreReply->type == REDIS_REPLY_STRING) {
-        // 플레이어가 존재함
-        // 기존 점수를 삭제하고 새로운 점수로 업데이트
-        redisReply* delReply = (redisReply*)redisCommand(context, "ZREM %s %s", RANKING_KEY, playerName.c_str());
-        freeReplyObject(delReply);
+    redisReply* reply = (redisReply*)redisCommand(context, "ZADD %s %llu %s", RANKING_KEY, _newGold, _playerName.c_str());
+
+    if (reply == nullptr || reply->type != REDIS_REPLY_INTEGER) {
+        printf("ZADD failed: %s\n", reply ? reply->str : "No reply");
+        return false;
     }
-    
-    freeReplyObject(scoreReply);
-
-    std::stringstream ss;
-    ss << level << ":" << playerName;  // 레벨:플레이어이름 형식으로 저장 (정렬을 위해)
-
-    redisReply* reply = (redisReply*)redisCommand(context, "ZADD %s %s %s",
-        RANKING_KEY, ss.str().c_str(), playerName.c_str());
-    
-    if (!reply) return false;
-
-    bool result = (reply->type == REDIS_REPLY_INTEGER);
     freeReplyObject(reply);
-    return result;
+
+    auto newTop5 = GetTop5Ranking();
+
+    bool wasInOldTop5 = any_of(oldTop5.begin(), oldTop5.end(),
+        [&](const RankingData& data) {
+            return data.playerName == _playerName;
+        });
+
+    bool isInNewTop5 = any_of(newTop5.begin(), newTop5.end(),
+        [&](const RankingData& data) {
+            return data.playerName == _playerName;
+        });
+
+    if (!wasInOldTop5 && isInNewTop5) {
+        _outUpdatedTop5 = move(newTop5);
+        return true;
+    }
+
+    if (oldTop5 != newTop5) {
+        _outUpdatedTop5 = move(newTop5);
+        return true;
+    }
+
+    return false;
 }
 
-vector<RankingData> RedisManager::GetTop5Ranking() {
+void RedisManager::RegisterPlayerRanking(const string& _playerName, uint64 _gold)
+{
+    WRITE_LOCK;
+    if (!context) return;
+
+    redisReply* reply = (redisReply*)redisCommand(context,
+        "ZADD %s %llu %s", RANKING_KEY, _gold, _playerName.c_str());
+
+    if (!reply || reply->type != REDIS_REPLY_INTEGER)
+        printf("ZADD failed: %s\n", reply ? reply->str : "No reply");
+
+    if (reply) freeReplyObject(reply);
+}
+
+vector<RankingData> RedisManager::GetTop5Ranking() const{
     vector<RankingData> result;
+    READ_LOCK;
     if (!context) return result;
 
     // ZREVRANGE를 사용하여 상위 5명 조회 (내림차순)
@@ -61,6 +99,7 @@ vector<RankingData> RedisManager::GetTop5Ranking() {
         RANKING_KEY);
 
     if (!reply || reply->type != REDIS_REPLY_ARRAY) {
+        printf("ZREVRANGE failed\n");
         if (reply) freeReplyObject(reply);
         return result;
     }
@@ -68,10 +107,28 @@ vector<RankingData> RedisManager::GetTop5Ranking() {
     for (size_t i = 0; i < reply->elements; i += 2) {
         RankingData data;
         data.playerName = reply->element[i]->str;
-        data.level = std::stoi(reply->element[i + 1]->str);
+        data.gold = std::stoi(reply->element[i + 1]->str);
         result.push_back(data);
     }
 
     freeReplyObject(reply);
     return result;
+}
+
+bool RedisManager::ResetRanking()
+{
+    WRITE_LOCK;
+    if (!context) return false;
+
+    redisReply* reply = (redisReply*)redisCommand(context, "DEL %s", RANKING_KEY);
+
+    if (!reply || reply->type != REDIS_REPLY_INTEGER) {
+        printf("DEL ranking failed: %s\n", reply ? reply->str : "No reply");
+        if (reply) freeReplyObject(reply);
+        return false;
+    }
+
+    bool success = (reply->integer > 0);
+    freeReplyObject(reply);
+    return success;
 }

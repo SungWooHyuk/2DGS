@@ -42,7 +42,7 @@ constexpr int INVALID_ID = -1;
 constexpr int DELAY_LIMIT = 100;
 constexpr int DELAY_LIMIT2 = 150;
 constexpr int ACCEPT_DELY = 50;
-
+constexpr int FORCE_SAVE_THRESHOLD = 20;
 
 enum
 {
@@ -67,19 +67,19 @@ struct POS
 	}
 
 	POS operator+(const POS& other) const {
-		return { posx + other.posx, posy + other.posy };  // �� �����ϰ� �ʱ�ȭ
+		return { posx + other.posx, posy + other.posy };  
 	}
 
-	// �� ������ �߰�
 	bool operator<(const POS& other) const {
-		return std::tie(posy, posx) < std::tie(other.posy, other.posx); // posy�� ������ posx ��
+		return std::tie(posy, posx) < std::tie(other.posy, other.posx); 
 	}
 
 	bool operator>(const POS& other) const {
-		return std::tie(posy, posx) > std::tie(other.posy, other.posx); // posy�� ������ posx ��
+		return std::tie(posy, posx) > std::tie(other.posy, other.posx); 
 	}
 
 };
+
 
 struct PQNode
 {
@@ -94,6 +94,30 @@ struct PQNode
 
 enum { DIR_COUNT = 4 };
 
+constexpr int32 cost[8] =
+{
+	10,
+	10,
+	10,
+	10,
+	14,
+	14,
+	14,
+	14
+};
+
+constexpr POS dirs[8] =
+{	POS { -1,  0},		// UP
+	POS {  0, -1},		// LEFT
+	POS {  1,  0},		// DOWN
+	POS {  0,  1},		// RIGHT
+	POS { -1, -1},		// UP_LEFT
+	POS {  1, -1},		// DOWN_LEFT
+	POS {  1,  1},		// DOWN_RIGHT
+	POS { -1,  1}		// UP_RIGHT 
+};
+
+constexpr array<pair<int, int>, 4> directions = { { {0,1}, {0,-1}, {1, 0}, {-1, 0} } };
 
 struct STAT
 {
@@ -197,11 +221,26 @@ enum class E_INVEN
 	MISC = 3
 };
 
+enum class E_EFFECT_TYPE
+{
+	NONE = 0,
+	HP = 1,
+	MP = 2
+};
 struct TP
 {
 	chrono::system_clock::time_point	attackTime;
 	chrono::system_clock::time_point	attackEndTime;
 	chrono::system_clock::time_point	moveTime;
+};
+
+struct RankingData {
+	string playerName;
+	uint64 gold;
+
+	bool operator==(const RankingData& other) const {
+		return playerName == other.playerName && gold == other.gold;
+	}
 };
 
 enum SystemText
@@ -228,14 +267,44 @@ enum SystemBox
 	EXPINNERBOX
 };
 
+struct InventoryKeyHash {
+	size_t operator()(const pair<Protocol::InventoryTab, uint64>& key) const {
+		return hash<int>()(static_cast<int>(key.first)) ^ (hash<uint64>()(key.second) << 1);
+	}
+};
+
+struct InventoryKeyEqual {
+	bool operator()(const pair<Protocol::InventoryTab, uint64>& lhs,
+		const pair<Protocol::InventoryTab, uint64>& rhs) const {
+		return lhs.first == rhs.first && lhs.second == rhs.second;
+	}
+};
+
+using InventoryKey = pair<Protocol::InventoryTab, uint64>;
+using InventoryMap = unordered_map<InventoryKey, INVEN, InventoryKeyHash, InventoryKeyEqual>; // slot_index -> item
+using EquipmentMap = unordered_map<Protocol::EquipmentSlot, ITEM_INFO>; // equip_slot -> item
+
+struct DROPINFO
+{
+	uint64 itemId;
+	uint64 minQuantity;
+	uint64 maxQuantity;
+	float  dropRate;
+};
+
+struct DROPTABLE
+{
+	vector<DROPINFO> drops;
+};
 #define	MAPDATA				MapData::GetInstance()
 #define	SFSYSTEM			SFSystem::GetInstance()
 #define TILE				Tile::GetInstance()
-#define ROOMMANAGER			RoomManager::GetInstance()
-#define GAMESESSIONMANAGER	GameSessionManager::GetInstance()
+#define ROOMMANAGER			GRoomManager
+#define GAMESESSIONMANAGER	GGameSessionManager
 #define DBMANAGER			DBSessionManager::GetInstance()
 #define ITEM				Item::GetInstance()
-
+#define REDIS				RedisManager::GetInstance()
+#define GDROPTABLE			DropTable::GetInstance()
 #define DUMMYMANAGER		DummyManager::GetInstance()
 
 #define PLAYERMOVETIME		session->GetPlayer()->GetTP().moveTime
@@ -279,5 +348,8 @@ enum SystemBox
 #define SCRACH				1
 #define TOWN				1010,1010
 
+#define GOLD				9999
+#define MAXCONSUME			99
+#define MAXMISC				200
 #define IP					L"127.0.0.1"
 #endif 

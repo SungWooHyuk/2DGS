@@ -8,24 +8,26 @@
 #include "Player.h"
 #include "RoomManager.h"
 #include "Item.h"
+#include "RedisManager.h"
 
 PacketHandlerFunc GDBPacketHandler[UINT16_MAX];
 
 bool Handle_DS_LOGIN(PacketSessionRef& session, DBProtocol::DS_LOGIN& pkt)
 {
-	auto gamesession = GAMESESSIONMANAGER.GetSession(pkt.user_id());
+	auto gamesession = GAMESESSIONMANAGER->GetSession(pkt.user_id());
 
 	if (!pkt.success()) // 로그인 실패
 	{
 		gamesession->LoginPkt(false); // 클라이언트에 false 전송
+		GLogger::LogWithContext(spdlog::level::warn, "UNKNOWN", "LOGIN FAILED","user_id: {}", pkt.user_id());
 		return false;
 	}
 
 	const auto& playerInfo = pkt.player(0);
 	POS pos{ playerInfo.x(), playerInfo.y() };
 	STAT stat = {
-		playerInfo.level(), playerInfo.hp(), playerInfo.maxhp(),
-		playerInfo.mp(), playerInfo.maxmp(), playerInfo.exp(), playerInfo.maxexp()
+		playerInfo.level(), playerInfo.hp(), 
+		playerInfo.mp(), playerInfo.exp(), playerInfo.maxhp(),playerInfo.maxmp(), playerInfo.maxexp()
 	};
 
 	// 인벤토리 설정
@@ -51,8 +53,11 @@ bool Handle_DS_LOGIN(PacketSessionRef& session, DBProtocol::DS_LOGIN& pkt)
 		equipmentList.emplace_back(eq.eq_slot(), *item);
 	}
 
+	string name = playerInfo.name();
+	name.erase(name.find_last_not_of(' ') + 1);
+
 	PlayerRef player = MakeShared<Player>(
-		playerInfo.name(), stat, pos, ST_INGAME,
+		name, stat, pos, ST_INGAME,
 		9999, Protocol::PLAYER_TYPE_CLIENT,
 		playerInfo.gold(), inventoryList, equipmentList);
 
@@ -60,32 +65,42 @@ bool Handle_DS_LOGIN(PacketSessionRef& session, DBProtocol::DS_LOGIN& pkt)
 	player->SetOwnerSession(gamesession);
 	gamesession->SetCurrentPlayer(player);
 
-	ROOMMANAGER.EnterRoom(gamesession);
+	GLogger::LogWithContext(spdlog::level::info, name, "LOGIN SUCCESS",
+		fmt::format("Level: {}, Gold: {}, Position: ({}, {}), InventoryCount: {}, EquipmentCount: {}",
+			stat.level, player->GetGold(), pos.posx, pos.posy,
+			inventoryList.size(), equipmentList.size()));
+
+	ROOMMANAGER->EnterRoom(gamesession);
 
 	gamesession->LoginPkt(true, player);
 
-	unordered_set<uint64> vl = ROOMMANAGER.ViewList(gamesession, false);
+	REDIS.RegisterPlayerRanking(name, playerInfo.gold()); // 등록
+	auto top5 = REDIS.GetTop5Ranking();
+	gamesession->RankingPkt(top5);
+
+	GAMESESSIONMANAGER->UpdateGold();
+	unordered_set<uint64> vl = ROOMMANAGER->ViewList(gamesession, false);
 	gamesession->SetViewPlayer(vl); // first viewlist enroll
 	
 	for (const auto vp : vl)
 	{
-		if (GAMESESSIONMANAGER.GetSession(vp))
+		if (GAMESESSIONMANAGER->GetSession(vp))
 		{
-			POS vpPos = { GAMESESSIONMANAGER.GetSession(vp)->GetCurrentPlayer()->GetPos().posx, GAMESESSIONMANAGER.GetSession(vp)->GetCurrentPlayer()->GetPos().posy };
+			POS vpPos = { GAMESESSIONMANAGER->GetSession(vp)->GetCurrentPlayer()->GetPos().posx, GAMESESSIONMANAGER->GetSession(vp)->GetCurrentPlayer()->GetPos().posy };
 
 			if (gamesession->GetCurrentPlayer()->GetPT() != Protocol::PLAYER_TYPE_DUMMY)
 			{
 				gamesession->AddObjectPkt(
-					GAMESESSIONMANAGER.GetSession(vp)->GetCurrentPlayer()->GetPT(),
-					GAMESESSIONMANAGER.GetSession(vp)->GetCurrentPlayer()->GetId(),
-					GAMESESSIONMANAGER.GetSession(vp)->GetCurrentPlayer()->GetName(),
+					GAMESESSIONMANAGER->GetSession(vp)->GetCurrentPlayer()->GetPT(),
+					GAMESESSIONMANAGER->GetSession(vp)->GetCurrentPlayer()->GetId(),
+					GAMESESSIONMANAGER->GetSession(vp)->GetCurrentPlayer()->GetName(),
 					vpPos);
 			}
 			
-			if (GAMESESSIONMANAGER.GetSession(vp)->GetCurrentPlayer()->GetPT() == Protocol::PlayerType::PLAYER_TYPE_CLIENT)
+			if (GAMESESSIONMANAGER->GetSession(vp)->GetCurrentPlayer()->GetPT() == Protocol::PlayerType::PLAYER_TYPE_CLIENT)
 			{
 				POS plPos = { player->GetPos().posx, player->GetPos().posy };
-				GAMESESSIONMANAGER.GetSession(vp)->AddObjectPkt(
+				GAMESESSIONMANAGER->GetSession(vp)->AddObjectPkt(
 					player->GetPT(),
 					player->GetId(),
 					player->GetName(),

@@ -8,15 +8,14 @@
 
 #include <atomic>
 
+shared_ptr<RoomManager> GRoomManager = make_shared<RoomManager>();
+
 RoomManager::RoomManager()
 {
 	for (int i = 0; i < ROOM; ++i)
-	{
 		for (int j = 0; j < ROOM; ++j)
-		{
 			rooms[i][j] = MakeShared<Room>();
-		}
-	}
+		
 }
 
 void RoomManager::EnterRoom(GameSessionRef& _session)
@@ -78,16 +77,22 @@ vector<RoomRef> RoomManager::GetAdjacentRooms(uint32 _roomNumber)
 
 unordered_set<uint64> RoomManager::ViewList(GameSessionRef& _session, bool _npc)
 {
-	READ_LOCK;
-
+	
 	unordered_set<uint64> viewPlayer;
 	PlayerRef player = _session->GetCurrentPlayer();
-	vector<RoomRef> vroom = GetAdjacentRooms(player->GetCurrentroom());
-	vroom.push_back(_session->GetRoom().lock());
+	vector<RoomRef> vroom;
+
+	{ 
+		READ_LOCK;
+		vroom = GetAdjacentRooms(player->GetCurrentroom());
+		vroom.push_back(_session->GetRoom().lock());
+	}
 
 	for (const auto& room : vroom)
 	{
-		for (const auto& other : room->GetPlayers())
+		auto players = room->GetPlayersCopy();
+
+		for (const auto& other : players)
 		{
 			if (other.second)
 			{
@@ -109,7 +114,7 @@ unordered_set<uint64> RoomManager::ViewList(GameSessionRef& _session, bool _npc)
 						{
 							if (CanSee(player, vl)) {
 								viewPlayer.insert(vl->GetId());
-								GAMESESSIONMANAGER.WakeNpc(vl, player);
+								GAMESESSIONMANAGER->WakeNpc(vl, player);
 							}
 						}
 					}

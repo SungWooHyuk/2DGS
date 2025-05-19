@@ -7,23 +7,30 @@
 #include "GameDBPacketHandler.h"
 #include "Player.h"
 #include "RoomManager.h"
+#include "StateSnap.h"
+#include "GLogger.h"
 
 void GameSession::OnConnected()
 {
-	GAMESESSIONMANAGER.Add(static_pointer_cast<GameSession>(shared_from_this()));
+	GAMESESSIONMANAGER->Add(static_pointer_cast<GameSession>(shared_from_this()));
+	GLogger::LogWithContext(spdlog::level::info, "GameSession", "OnConnected", "New");
 }
 
 void GameSession::OnDisconnected()
 {
-	GAMESESSIONMANAGER.Remove(static_pointer_cast<GameSession>(shared_from_this()));
-
-	if (currentPlayer)
-	{
-		if (auto rooms = room.lock())
-			rooms->DoAsync(&Room::Leave, currentPlayer);
+	if (currentPlayer) {
+		GLogger::LogWithContext(spdlog::level::info, currentPlayer->GetName(), "OnDisconnected",
+			"Player disconnected. ID: {}", currentPlayer->GetId());
 	}
-	
+	GAMESESSIONMANAGER->Remove(static_pointer_cast<GameSession>(shared_from_this()));
+
+	WRITE_LOCK_IDX(0);
+	PlayerRef player = currentPlayer;
 	currentPlayer = nullptr;
+
+	if (auto rooms = room.lock())
+		rooms->DoAsync(&Room::Leave, player);
+
 }
 
 void GameSession::OnRecvPacket(BYTE* buffer, int32 len)
@@ -31,8 +38,13 @@ void GameSession::OnRecvPacket(BYTE* buffer, int32 len)
 	PacketSessionRef session = GetPacketSessionRef();
 	PacketHeader* header = reinterpret_cast<PacketHeader*>(buffer);
 
+	if (currentPlayer) {
+		GLogger::LogWithContext(spdlog::level::debug, currentPlayer->GetName(), "OnRecvPacket",
+			"Received packet of type: {}, length: {}", header->id, len);
+	}
+
 	ClientPacketHandler::HandlePacket(session, buffer, len);
-	
+
 }
 
 void GameSession::OnSend(int32 len)
@@ -51,14 +63,18 @@ vector<int> GameSession::GetRandomDirectionIndices()
 
 bool GameSession::CanGo(POS _pos)
 {
-	if (MAPDATA.GetTile(_pos.posy, _pos.posx) != MAPDATA.e_OBSTACLE)
-		return true;
-	return false;
+	if (_pos.posx < 0 || _pos.posx >= W_WIDTH || _pos.posy < 0 || _pos.posy >= W_HEIGHT)
+		return false;
+
+	if (MAPDATA.GetTile(_pos.posy, _pos.posx) == MAPDATA.e_OBSTACLE)
+		return false;
+
+	return true;
 }
 
 void GameSession::ResetPath()
 {
-	WRITE_LOCK_IDX(1);
+	WRITE_LOCK_IDX(2);
 	if (!path.empty()) {
 		path.clear();
 		pathIndex = 1;
@@ -68,8 +84,8 @@ void GameSession::ResetPath()
 
 void GameSession::SetPath(POS _dest, map<POS, POS>& _parent)
 {
+	WRITE_LOCK_IDX(2);
 	POS pos = _dest;
-	WRITE_LOCK_IDX(1);
 	path.clear();
 	pathIndex = 1;
 	pathCount = 0;
@@ -89,10 +105,21 @@ void GameSession::SetPath(POS _dest, map<POS, POS>& _parent)
 
 bool GameSession::EmptyPath()
 {
+	READ_LOCK_IDX(2);
 	if (path.empty())
 		return true;
 	else
 		return false;
+}
+
+bool GameSession::SaveStateSnap()
+{
+	READ_LOCK_IDX(0);
+
+	if (currentPlayer == nullptr)
+		return false;
+	currentPlayer->GetStateSnap().SaveState();
+	return true;
 }
 
 void GameSession::RemovePkt(uint64 _id)
@@ -186,13 +213,6 @@ void GameSession::LoginPkt(bool _success, uint64 _id, Protocol::PlayerType _pt, 
 	Player->set_name(_name);
 	Player->set_x(_pos.posx);
 	Player->set_y(_pos.posy);
-	//Player->set_exp(_stat.exp);
-	//Player->set_hp(_stat.hp);
-	//Player->set_mp(_stat.mp);
-	//Player->set_level(_stat.level);
-	//Player->set_maxexp(_stat.maxExp);
-	//Player->set_maxhp(_stat.maxHp);
-	//Player->set_maxmp(_stat.maxMp);
 
 	auto sendBuffer = ClientPacketHandler::MakeSendBuffer(sPkt);
 	Send(sendBuffer);
@@ -238,16 +258,16 @@ void GameSession::LoginPkt(bool _success, PlayerRef _player)
 		slotData->set_inv_slot_index(item.slot_index);
 	}
 
-	auto equip = pkt.mutable_equipment()->add_equipment();
 	for (const auto& [slot, itemInfo] : _player->GetEquipments())
 	{
 		if (itemInfo.itemId == 0)
 			continue;
 
+		auto equip = pkt.mutable_equipment()->add_equipment();
 		switch (slot)
 		{
-		case Protocol::WEAPON:  
-			equip->set_eq_slot(Protocol::WEAPON); 
+		case Protocol::WEAPON:
+			equip->set_eq_slot(Protocol::WEAPON);
 			equip->set_item_id(itemInfo.itemId);
 			break;
 		case Protocol::HELMET:
@@ -277,3 +297,153 @@ void GameSession::LoginPkt(bool _success)
 	Send(sendBuffer);
 }
 
+void GameSession::LoadInventoryPkt()
+{
+	Protocol::S_LOAD_INVENTORY pkt;
+
+	auto inv = currentPlayer->GetInventory();
+
+	for (const auto& [key, inven] : inv)
+	{
+		Protocol::InventorySlot* slot = pkt.add_inventory();
+		slot->set_item_id(inven.itemId);
+		slot->set_inv_slot_index(inven.slot_index);
+		slot->set_tab_type(inven.tab_type);
+		slot->set_quantity(inven.quantity);
+	}
+
+	auto sendBuffer = ClientPacketHandler::MakeSendBuffer(pkt);
+	Send(sendBuffer);
+}
+
+void GameSession::LoadEquipmentPkt()
+{
+	Protocol::S_LOAD_EQUIPMENT pkt;
+
+	auto eup = currentPlayer->GetEquipments();
+
+	for (const auto& [slot, item] : eup)
+	{
+		Protocol::EquipmentItem* eq = pkt.add_equipment();
+		eq->set_eq_slot(slot);
+		eq->set_item_id(item.itemId);
+	}
+	auto sendBuffer = ClientPacketHandler::MakeSendBuffer(pkt);
+	Send(sendBuffer);
+}
+
+void GameSession::ConsumeItemPkt(bool _success, uint64 _itemId, Protocol::InventoryTab _tab, uint64 _slotIndex, uint64 _newQuantity)
+{
+	Protocol::S_CONSUME_RESULT pkt;
+
+	pkt.set_success(_success);
+	pkt.set_item_id(_itemId);
+	pkt.set_new_quantity(_newQuantity);
+	pkt.set_tab_type(_tab);
+	pkt.set_slot_index(_slotIndex);
+
+	auto sendBuffer = ClientPacketHandler::MakeSendBuffer(pkt);
+	Send(sendBuffer);
+}
+
+void GameSession::DropPkt(bool _success, uint64 _itemId, Protocol::InventoryTab _tab, uint64 _slotIndex, uint64 _dropQuantity)
+{
+	Protocol::S_DROP_RESULT pkt;
+	pkt.set_success(_success);
+	pkt.set_item_id(_itemId);
+	pkt.set_tab_type(_tab);
+	pkt.set_inv_slot_index(_slotIndex);
+	pkt.set_quantity_dropped(_dropQuantity);
+
+	auto sendBuffer = ClientPacketHandler::MakeSendBuffer(pkt);
+	Send(sendBuffer);
+}
+
+void GameSession::MoveInventoryIndex(bool _success, Protocol::InventoryTab _fromTab, uint64 _fromIndex, Protocol::InventoryTab _toTab, uint64 _toIndex, uint64 _moveItemId, uint64 _quantity)
+{
+	Protocol::S_MOVE_INVENTORY_RESULT pkt;
+
+	pkt.set_success(_success);
+	pkt.set_from_tab(_fromTab);
+	pkt.set_inv_from_index(_fromIndex);
+	pkt.set_to_tab(_toTab);
+	pkt.set_inv_to_index(_toIndex);
+	pkt.set_moved_item_id(_moveItemId);
+	pkt.set_quantity(_quantity);
+
+	auto sendBuffer = ClientPacketHandler::MakeSendBuffer(pkt);
+	Send(sendBuffer);
+}
+
+void GameSession::EquipPkt(bool _success, uint64 _itemId, Protocol::EquipmentSlot _slot)
+{
+	Protocol::S_EQUIP_RESULT pkt;
+	pkt.set_success(_success);
+	pkt.set_item_id(_itemId);
+	pkt.set_slot_type(_slot);
+
+	auto sendBuffer = ClientPacketHandler::MakeSendBuffer(pkt);
+	Send(sendBuffer);
+}
+
+void GameSession::UnEquipPkt(bool _success, uint64 _itemId, Protocol::EquipmentSlot _slot, Protocol::InventoryTab _tab, uint64 _invToSlotIndex)
+{
+	Protocol::S_UNEQUIP_RESULT pkt;
+	pkt.set_success(_success);
+	pkt.set_item_id(_itemId);
+	pkt.set_slot_type(_slot);
+	pkt.set_to_tab_type(_tab);
+	pkt.set_inv_to_slot_index(_invToSlotIndex);
+
+	auto sendBuffer = ClientPacketHandler::MakeSendBuffer(pkt);
+	Send(sendBuffer);
+}
+
+void GameSession::GoldChangePkt(uint64 _newGold, int64 _delta)
+{
+	Protocol::S_GOLD_CHANGE pkt;
+	pkt.set_delta(_delta);
+	pkt.set_new_gold(_newGold);
+
+	auto sendBuffer = ClientPacketHandler::MakeSendBuffer(pkt);
+	Send(sendBuffer);
+}
+
+void GameSession::RankingPkt(const vector<RankingData>& _ranking)
+{
+	Protocol::S_RANKING pkt;
+
+	for (const auto& r : _ranking)
+	{
+		Protocol::GoldRanking* gr = pkt.add_ranking();
+		gr->set_name(r.playerName);
+		gr->set_gold(r.gold);
+	}
+
+	auto sendBuffer = ClientPacketHandler::MakeSendBuffer(pkt);
+	Send(sendBuffer);
+}
+
+void GameSession::RemoveItemPkt(uint64 _itemId, Protocol::InventoryTab _tab, uint64 _slotIndex)
+{
+	Protocol::S_REMOVE_ITEM pkt;
+	pkt.set_item_id(_itemId);
+	pkt.set_inv_slot_index(_slotIndex);
+	pkt.set_tab(_tab);
+
+	auto sendBuffer = ClientPacketHandler::MakeSendBuffer(pkt);
+	Send(sendBuffer);
+}
+
+void GameSession::SwapPkt(bool _success, Protocol::InventoryTab _fromTab, uint64 _fromIndex, Protocol::InventoryTab _toTab, uint64 _toIndex)
+{
+	Protocol::S_SWAP_ITEM pkt;
+	pkt.set_success(_success);
+	pkt.set_from_tab(_fromTab);
+	pkt.set_inv_from_index(_fromIndex);
+	pkt.set_to_tab(_toTab);
+	pkt.set_inv_to_index(_toIndex);
+
+	auto sendBuffer = ClientPacketHandler::MakeSendBuffer(pkt);
+	Send(sendBuffer);
+}

@@ -5,15 +5,14 @@
 #include "utils.h"
 
 class Room;
+using RoomRef = shared_ptr<Room>;
 
 class RoomManager : public JobQueue
 {
 public:
-	static RoomManager& GetInstance()
-	{
-		static RoomManager instance;
-		return instance;
-	}
+	RoomManager();
+	~RoomManager() {};
+
 public:
 	void							EnterRoom(GameSessionRef& _session);
 	void							LeaveRoom(GameSessionRef& _session);
@@ -27,12 +26,8 @@ public:
 	unordered_set<uint64>			ViewList(GameSessionRef& _session, bool _npc);
 
 private:
-	RoomManager();
-	~RoomManager() {};
-	RoomManager(const RoomManager&) = delete;
-	RoomManager& operator=(const RoomManager&) = delete;
-private:
 	USE_LOCK;
 	Array<Array<RoomRef, ROOM>, ROOM> rooms;
 };
 
+extern shared_ptr<RoomManager> GRoomManager;
