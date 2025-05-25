@@ -13,7 +13,7 @@ bool Handle_INVALID(PacketSessionRef& session, BYTE* buffer, int32 len)
 	ServerSessionRef serverSession = static_pointer_cast<ServerSession>(session);
 	string playerName = serverSession->GetPlayer()->GetName();
 
-	//GLogger::LogWithContext(spdlog::level::warn, playerName, "Handle_INVALID", "Received invalid packet");
+	GLogger::LogWithContext(spdlog::level::warn, playerName, "Handle_INVALID", "Received invalid packet");
 	return false;
 }
 bool Handle_S_LOGIN(PacketSessionRef& session, Protocol::S_LOGIN& pkt)
@@ -22,14 +22,14 @@ bool Handle_S_LOGIN(PacketSessionRef& session, Protocol::S_LOGIN& pkt)
 	
 	if (!pkt.success())
 	{
-		//GLogger::LogWithContext(spdlog::level::warn, playerName, "Handle_S_LOGIN", "Login failed");
+		GLogger::LogWithContext(spdlog::level::warn, serverSession->GetPlayer()->GetName(), "Handle_S_LOGIN", "Login failed");
 		return false;
 	}
 
 	for (const auto& player : pkt.players())
 	{
-		//GLogger::LogWithContext(spdlog::level::info, playerName, "Handle_S_LOGIN", "PlayerID: {}, Name : {}, Gold : {}",
-		//	player.id(), player.name(), player.gold());
+		GLogger::LogWithContext(spdlog::level::err, player.name(), "Handle_S_LOGIN", "PlayerID: {}, Name : {}, Gold : {}",
+			player.id(), player.name(), player.gold());
 
 		POS ps;
 		TP tp;
@@ -131,7 +131,6 @@ bool Handle_S_REMOVE_ITEM(PacketSessionRef& session, Protocol::S_REMOVE_ITEM& pk
 	//GLogger::LogWithContext(spdlog::level::info, playerName, "Handle_S_REMOVE_ITEM", "ItemID: {}, Tab: {}, Slot: {}",
 	//	pkt.item_id(), static_cast<int>(pkt.tab()), pkt.inv_slot_index());
 
-	
 	uint64 itemId = pkt.item_id();
 	Protocol::InventoryTab tab = pkt.tab();
 	uint64 slotIndex = pkt.inv_slot_index();
@@ -163,6 +162,8 @@ bool Handle_S_LOAD_INVENTORY(PacketSessionRef& session, Protocol::S_LOAD_INVENTO
 		serverSession->GetPlayer()->SetInventory(inventoryList);
 		return true;
 	}
+
+	GLogger::LogWithContext(spdlog::level::warn, playerName, "Handle_S_LOAD_INVENTORY", "inventoryList Empty!");
 	return false;
 }
 
@@ -177,6 +178,7 @@ bool Handle_S_LOAD_EQUIPMENT(PacketSessionRef& session, Protocol::S_LOAD_EQUIPME
 		return true;
 	}
 
+	GLogger::LogWithContext(spdlog::level::warn, playerName, "Handle_S_LOAD_EQUIPMENT", "equipment_size() < 0 !");
 	return false;
 }
 
@@ -198,8 +200,12 @@ bool Handle_S_CONSUME_RESULT(PacketSessionRef& session, Protocol::S_CONSUME_RESU
 			serverSession->GetPlayer()->RemoveItem(pkt.tab_type(), pkt.slot_index());
 			SFSYSTEM.SetQuickSlotReset(pkt.slot_index());
 		}
+		else
+		{
+			GLogger::LogWithContext(spdlog::level::warn, playerName, "Handle_S_CONSUME_RESULT", "Fail + new_quantity > 0");
+			return false;
+		}
 	}
-	return false;
 }
 
 bool Handle_S_DROP_RESULT(PacketSessionRef& session, Protocol::S_DROP_RESULT& pkt)
@@ -213,6 +219,7 @@ bool Handle_S_DROP_RESULT(PacketSessionRef& session, Protocol::S_DROP_RESULT& pk
 		serverSession->GetPlayer()->RemoveItem(pkt.tab_type(), pkt.inv_slot_index());
 		return true;
 	}
+	GLogger::LogWithContext(spdlog::level::warn, playerName, "Handle_S_DROP_RESULT", " DROP Fail");
 	return false;
 }
 
@@ -226,6 +233,7 @@ bool Handle_S_MOVE_INVENTORY_RESULT(PacketSessionRef& session, Protocol::S_MOVE_
 		serverSession->GetPlayer()->MoveItem(pkt.from_tab(), pkt.inv_from_index(), pkt.to_tab(), pkt.inv_to_index(), pkt.quantity());
 		return true;
 	}
+	GLogger::LogWithContext(spdlog::level::warn, playerName, "Handle_S_MOVE_INVENTORY_RESULT", " Move Fail");
 	return false;
 }
 
@@ -239,6 +247,7 @@ bool Handle_S_EQUIP_RESULT(PacketSessionRef& session, Protocol::S_EQUIP_RESULT& 
 		serverSession->GetPlayer()->SetEquip(pkt.slot_type(), pkt.item_id());
 		return true;
 	}
+	GLogger::LogWithContext(spdlog::level::warn, playerName, "Handle_S_EQUIP_RESULT", " Equip Fail");
 	return false;
 }
 
@@ -258,6 +267,8 @@ bool Handle_S_UNEQUIP_RESULT(PacketSessionRef& session, Protocol::S_UNEQUIP_RESU
 		serverSession->GetPlayer()->UnEquip(pkt.slot_type(), pkt.item_id()); // 삭제
 		return true;
 	}
+
+	GLogger::LogWithContext(spdlog::level::warn, playerName, "Handle_S_UNEQUIP_RESULT", "UnEquip Fail");
 	return false;
 }
 
@@ -272,6 +283,7 @@ bool Handle_S_SWAP_ITEM(PacketSessionRef& session, Protocol::S_SWAP_ITEM& pkt)
 		serverSession->GetPlayer()->SwapItems(pkt.from_tab(), pkt.inv_from_index(), pkt.to_tab(), pkt.inv_to_index());
 		return true;
 	}
+	GLogger::LogWithContext(spdlog::level::warn, playerName, "Handle_S_SWAP_ITEM", "Swap Fail");
 	return false;
 }
 
@@ -290,7 +302,8 @@ bool Handle_S_GOLD_CHANGE(PacketSessionRef& session, Protocol::S_GOLD_CHANGE& pk
 		return true;
 	}
 	
-	return true;
+	GLogger::LogWithContext(spdlog::level::warn, playerName, "Handle_S_GOLD_CHANGE", "new_gold < 0");
+	return false;
 }
 
 bool Handle_S_ADD_OBJECT(PacketSessionRef& session, Protocol::S_ADD_OBJECT& pkt)
@@ -320,6 +333,7 @@ bool Handle_S_REMOVE_OBJECT(PacketSessionRef& session, Protocol::S_REMOVE_OBJECT
 
 	if (serverSession->GetPlayer()->GetId() == pkt.id())
 	{
+		GLogger::LogWithContext(spdlog::level::warn, playerName, "Handle_S_REMOVE_OBJECT", "remove me");
 		return false;
 	}
 	else {
@@ -366,6 +380,7 @@ bool Handle_S_CHAT(PacketSessionRef& session, Protocol::S_CHAT& pkt)
 bool Handle_S_STAT_CHANGE(PacketSessionRef& session, Protocol::S_STAT_CHANGE& pkt)
 {
 	ServerSessionRef serverSession = static_pointer_cast<ServerSession>(session);
+	string playerName = serverSession->GetPlayer()->GetName();
 
 	for (const auto& cli : pkt.stats())
 	{
@@ -387,6 +402,7 @@ bool Handle_S_STAT_CHANGE(PacketSessionRef& session, Protocol::S_STAT_CHANGE& pk
 		return true;
 	}
 
+	GLogger::LogWithContext(spdlog::level::warn, playerName, "Handle_S_STAT_CHANGE", "stat change fail");
 	return false;
 }
 
@@ -410,6 +426,7 @@ bool Handle_S_RESPAWN(PacketSessionRef& session, Protocol::S_RESPAWN& pkt)
 bool Handle_S_RANKING(PacketSessionRef& session, Protocol::S_RANKING& pkt)
 {
 	ServerSessionRef serverSession = static_pointer_cast<ServerSession>(session);
+	string playerName = serverSession->GetPlayer()->GetName();
 
 	vector<GoldRanking> ranking;
 	
@@ -427,5 +444,6 @@ bool Handle_S_RANKING(PacketSessionRef& session, Protocol::S_RANKING& pkt)
 		return true;
 	}
 
+	GLogger::LogWithContext(spdlog::level::warn, playerName, "Handle_S_RANKING", "ranking.empty() fail");
 	return false;
 }

@@ -56,15 +56,14 @@ void DoDBWorkerJob(DBServiceRef& service)
 }
 int main()
 {
-	GLogger::Initialize("GameServer"); // 로그찍을준비
+	GLogger::Initialize("GameServer"); // log init
+	GLogger::SetCurrentLogger("GameServer");
 	MAPDATA.InitMAP();
 	ClientPacketHandler::Init();
 	GameDBPacketHandler::Init();
 	GAMESESSIONMANAGER->InitializeNPC();
 	REDIS.Init();
-	GAMESESSIONMANAGER->SaveAllPlayerStateSnap(); // 주기적 snap 30초마다 
 	ITEM.LoadFromJson("items.json");
-	//REDIS.ResetRanking();
 	GDROPTABLE.LoadFromJson("droptable.json");
 	GLogger::Log(spdlog::level::info, "Server Begin");
 
@@ -85,8 +84,8 @@ int main()
 	ASSERT_CRASH(dbservice->Start());
 	ASSERT_CRASH(service->Start());
 
-	int num_threads = std::thread::hardware_concurrency() - 3;
-	int db_num_threads = 3;
+	int num_threads = std::thread::hardware_concurrency();
+	int db_num_threads = num_threads/5;
 
 	for (int32 i = 0; i < num_threads; ++i)
 	{
@@ -96,7 +95,6 @@ int main()
 			});
 	}
 
-	// DB 서비스 스레드
 	for (int32 i = 0; i < db_num_threads; ++i)
 	{
 		GThreadManager->Launch([&dbservice]()

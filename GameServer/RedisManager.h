@@ -19,6 +19,11 @@ public:
     // 상위 5명의 랭킹 조회
     vector<RankingData> GetTop5Ranking() const;
 
+    
+    bool EnqueuePacket(SendBufferRef _buffer); // Redis 큐에 패킷 push
+    bool DequeuePacket(string& deSerializedPacket);    // Redis 큐에서 패킷 pop
+    bool IsPacketQueueEmpty();          // 큐가 비었는지 확인
+    bool FlushQueue(DBGameSessionRef _dbsession);
 
 private:
     RedisManager() = default;
@@ -29,5 +34,5 @@ private:
     mutable     USE_LOCK;
     redisContext* context = nullptr;
     const char* RANKING_KEY = "player_ranking";
-
+    const char* PACKET_QUEUE_KEY = "packet_queue:";
 }; 

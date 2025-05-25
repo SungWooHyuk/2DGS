@@ -19,7 +19,7 @@ bool Handle_DS_LOGIN(PacketSessionRef& session, DBProtocol::DS_LOGIN& pkt)
 	if (!pkt.success()) // 로그인 실패
 	{
 		gamesession->LoginPkt(false); // 클라이언트에 false 전송
-		GLogger::LogWithContext(spdlog::level::warn, "UNKNOWN", "LOGIN FAILED","user_id: {}", pkt.user_id());
+		GLogger::LogWithContext(spdlog::level::err, "UNKNOWN", "LOGIN FAILED","user_id: {}", pkt.user_id());
 		return false;
 	}
 
@@ -73,7 +73,7 @@ bool Handle_DS_LOGIN(PacketSessionRef& session, DBProtocol::DS_LOGIN& pkt)
 	ROOMMANAGER->EnterRoom(gamesession);
 
 	gamesession->LoginPkt(true, player);
-
+	gamesession->StartSaveTimer();
 	REDIS.RegisterPlayerRanking(name, playerInfo.gold()); // 등록
 	auto top5 = REDIS.GetTop5Ranking();
 	gamesession->RankingPkt(top5);

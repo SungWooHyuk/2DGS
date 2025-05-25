@@ -57,9 +57,9 @@ void Player::LevelUp()
 	myStat.hp = myStat.maxHp;
 	myStat.mp = myStat.maxMp;
 
-	GLogger::LogWithContext(spdlog::level::info, myName, "LevelUp",
-		"Player leveled up from {} to {}. New stats - HP: {}/{}, MP: {}/{}, MaxExp: {}",
-		oldLevel, myStat.level, myStat.hp, myStat.maxHp, myStat.mp, myStat.maxMp, myStat.maxExp);
+	//GLogger::LogWithContext(spdlog::level::info, myName, "LevelUp",
+	//	"Player leveled up from {} to {}. New stats - HP: {}/{}, MP: {}/{}, MaxExp: {}",
+	//	oldLevel, myStat.level, myStat.hp, myStat.maxHp, myStat.mp, myStat.maxMp, myStat.maxExp);
 }
 
 const USER_INFO Player::GetPlayer() const
@@ -123,8 +123,8 @@ void Player::AddStateSnap(StateSnap::FLAG _flag, const StateSnap::StateSnapshot 
 
 void Player::ConsumeItem(uint64 _itemId, Protocol::InventoryTab _tab, uint64 _slotIndex)
 {
-	GLogger::LogWithContext(spdlog::level::info, myName, "ConsumeItem",
-		"Consuming item ID: {} from tab: {}, slot: {}", _itemId, static_cast<int>(_tab), _slotIndex);
+	//GLogger::LogWithContext(spdlog::level::info, myName, "ConsumeItem",
+	//	"Consuming item ID: {} from tab: {}, slot: {}", _itemId, static_cast<int>(_tab), _slotIndex);
 
 	WRITE_LOCK_IDX(2);
 
@@ -132,19 +132,19 @@ void Player::ConsumeItem(uint64 _itemId, Protocol::InventoryTab _tab, uint64 _sl
 
 	auto it = myInven.find(key);
 	if (it == myInven.end()) {
-		// log
+		GLogger::LogWithContext(spdlog::level::err, myName, "ConsumeItem", "it == myInven.end()");
 		return;
 	}
 
 	INVEN& item = it->second;
 
 	if (item.itemId != _itemId) {
-		// log
+		GLogger::LogWithContext(spdlog::level::err, myName, "ConsumeItem", "item.itemId != _itemId");
 		return;
 	}
 
 	if (item.quantity <= 0) {
-		// log
+		GLogger::LogWithContext(spdlog::level::err, myName, "ConsumeItem", "item.quantity <= 0");
 		return;
 	}
 
@@ -188,9 +188,9 @@ void Player::ConsumeItem(uint64 _itemId, Protocol::InventoryTab _tab, uint64 _sl
 
 void Player::DropItem(uint64 _itemId, Protocol::InventoryTab _tab, uint64 _slotIndex, uint64 _quantity)
 {
-	GLogger::LogWithContext(spdlog::level::info, myName, "DropItem",
-		"Dropping item ID: {}, quantity: {} from tab: {}, slot: {}",
-		_itemId, _quantity, static_cast<int>(_tab), _slotIndex);
+	//GLogger::LogWithContext(spdlog::level::info, myName, "DropItem",
+	//	"Dropping item ID: {}, quantity: {} from tab: {}, slot: {}",
+	//	_itemId, _quantity, static_cast<int>(_tab), _slotIndex);
 	WRITE_LOCK_IDX(2);
 
 	InventoryKey key = { _tab, _slotIndex };
@@ -226,8 +226,10 @@ void Player::MoveInventoryItem(Protocol::InventoryTab _fromTab, uint64 _fromInde
 	InventoryKey toKey = { _toTab, _toIndex };
 
 	auto fromIt = myInven.find(fromKey);
-	if (fromIt == myInven.end()) return;
-
+	if (fromIt == myInven.end()) {
+		GLogger::LogWithContext(spdlog::level::err, myName, "MoveInventoryItem", "fromIt == myInven.end()");
+		return;
+	}
 	// 이동 후 삭제 만약 이동자리에 있었으면 swap 요청이 왔을 것. quantity는 추후 쪼개서 이동시킬때를 대비해서 만듦
 	myInven[toKey] = fromIt->second;
 	myInven[toKey].slot_index = toKey.second;
@@ -246,10 +248,14 @@ void Player::InvenSwapItem(uint64 _fromItemId, Protocol::InventoryTab _fromTab, 
 
 	auto fromIt = myInven.find(fromKey);
 	auto toIt = myInven.find(toKey);
-	if (fromIt == myInven.end() || toIt == myInven.end()) return;
-
-	if (fromIt->second.itemId != _fromItemId || toIt->second.itemId != _toItemId) return;
-
+	if (fromIt == myInven.end() || toIt == myInven.end()) {
+		GLogger::LogWithContext(spdlog::level::err, myName, "InvenSwapItem", "fromIt == myInven.end() || toIt == myInven.end()");
+		return;
+	}
+	if (fromIt->second.itemId != _fromItemId || toIt->second.itemId != _toItemId) {
+		GLogger::LogWithContext(spdlog::level::err, myName, "InvenSwapItem", "fromIt->second.itemId != _fromItemId || toIt->second.itemId != _toItemId");
+		return;
+	}
 	swap(myInven[fromKey], myInven[toKey]);
 	swap(myInven[fromKey].slot_index, myInven[toKey].slot_index);
 
@@ -320,8 +326,10 @@ void Player::RemoveItem(uint64 _itemId, Protocol::InventoryTab _tab, uint64 _slo
 
 	InventoryKey key = { _tab, _slotIndex };
 	auto it = myInven.find(key);
-	if (it == myInven.end() || it->second.itemId != _itemId) return;
-
+	if (it == myInven.end() || it->second.itemId != _itemId) {
+		GLogger::LogWithContext(spdlog::level::err, myName, "RemoveItem", "it == myInven.end() || it->second.itemId != _itemId");
+		return;
+	}
 	myInven.erase(it);
 
 	if (ownerSession)
@@ -357,8 +365,10 @@ void Player::UnEquip(uint64 _itemId, uint64 _slotIndex, Protocol::EquipmentSlot 
 	WRITE_LOCK_IDX(2);
 
 	auto it = myEquip.find(_slot);
-	if (it == myEquip.end() || it->second.itemId != _itemId) return;
-
+	if (it == myEquip.end() || it->second.itemId != _itemId) {
+		GLogger::LogWithContext(spdlog::level::err, myName, "UnEquip", "it == myEquip.end() || it->second.itemId != _itemId");
+		return;
+	}
 	InventoryKey key = { _tab, _slotIndex };
 	INVEN invenItem;
 	invenItem.itemId = _itemId;
@@ -387,10 +397,14 @@ void Player::UpdateItem(Protocol::InventoryTab _tab, uint64 _itemId, uint64 _slo
 
 	InventoryKey key = { _tab, _slotIndex };
 	auto it = myInven.find(key);
-	if (it == myInven.end()) return;
-
-	if (it->second.itemId != _itemId) return;
-
+	if (it == myInven.end()) {
+		GLogger::LogWithContext(spdlog::level::err, myName, "UpdateItem", "it == myInven.end()");
+		return;
+	}
+	if (it->second.itemId != _itemId) {
+		GLogger::LogWithContext(spdlog::level::err, myName, "UpdateItem", "it->second.itemId != _itemId");
+		return;
+	}
 	it->second.quantity = _quantity;
 
 	if (it->second.quantity == 0) // 0 즉, 삭제될것

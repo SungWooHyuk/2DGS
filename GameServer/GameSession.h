@@ -6,7 +6,7 @@
 class GameSession : public PacketSession
 {
 public:
-	GameSession() = default;
+	GameSession();
 	~GameSession() { cout << "~GameSession" << endl; };
 
 public:
@@ -71,6 +71,8 @@ public:
 	void							RemoveItemPkt(uint64 _itemId, Protocol::InventoryTab _tab, uint64 _slotIndex);
 	void							SwapPkt(bool _success, Protocol::InventoryTab _fromTab, uint64 _fromIndex, Protocol::InventoryTab _toTab, uint64 _toIndex);
 
+	JobQueueRef						GetJobQueue() { return jobQueue; }
+	void							StartSaveTimer();
 private:
 	USE_MANY_LOCKS(3); // 0 : currentPlayer , 1 : viewPlayer, 2 : path
 	PlayerRef currentPlayer;
@@ -82,5 +84,8 @@ private:
 	vector<POS>		path;
 	uint32			pathIndex = 1;
 	uint32			pathCount = 0;
+
+private:
+	JobQueueRef jobQueue;
 };
 

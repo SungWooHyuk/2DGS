@@ -25,6 +25,7 @@ void GameSessionManager::Add(GameSessionRef _session)
 		_session->SetId(newId);
 		sessions[newId] = _session;
 	}
+
 	GLogger::LogWithContext(spdlog::level::info, "GameSessionManager", "Add", "New session added with ID: {}", newId);
 
 }
@@ -40,8 +41,10 @@ void GameSessionManager::Remove(GameSessionRef _session)
 	GameSessionRef gamesession = _session;
 	auto currentPlayer = gamesession->GetCurrentPlayer();
 
-	if (!currentPlayer)
+	if (!currentPlayer) {
+		GLogger::Log(spdlog::level::err, "[GameSessionManager][Remove] currentplayer already remove");
 		return;
+	}
 
 	int id = currentPlayer->GetId();
 	GLogger::LogWithContext(spdlog::level::info, currentPlayer->GetName(), "Remove", "Removing session for player ID: {}", id);
@@ -104,20 +107,6 @@ void GameSessionManager::Broadcast(SendBufferRef _sendBuffer)
 	}
 }
 
-void GameSessionManager::SaveAllPlayerStateSnap()
-{
-	GLogger::Log(spdlog::level::info, "SaveAllPlayerStateSnap EXEC");
-	for (int i = 0; i < MAX_USER; ++i)
-	{
-		READ_LOCK;
-		if (sessions[i] != nullptr) {
-			GLogger::LogWithContext(spdlog::level::info, sessions[i]->GetCurrentPlayer()->GetName(), "SaveAllPlayerStateSnap", "id: {}", i);
-			sessions[i]->SaveStateSnap();
-		}
-	}
-	DoTimer(30000, &GameSessionManager::SaveAllPlayerStateSnap);
-}
-
 void GameSessionManager::SessionRankingUpdate()
 {
 	for (int i = 0; i < MAX_USER; ++i)
@@ -175,8 +164,10 @@ void GameSessionManager::PlayerRespawn(uint64 _id)
 		session = sessions[_id];
 	}
 
-	if (!session) return;
-
+	if (!session) {
+		GLogger::Log(spdlog::level::err, "[GameSessionManager][PlayerRespawn] !session");
+		return;
+	}
 	player = session->GetCurrentPlayer();
 
 	player->SetStatHp(player->GetStat().maxHp);
@@ -207,6 +198,7 @@ int GameSessionManager::GetNewClientId()
 			return i;
 	}
 
+	GLogger::Log(spdlog::level::err, "[GameSessionManager][GetNewClientId] -1");
 	return -1;
 }
 
@@ -301,8 +293,7 @@ void GameSessionManager::NpcAstarMove(uint64 _id)
 			}
 		}
 
-		if (closestPlayerId != 0)
-			NpcAstar(npc->GetId(), closestPlayerId);
+		NpcAstar(npc->GetId(), closestPlayerId);
 	}
 
 	if (DoNpcAstarMove(_id))
@@ -371,13 +362,17 @@ bool GameSessionManager::DoNpcAstarMove(uint64 _id)
 	PlayerRef player;
 	{
 		READ_LOCK;
-		if (!sessions[_id])
+		if (!sessions[_id]) {
+			GLogger::Log(spdlog::level::err, "[GameSessionManager][DoNpcAstarMove] !sessions[_id]");
 			return false;
+		}
 
 		gamesession = sessions[_id];
 		player = gamesession->GetCurrentPlayer();
-		if (!player)
+		if (!player) {
+			GLogger::Log(spdlog::level::err, "[GameSessionManager][DoNpcAstarMove] !player");
 			return false;
+		}
 	}
 
 	unordered_set<uint64> old_vl = gamesession->GetViewPlayer();
@@ -393,32 +388,22 @@ bool GameSessionManager::DoNpcAstarMove(uint64 _id)
 
 void GameSessionManager::AstarMove(GameSessionRef& _session, PlayerRef& _player)
 {
-	GameSessionRef gamesession;
-	PlayerRef player;
-	{
-		gamesession = _session;
-		player = _player;
-	}
+	GameSessionRef gamesession = _session;
+	PlayerRef player = _player;
 
 	int index = gamesession->GetPathIndex();
-	vector<POS> v = gamesession->GetPath();
-	int size = v.size();
+	const vector<POS>& path = gamesession->GetPath();
+	int size = path.size();
 
+	if (size == 0)
+		return;
+
+	if (index >= size)
+		return;
+
+	player->SetPos(path[index]);
+	gamesession->SetPathIndex(index + 1);
 	gamesession->SetPathCount(gamesession->GetPathCount() + 1);
-
-	if (!v.empty())
-	{
-		if (index >= size)
-		{
-			if (index > 0)
-				player->SetPos(v[index - 1]);
-		}
-		else
-		{
-			player->SetPos(v[index]);
-			gamesession->SetPathIndex(index + 1);
-		}
-	}
 }
 
 void GameSessionManager::NpcAstar(uint64 _id, uint64 _destId)
@@ -431,17 +416,22 @@ void GameSessionManager::NpcAstar(uint64 _id, uint64 _destId)
 		dest_gamesession = sessions[_destId];
 	}
 
-	if (!gamesession || !dest_gamesession) return;
-
+	if (!gamesession || !dest_gamesession) {
+		GLogger::Log(spdlog::level::err, "[GameSessionManager][NpcAstar] gamesession: {}, dest_gamesession: {} !gamesession || !dest_gamesession",
+			_id, _destId);
+		return;
+	}
 	PlayerRef player = gamesession->GetCurrentPlayer();
 	PlayerRef target = dest_gamesession->GetCurrentPlayer();
-	if (!player || !target) return;
-
-	if (!gamesession->EmptyPath()) return;
-
+	if (!player || !target) {
+		GLogger::Log(spdlog::level::err, "[GameSessionManager][NpcAstar] !player || !target");
+		return;
+	}
+	if (!gamesession->EmptyPath()) {
+		return;
+	}
 	POS start = player->GetPos();
 	POS dest = target->GetPos();
-
 	if (start == dest) return;
 
 	const int MAX_ITERATIONS = 1000;
@@ -537,29 +527,6 @@ bool GameSessionManager::IsPlayer(uint64 _id)
 {
 	return _id < MAX_USER;
 }
-
-//bool GameSessionManager::UserInfoPlayer(uint64 _id)
-//{
-//	GameSessionRef gamesession;
-//	USER_INFO db;
-//	{
-//		gamesession = sessions[_id];
-//	}
-//	{
-//		db.level = gamesession->GetCurrentPlayer()->GetStat().level;
-//		db.hp = gamesession->GetCurrentPlayer()->GetStat().hp;
-//		db.maxHp = gamesession->GetCurrentPlayer()->GetStat().maxHp;
-//		db.mp = gamesession->GetCurrentPlayer()->GetStat().mp;
-//		db.maxMp = gamesession->GetCurrentPlayer()->GetStat().maxMp;
-//		db.exp = gamesession->GetCurrentPlayer()->GetStat().exp;
-//		db.maxExp = gamesession->GetCurrentPlayer()->GetStat().maxExp;
-//		//db.name = gamesession->GetCurrentPlayer()->GetName();
-//		db.posx = gamesession->GetCurrentPlayer()->GetPos().posx;
-//		db.posy = gamesession->GetCurrentPlayer()->GetPos().posy;
-//	}
-//
-//	return true;
-//}
 
 void GameSessionManager::UpdatePlayerPosition(PlayerRef& _player, uint64 _direction)
 {
@@ -994,7 +961,8 @@ void GameSessionManager::DropItems(GameSessionRef& _gamesession, GameSessionRef&
 			int quantity = quantityGen(gen);
 
 			if (drop.itemId == GOLD) {
-				GLogger::LogWithContext(spdlog::level::info, user->GetName(), "DropItems - Gold","quantity: {}", quantity);
+				GLogger::LogWithContext(spdlog::level::info, user->GetName(), 
+					"DropItems - Gold","quantity: {}", quantity);
 				user->AddGold(quantity); 
 				continue;
 			}

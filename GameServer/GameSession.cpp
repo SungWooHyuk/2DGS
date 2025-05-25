@@ -9,11 +9,17 @@
 #include "RoomManager.h"
 #include "StateSnap.h"
 #include "GLogger.h"
+#include "JobQueue.h"
+
+GameSession::GameSession()
+{
+	jobQueue = MakeShared<JobQueue>();
+}
 
 void GameSession::OnConnected()
 {
 	GAMESESSIONMANAGER->Add(static_pointer_cast<GameSession>(shared_from_this()));
-	GLogger::LogWithContext(spdlog::level::info, "GameSession", "OnConnected", "New");
+	//GLogger::LogWithContext(spdlog::level::info, "GameSession", "OnConnected", "New");
 }
 
 void GameSession::OnDisconnected()
@@ -37,11 +43,6 @@ void GameSession::OnRecvPacket(BYTE* buffer, int32 len)
 {
 	PacketSessionRef session = GetPacketSessionRef();
 	PacketHeader* header = reinterpret_cast<PacketHeader*>(buffer);
-
-	if (currentPlayer) {
-		GLogger::LogWithContext(spdlog::level::debug, currentPlayer->GetName(), "OnRecvPacket",
-			"Received packet of type: {}, length: {}", header->id, len);
-	}
 
 	ClientPacketHandler::HandlePacket(session, buffer, len);
 
@@ -116,8 +117,10 @@ bool GameSession::SaveStateSnap()
 {
 	READ_LOCK_IDX(0);
 
-	if (currentPlayer == nullptr)
+	if (currentPlayer == nullptr) {
+		GLogger::Log(spdlog::level::err, "SaveStateSnap , currentPlayer id={} nullptr err", myId);
 		return false;
+	}
 	currentPlayer->GetStateSnap().SaveState();
 	return true;
 }
@@ -446,4 +449,13 @@ void GameSession::SwapPkt(bool _success, Protocol::InventoryTab _fromTab, uint64
 
 	auto sendBuffer = ClientPacketHandler::MakeSendBuffer(pkt);
 	Send(sendBuffer);
+}
+
+void GameSession::StartSaveTimer()
+{
+	auto self = static_pointer_cast<GameSession>(shared_from_this());
+	jobQueue->DoTimer(10000, [self]() {
+		self->SaveStateSnap();
+		self->StartSaveTimer();
+		});
 }

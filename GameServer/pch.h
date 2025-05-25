@@ -28,3 +28,4 @@ using GameSessionRef = shared_ptr<class GameSession>;
 using DBGameSessionRef = shared_ptr<class DBGameSession>;
 using PlayerRef = shared_ptr<class Player>;
 using RoomRef = shared_ptr<class Room>;
+using JobQueueRef = shared_ptr<class JobQueue>;

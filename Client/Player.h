@@ -60,6 +60,7 @@ private:
 	STAT		myStat;
 	TP			myTp;
 	uint64		myGold;
+
 	vector<INVEN> myInventory;
 	unordered_map<Protocol::EquipmentSlot, uint32> myEquipments;
 

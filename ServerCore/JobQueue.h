@@ -28,6 +28,12 @@ public:
 		GJobTimer->Reserve(tickAfter, shared_from_this(), job);
 	}
 
+	void DoTimer(uint64 tickAfter, JobQueueRef owner, CallbackType&& callback)
+	{
+		JobRef job = ObjectPool<Job>::MakeShared(std::move(callback));
+		GJobTimer->Reserve(tickAfter, owner, job); 
+	}
+
 	template<typename T, typename Ret, typename... Args>
 	void DoTimer(uint64 tickAfter, Ret(T::* memFunc)(Args...), Args... args)
 	{

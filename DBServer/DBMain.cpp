@@ -33,12 +33,13 @@ void DoWorkerJob(DBServerServiceRef& service)
 
 int main()
 {
-	GLogger::Initialize("DBServer"); // 로그찍을준비
+	GLogger::Initialize("DBServer");
+	GLogger::SetCurrentLogger("DBServer");
 	GLogger::Log(spdlog::level::err, "DBServer Begin");
 	// 패킷 핸들러 초기화
 	DBPacketHandler::Init();
 
-	// 서비스 시작
+	// DB 서버 서비스 시작
 	DBServerServiceRef service = MakeShared<DBServerService>( // connect
 		NetAddress(IP, DB_PORT),
 		MakeShared<IocpCore>(),

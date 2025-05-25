@@ -21,7 +21,6 @@ public:
 
 	int				GetNewClientId();
 	
-	void			SaveAllPlayerStateSnap();
 	void			SessionRankingUpdate();
 	void			NpcRandomMove(uint64 _id);
 	void			NpcAstarMove(uint64 _id);

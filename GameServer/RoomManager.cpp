@@ -31,7 +31,7 @@ void RoomManager::EnterRoom(GameSessionRef& _session)
 		session->SetRoom(rooms[roomX][roomY]);
 	}
 	else {
-		cout << "out bound" << endl;
+		GLogger::Log(spdlog::level::err, "[RoomManager][EnterRoom] out bound");
 	}
 }
 

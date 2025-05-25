@@ -38,6 +38,7 @@ void InitSingletons()
 int main()
 {
 	GLogger::Initialize("Client");
+	GLogger::SetCurrentLogger("Client");
 	GLogger::Log(spdlog::level::err, "client Begin");
 	InitSingletons();
 	ITEM.InitItemICons();
