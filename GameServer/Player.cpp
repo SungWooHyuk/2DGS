@@ -446,6 +446,7 @@ void Player::AddGold(int _gold)
 	if (ownerSession)
 		ownerSession->GoldChangePkt(myGold, _gold);
 
-	DBMANAGER.GetSession()->SendUpdateGoldPkt(myId, myName, myGold); // 골드는 즉시 저장
+	
+	DBMANAGER.SendUpdateGoldPkt(myId, myName, myGold); // 골드는 즉시 저장
 	GAMESESSIONMANAGER->UpdateGold(myName, myGold); // 레디스 새롭게 등록
 }

@@ -3,8 +3,6 @@
 #include "JobQueue.h"
 #include "utils.h"
 
-
-
 class DBSessionManager : public JobQueue
 {
 private:
@@ -21,11 +19,17 @@ public:
 	}
 
 public:
-	void				SetSession(DBGameSessionRef session) { WRITE_LOCK; dbSession = session; }
-	DBGameSessionRef	GetSession() { READ_LOCK; return dbSession; }
-	void				RemoveSession() { WRITE_LOCK; dbSession = nullptr; }
+	void				SetSession(DBGameSessionRef session) { dbSession = session; }
+	DBGameSessionRef	GetSession() { return dbSession; }
+	void				RemoveSession() { dbSession = nullptr; }
+
+	// 통합 패킷 전송 함수들
+	void				SendInventoryPkt(uint64 id, const string& name, const InventoryMap& inventory);
+	void				SendEquipmentPkt(uint64 id, const string& name, const EquipmentMap& equipment);
+	void				SendPlayerStatePkt(uint64 id, const string& name, const POS& pos, const STAT& stats);
+	void				SendUpdateGoldPkt(uint64 id, const string& name, int gold);
+	void				SendSavePkt(uint64 id, const InventoryMap& inven, const EquipmentMap& equip, const USER_INFO& player);
 
 private:
-	USE_LOCK;
 	DBGameSessionRef dbSession;
 };

@@ -52,7 +52,7 @@ void GameSessionManager::Remove(GameSessionRef _session)
 	if (currentPlayer->GetPT() == Protocol::PLAYER_TYPE_CLIENT) {
 		if (currentPlayer->GetName().substr(0, 5) != "dummy")
 		{
-			DBMANAGER.GetSession()->SendSavePkt(
+			DBMANAGER.SendSavePkt(
 				id,
 				currentPlayer->GetInventory(),
 				currentPlayer->GetEquipments(),

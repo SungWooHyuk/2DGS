@@ -7,15 +7,16 @@
 
 void DBGameSession::OnConnected()
 {
-	DBMANAGER.SetSession(static_pointer_cast<DBGameSession>(shared_from_this()));
-	//REDIS.FlushQueue(static_pointer_cast<DBGameSession>(shared_from_this()));
-	cout << "DBGameSession::OnConnected()" << endl;
+	auto session = static_pointer_cast<DBGameSession>(shared_from_this());
+	if (DBMANAGER.GetSession() != session)
+		DBMANAGER.SetSession(session);
+
+	REDIS.FlushQueue(session);
 }
 
 void DBGameSession::OnDisconnected()
 {
 	DBMANAGER.RemoveSession();
-	cout << "DBGameSession::OnDisconnected()" << endl;
 }
 
 void DBGameSession::OnRecvPacket(BYTE* buffer, int32 len)
@@ -30,10 +31,9 @@ void DBGameSession::OnSend(int32 len)
 {
 }
 
+// 이제 이 함수들은 단순히 패킷만 전송 (연결 상태 체크 없음)
 void DBGameSession::SendInventoryPkt(uint64 _id, const string& _name, const InventoryMap& _inventory)
 {
-	//GLogger::LogWithContext(spdlog::level::info, _name, "SendInventoryPkt", "Sending {} items to DB", _inventory.size());
-
 	DBProtocol::SD_SAVE_INVENTORY pkt;
 	pkt.set_user_id(_id);
 	pkt.set_name(_name);
@@ -48,15 +48,10 @@ void DBGameSession::SendInventoryPkt(uint64 _id, const string& _name, const Inve
 
 	auto sendBuffer = GameDBPacketHandler::MakeSendBuffer(pkt);
 	Send(sendBuffer);
-	/*if (!Send(sendBuffer)) {
-		GLogger::Log(spdlog::level::info, "dbserver Isconnected false SendInventoryPkt id={} ", _id);
-		REDIS.EnqueuePacket(sendBuffer);
-	}*/
 }
 
-void DBGameSession::SendEquipmentPkt(uint64 _id, const string& _name, const EquipmentMap& _equipment) {
-	//GLogger::LogWithContext(spdlog::level::info, _name, "SendEquipmentPkt", "Sending {} equipment slots to DB", _equipment.size());
-
+void DBGameSession::SendEquipmentPkt(uint64 _id, const string& _name, const EquipmentMap& _equipment)
+{
 	DBProtocol::SD_SAVE_EQUIPMENT pkt;
 	pkt.set_user_id(_id);
 	pkt.set_name(_name);
@@ -69,55 +64,38 @@ void DBGameSession::SendEquipmentPkt(uint64 _id, const string& _name, const Equi
 
 	auto sendBuffer = GameDBPacketHandler::MakeSendBuffer(pkt);
 	Send(sendBuffer);
-	/*if (!Send(sendBuffer)) {
-		GLogger::Log(spdlog::level::info, "dbserver Isconnected false SendEquipmentPkt id={} ", _id);
-		REDIS.EnqueuePacket(sendBuffer);
-	}*/
 }
 
-void DBGameSession::SendPlayerStatePkt(uint64 _id, const string& _name, const POS& _pos, const STAT& _stats) {
-	
+void DBGameSession::SendPlayerStatePkt(uint64 _id, const string& _name, const POS& _pos, const STAT& _stats)
+{
 	DBProtocol::SD_SAVE_PLAYER pkt;
+	// TODO: 필요한 필드들 설정
+
 	auto sendBuffer = GameDBPacketHandler::MakeSendBuffer(pkt);
 	Send(sendBuffer);
-	/*if (!Send(sendBuffer)) {
-		GLogger::Log(spdlog::level::info, "dbserver Isconnected false SendPlayerStatePkt id={} ", _id);
-		REDIS.EnqueuePacket(sendBuffer);
-	}*/
 }
 
 void DBGameSession::SendUpdateGoldPkt(uint64 _id, const string& _name, int _gold)
 {
-	//GLogger::LogWithContext(spdlog::level::info, _name, "SendUpdateGoldPkt", "Sending updated gold: {}", _gold);
-
 	DBProtocol::SD_UPDATE_GOLD pkt;
 	pkt.set_gold(_gold);
 	pkt.set_name(_name);
 	pkt.set_user_id(_id);
-	
+
 	auto sendBuffer = GameDBPacketHandler::MakeSendBuffer(pkt);
 	Send(sendBuffer);
-	/*if (!Send(sendBuffer)) {
-		GLogger::Log(spdlog::level::info, "dbserver Isconnected false SendUpdateGoldPkt id={} ", _id);
-		REDIS.EnqueuePacket(sendBuffer);
-	}*/
 }
 
 void DBGameSession::SendSavePkt(uint64 _id, const InventoryMap& _inven, const EquipmentMap& _equip, const USER_INFO& _player)
 {
-	//GLogger::LogWithContext(spdlog::level::info, _player.name, "SendSavePkt",
-	//	"Saving to DB: Pos=({}, {}), Level={}, HP={}/{} MP={}/{} Gold={}, Equip={}, Inven={}",
-	//	_player.posx, _player.posy, _player.level, _player.hp, _player.maxHp, _player.mp, _player.maxMp, _player.gold,
-	//	_equip.size(), _inven.size());
-
 	DBProtocol::SD_SAVE_PLAYER pkt;
 	pkt.set_user_id(_id);
 	pkt.set_name(_player.name);
 
 	for (const auto& [slot, item] : _equip) {
-		auto* equip = pkt.add_equipment();
-		equip->set_eq_slot(slot);
-		equip->set_item_id(item.itemId);
+		auto* equipment = pkt.add_equipment();
+		equipment->set_eq_slot(slot);
+		equipment->set_item_id(item.itemId);
 	}
 
 	for (const auto& [key, item] : _inven) {
@@ -145,9 +123,4 @@ void DBGameSession::SendSavePkt(uint64 _id, const InventoryMap& _inven, const Eq
 
 	auto sendBuffer = GameDBPacketHandler::MakeSendBuffer(pkt);
 	Send(sendBuffer);
-	/*if (!Send(sendBuffer)) {
-		GLogger::Log(spdlog::level::info, "dbserver Isconnected false SendSavePkt id={} ", _id);
-		REDIS.EnqueuePacket(sendBuffer);
-	}*/
-
 }

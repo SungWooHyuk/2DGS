@@ -90,17 +90,17 @@ private:
 	void SaveToDatabase() {
 		if (flags.test(INVENTORY_FLAG)) {
 			GLogger::LogWithContext(spdlog::level::info, name, "SaveToDatabase", "Saving Inventory");
-			DBMANAGER.GetSession()->SendInventoryPkt(id, name, currentSnapshot.inventory);
+			DBMANAGER.SendInventoryPkt(id, name, currentSnapshot.inventory);
 		}
 		
 		if (flags.test(EQUIPMENT_FLAG)) {
 			GLogger::LogWithContext(spdlog::level::info, name, "SaveToDatabase", "Saving Equipment");
-			DBMANAGER.GetSession()->SendEquipmentPkt(id, name, currentSnapshot.equipment);
+			DBMANAGER.SendEquipmentPkt(id, name, currentSnapshot.equipment);
 		}
 		
 		if (flags.test(POS_FLAG) || flags.test(STATS_FLAG)) {
 			GLogger::LogWithContext(spdlog::level::info, name, "SaveToDatabase", "Saving Player State (Pos/Stats)");
-			DBMANAGER.GetSession()->SendPlayerStatePkt(id, name, currentSnapshot.pos, currentSnapshot.stats);
+			DBMANAGER.SendPlayerStatePkt(id, name, currentSnapshot.pos, currentSnapshot.stats);
 		}
 	}
 };
